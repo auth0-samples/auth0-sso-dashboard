@@ -4,7 +4,8 @@ var nodemon = require('gulp-nodemon');
 gulp.task('develop', function () {
   nodemon({
     script: 'bin/www',
-    ext: 'hbs js less',
+    ext: 'js less',
+    ignore: 'public/*',
     env: { 'NODE_ENV': 'development' }
   })
     .on('restart', function () {
