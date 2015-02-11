@@ -1,3 +1,61 @@
+/*
+ * Base structure
+ */
+/* Move down content because we have a fixed navbar that is 50px tall */
+
+body {
+  padding-top: 50px;
+  -webkit-font-smoothing: antialiased;
+}
+h1, h2, h3 {
+  font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+  font-weight: lighter;
+}
+/*
+ * Global add-ons
+ */
+
+.sub-header {
+  padding-bottom: 10px;
+  border-bottom: 1px solid #eee;
+}
+/*
+ * Top navigation
+ * Hide default border to remove 1px line.
+ */
+
+.navbar-inverse {
+  background-color: #16214D;
+}
+.navbar-inverse .navbar-nav>.active>a, .navbar-inverse .navbar-nav>.active>a:hover, .navbar-inverse .navbar-nav>.active>a:focus {
+  background-color: #EB5424;
+}
+.navbar-fixed-top {
+  border: 0;
+}
+.navbar-inverse .navbar-brand {
+  color: white;
+}
+.navbar-inverse .navbar-nav>li>a {
+  color: white;
+}
+.profile-image {
+  width: 30px;
+  margin-right: 10px;
+  border-radius: 40px;
+}
+.navbar-nav>li>a.profile-image-dropdown {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+.nav-sidebar > .active > a, .nav-sidebar > .active > a:hover, .nav-sidebar > .active > a:focus {
+  background-color: #44C7F4;
+}
+.btn-primary {
+  background-color: #44C7F4;
+  border-color: #44C7F4;
+}
+
 #apps {
   margin-top: 50px;
 }
