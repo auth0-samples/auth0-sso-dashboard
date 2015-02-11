@@ -1,0 +1,15 @@
+<div class="container">
+  <div class="row">
+    <div class="col-sm-8">
+      <h1>Company Dashboard</h1>
+      <p>Click any of the icons below to sign in to your corporate applications</p>
+      <div id="apps"></div>
+    </div>
+  </div>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+<script src="/js/dashboard.js"></script>
+<script>
+  var apps = {{apps}};
+  Dashboard.load(apps);
+</script>

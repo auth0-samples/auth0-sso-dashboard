@@ -1,0 +1,17 @@
+{
+  "concur": {
+    "name": "Concur",
+    "logo": "concur.png",
+    "loginUrl": "http://concur.com"
+  },
+  "salesforce": {
+    "name": "Salesforce",
+    "logo": "salesforce.jpg",
+    "loginUrl": "http://mytenant.salesforce.com"
+  },
+  "sharepoint": {
+    "name": "SharePoint",
+    "logo": "sharepoint.png",
+    "loginUrl": "http://sharepoint"
+  }
+}
