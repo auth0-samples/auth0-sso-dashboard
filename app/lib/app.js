@@ -1,6 +1,6 @@
 
 var SsoDashboardApp = require('./components/SsoDashboardApp.react');
-//var SectionStore = require('./stores/SectionStore');
+var TokenStore = require('./stores/TokenStore');
 var React = require('react');
 window.React = React;
 
@@ -12,10 +12,9 @@ var SsoDashbaord = function(element) {
   );
 }
 
-// RepoNavigator.prototype.init = function(data) {
-//   //SectionStore.init(data.sections);
-//   //RepoStore.init(data.repos);
-// };
+SsoDashbaord.prototype.init = function() {
+  TokenStore.init();
+};
 
 
 module.export = window.SsoDashbaord = SsoDashbaord;
