@@ -6,6 +6,7 @@
     "start": "node ./bin/www"
   },
   "dependencies": {
+    "browser-request": "^0.3.3",
     "debug": "~2.1.1",
     "dotenv": "^0.5.1",
     "express": "~4.11.1",

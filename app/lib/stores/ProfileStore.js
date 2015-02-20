@@ -3,37 +3,26 @@ var AppDispatcher = require('../dispatcher/AppDispatcher');
 var EventEmitter = require('events').EventEmitter;
 var AppConstants = require('../constants/AppConstants');
 var assign = require('object-assign');
-var AuthActionCreators = require('../actions/AuthActionCreators');
 
 var CHANGE_EVENT = 'change';
 
-function setAuthToken(token) {
-  store.set('token', token);
+var _profile;
+function setProfile(profile) {
+  _profile = profile;
 }
 
-function getAuthToken() {
-  return store.get('token');
+function getProfile() {
+  return _profile;
 }
 
-var TokenStore = assign({}, EventEmitter.prototype, {
-
-  init: function() {
-    var token = getAuthToken();
-    if (token) {
-      AuthActionCreators.authenticated(token);
-    }
-  },
+var ProfileStore = assign({}, EventEmitter.prototype, {
 
   /**
    * Get the entire collection of TODOs.
    * @return {object}
    */
-  get: function() {
-    return getAuthToken();
-  },
-
-  isAuthenticated: function() {
-    return getAuthToken() !== undefined;
+  getProfile: function() {
+    return getProfile();
   },
 
   emitChange: function() {
@@ -59,9 +48,9 @@ var TokenStore = assign({}, EventEmitter.prototype, {
 AppDispatcher.register(function(action) {
 
   switch(action.actionType) {
-    case AppConstants.USER_AUTHENTICATED:
-      setAuthToken(action.token);
-      TokenStore.emitChange();
+    case AppConstants.RECIEVED_PROFILE:
+      setProfile(action.profile);
+      ProfileStore.emitChange();
       break;
 
     default:
@@ -69,4 +58,4 @@ AppDispatcher.register(function(action) {
   }
 });
 
-module.exports = TokenStore;
+module.exports = ProfileStore;
