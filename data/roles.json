@@ -1,0 +1,11 @@
+{
+  "admin": {
+    "all_apps": true
+  },
+  "group1": {
+    "apps": ["salesforce"]
+  },
+  "group2": {
+    "apps": ["concur"]
+  }
+}
