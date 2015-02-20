@@ -13,9 +13,12 @@
     "flux": "^2.0.1",
     "hbs": "~2.8.0",
     "jade": "^1.9.2",
+    "json-proxy": "^0.3.0",
+    "lodash": "^3.2.0",
     "morgan": "~1.5.1",
     "object-assign": "^2.0.0",
     "react": "^0.12.2",
+    "request": "^2.53.0",
     "serve-favicon": "~2.2.0"
   },
   "devDependencies": {
