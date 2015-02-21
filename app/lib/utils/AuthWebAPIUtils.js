@@ -14,7 +14,7 @@ module.exports = {
       if (error) {
         throw error;
       } else {
-        ProfileActionCreators.recieveProfile(body);
+        ProfileActionCreators.receiveProfile(body);
       }
     });
   }

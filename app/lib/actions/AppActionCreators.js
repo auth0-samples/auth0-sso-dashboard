@@ -1,15 +1,16 @@
 var AppDispatcher = require('../dispatcher/AppDispatcher');
 var AppConstants = require('../constants/AppConstants');
+var AuthWebAPIUtils = require('../utils/AuthWebAPIUtils');
 
 module.exports = {
 
   /**
-   * @param  {string} token
+   * @param  {object} apps
    */
-  receiveProfile: function(profile) {
+  receiveApps: function(apps) {
     AppDispatcher.dispatch({
-      actionType: AppConstants.RECIEVED_PROFILE,
-      profile: profile
+      actionType: AppConstants.RECEIVED_APPS,
+      apps: apps
     });
   }
 

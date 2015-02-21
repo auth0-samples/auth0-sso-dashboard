@@ -1,11 +1,16 @@
 {
-  "admin": {
-    "all_apps": true
-  },
-  "group1": {
-    "apps": ["salesforce"]
-  },
-  "group2": {
-    "apps": ["concur"]
-  }
+  "roles": [
+    {
+      "name": "admin",
+      "all_apps": true
+    },
+    {
+      "name": "group1",
+      "apps": ["salesforce"]
+    },
+    {
+      "name": "group2",
+      "apps": ["concur"]
+    }
+  ]
 }

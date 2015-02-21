@@ -1,33 +1,20 @@
 var request = require('browser-request');
+var AppActionCreators = require('../actions/AppActionCreators');
 
 module.exports = {
 
-  loadSettings = function(token) {
+  loadUserApps: function(token) {
     request({
-      url: '/data/settings',
-      header: {
+      url: '/data/apps',
+      headers: {
         'Authorization': 'Bearer ' + token
       }
     }, function(error, response, body) {
       if (error) {
         throw error;
       } else {
-        return JSON.parse(body);
-      }
-    });
-  }
-
-  loadRoles = function(token) {
-    request({
-      url: '/data/roles',
-      header: {
-        'Authorization': 'Bearer ' + token
-      }
-    }, function(error, response, body) {
-      if (error) {
-        throw error;
-      } else {
-        return JSON.parse(body);
+        var apps = JSON.parse(body);
+        AppActionCreators.receiveApps(apps);
       }
     });
   }

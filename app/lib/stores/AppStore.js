@@ -6,23 +6,23 @@ var assign = require('object-assign');
 
 var CHANGE_EVENT = 'change';
 
-var _profile = {};
-function setProfile(profile) {
-  _profile = profile;
+var _apps = [];
+function setApps(apps) {
+  _apps = apps;
 }
 
-function getProfile() {
-  return _profile;
+function getApps() {
+  return _apps;
 }
 
-var ProfileStore = assign({}, EventEmitter.prototype, {
+var AppStore = assign({}, EventEmitter.prototype, {
 
   /**
    * Get the entire collection of TODOs.
    * @return {object}
    */
-  getProfile: function() {
-    return getProfile();
+  getAll: function() {
+    return getApps();
   },
 
   emitChange: function() {
@@ -48,9 +48,9 @@ var ProfileStore = assign({}, EventEmitter.prototype, {
 AppDispatcher.register(function(action) {
 
   switch(action.actionType) {
-    case AppConstants.RECEIVED_PROFILE:
-      setProfile(action.profile);
-      ProfileStore.emitChange();
+    case AppConstants.RECEIVED_APPS:
+      setApps(action.apps);
+      AppStore.emitChange();
       break;
 
     default:
@@ -58,4 +58,4 @@ AppDispatcher.register(function(action) {
   }
 });
 
-module.exports = ProfileStore;
+module.exports = AppStore;
