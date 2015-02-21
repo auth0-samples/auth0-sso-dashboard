@@ -8,7 +8,7 @@ module.exports = {
    */
   receiveProfile: function(profile) {
     AppDispatcher.dispatch({
-      actionType: AppConstants.RECIEVED_PROFILE,
+      actionType: AppConstants.RECEIVED_PROFILE,
       profile: profile
     });
   }
