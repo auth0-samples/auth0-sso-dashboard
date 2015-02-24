@@ -15,6 +15,12 @@ module.exports = {
     });
     AuthWebAPIUtils.loadUserProfile(token);
     DataWebAPIUtils.loadUserApps(token);
+  },
+
+  logout: function() {
+    AppDispatcher.dispatch({
+      actionType: AppConstants.USER_LOGGED_OUT
+    });
   }
 
 };

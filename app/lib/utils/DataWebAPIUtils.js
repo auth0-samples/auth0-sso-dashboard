@@ -5,7 +5,7 @@ module.exports = {
 
   loadUserApps: function(token) {
     request({
-      url: '/data/apps',
+      url: '/api/apps',
       headers: {
         'Authorization': 'Bearer ' + token
       }

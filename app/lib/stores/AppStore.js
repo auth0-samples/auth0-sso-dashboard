@@ -52,7 +52,9 @@ AppDispatcher.register(function(action) {
       setApps(action.apps);
       AppStore.emitChange();
       break;
-
+    case AppConstants.USER_LOGGED_OUT:
+      setApps();
+      AppStore.emitChange();
     default:
       // no op
   }

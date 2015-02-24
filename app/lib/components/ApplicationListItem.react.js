@@ -5,7 +5,7 @@ var ApplicationItem = React.createClass({
   render: function() {
     var app = this.props.app;
     var logoUrl = '/img/logos/auth0.png';
-    var loginUrl = 'https://' + config.auth0_domain + '/samlp/' + app.client_id;
+    var loginUrl = this.props.app.login_url;
     if (app.logo) {
       logoUrl = app.logo;
     }

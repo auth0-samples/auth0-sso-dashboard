@@ -6,7 +6,7 @@ var assign = require('object-assign');
 
 var CHANGE_EVENT = 'change';
 
-var _profile = {};
+var _profile;
 function setProfile(profile) {
   _profile = profile;
 }
@@ -50,6 +50,10 @@ AppDispatcher.register(function(action) {
   switch(action.actionType) {
     case AppConstants.RECEIVED_PROFILE:
       setProfile(action.profile);
+      ProfileStore.emitChange();
+      break;
+    case AppConstants.USER_LOGGED_OUT:
+      setProfile();
       ProfileStore.emitChange();
       break;
 

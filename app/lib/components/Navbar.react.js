@@ -17,11 +17,9 @@ var Navbar = React.createClass({
           </div>
           <div id="navbar" className="navbar-collapse collapse">
             <ul id="navbar-menu" className="nav navbar-nav navbar-right">
-              <li className="active"><a>Apps</a>
-              </li>
-              <li><a href="#">Admin</a>
-              </li>
-              <ProfileMenu />
+              <li className="active"><a>Apps</a></li>
+              <li><a href="#">Admin</a></li>
+              <ProfileMenu profile={this.props.profile} />
             </ul>
           </div>
         </div>

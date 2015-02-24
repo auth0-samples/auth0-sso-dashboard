@@ -8,7 +8,11 @@ var AuthActionCreators = require('../actions/AuthActionCreators');
 var CHANGE_EVENT = 'change';
 
 function setAuthToken(token) {
-  store.set('token', token);
+  if (token) {
+    store.set('token', token);
+  } else {
+    store.remove('token');
+  }
 }
 
 function getAuthToken() {
@@ -61,6 +65,10 @@ AppDispatcher.register(function(action) {
   switch(action.actionType) {
     case AppConstants.USER_AUTHENTICATED:
       setAuthToken(action.token);
+      TokenStore.emitChange();
+      break;
+    case AppConstants.USER_LOGGED_OUT:
+      setAuthToken();
       TokenStore.emitChange();
       break;
 
