@@ -1,8 +1,8 @@
 # Logs
 logs
 *.log
-.env
 build
+config.json
 
 # Runtime data
 pids

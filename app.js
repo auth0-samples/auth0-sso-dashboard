@@ -1,11 +1,11 @@
 var express = require('express');
-var dotenv = require('dotenv');
+var nconf = require('nconf');
 var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
 
 
-dotenv.load();
+nconf.file({ file: 'config.json' });
 
 var app = express();
 

@@ -8,7 +8,6 @@
   "dependencies": {
     "browser-request": "^0.3.3",
     "debug": "~2.1.1",
-    "dotenv": "^0.5.1",
     "express": "~4.11.1",
     "express-jwt": "^1.0.0",
     "flux": "^2.0.1",
@@ -17,6 +16,7 @@
     "json-proxy": "^0.3.0",
     "lodash": "^3.2.0",
     "morgan": "~1.5.1",
+    "nconf": "^0.7.1",
     "object-assign": "^2.0.0",
     "react": "^0.12.2",
     "request": "^2.53.0",
