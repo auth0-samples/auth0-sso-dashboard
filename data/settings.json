@@ -1,19 +1,16 @@
 {
-  "settings": [
+  "clients": [
     {
-      "name": "Concur",
-      "logo": "concur.png",
-      "loginUrl": "http://concur.com"
+      "client_id": "6TJk91VOsMEimk387w6oXc6ELvIiAMgh",
+      "logo_url": "/img/logos/concur.png"
     },
     {
-      "name": "Salesforce",
-      "logo": "salesforce.jpg",
-      "loginUrl": "http://mytenant.salesforce.com"
+      "client_id": "0yTfL3Cy9WeGza8dnmJK9fQdfovNUY4P",
+      "logo_url": "/img/logos/salesforce.jpg"
     },
     {
-      "name": "SharePoint",
-      "logo": "sharepoint.png",
-      "loginUrl": "http://sharepoint"
+      "client_id": "d9xqGspCWW9M7t0lUHopkycMjOe3aWQP",
+      "logo_url": "/img/logos/sharepoint.png"
     }
   ]
 }
