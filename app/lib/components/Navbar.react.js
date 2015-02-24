@@ -1,8 +1,11 @@
 var React = require('react');
 var ProfileMenu = require('./ProfileMenu.react');
+var NavbarMenuItem = require('./NavbarMenuItem.react');
 
 var Navbar = React.createClass({
   render: function() {
+    var title = window.config.app_title;
+
     return (
       <nav className="navbar navbar-inverse navbar-fixed-top" role="navigation">
         <div className="container-fluid">
@@ -13,12 +16,12 @@ var Navbar = React.createClass({
               <span className="icon-bar"></span>
               <span className="icon-bar"></span>
             </button>
-            <a className="navbar-brand" href="/">Company Dashboard</a>
+            <a className="navbar-brand" href="/">{title}</a>
           </div>
           <div id="navbar" className="navbar-collapse collapse">
             <ul id="navbar-menu" className="nav navbar-nav navbar-right">
-              <li className="active"><a>Apps</a></li>
-              <li><a href="#">Admin</a></li>
+              <NavbarMenuItem title="Apps" route="/" />
+              <NavbarMenuItem title="Admin" route="/admin" />
               <ProfileMenu profile={this.props.profile} />
             </ul>
           </div>

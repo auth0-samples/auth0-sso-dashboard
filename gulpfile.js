@@ -41,7 +41,7 @@ gulp.task('css', ['clean'], function () {
 });
 
 gulp.task('css-watch', ['css'], function() {
-  var watcher = gulp.watch('app/styles/*.*', ['less']);
+  var watcher = gulp.watch('app/styles/*.*', ['css']);
   watcher.on('change', function(event) {
     console.log('File ' + event.path + ' was ' + event.type + ', running tasks...');
   });
