@@ -1,18 +1,18 @@
 var React = require('react');
 
-var SettingAdminSection = React.createClass({
+var AdminSettings = React.createClass({
   render: function() {
     return (
       <div className="container">
         <div className="row page-header">
-          <h2>Setting Administration</h2>
+          <h2>Administration: Settings</h2>
         </div>
         <div className="row" id="apps">
-          Setting Admin
+          Settings Admin
         </div>
       </div>
     );
   }
 });
 
-module.exports = SettingAdminSection;
+module.exports = AdminSettings;

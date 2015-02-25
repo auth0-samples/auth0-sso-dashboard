@@ -1,20 +1,15 @@
 
-var SsoDashboardApp = require('./components/SsoDashboardApp.react');
-var TokenStore = require('./stores/TokenStore');
 var React = require('react');
 window.React = React;
 
+var App = require('./components/App.react');
+var TokenStore = require('./stores/TokenStore');
 
-var SsoDashbaord = function(element) {
-  React.render(
-    <SsoDashboardApp />,
-    element
-  );
+var SsoDashboard = {
+  init: function(config) {
+    App.init(config);
+    TokenStore.init();
+  }
 }
 
-SsoDashbaord.prototype.init = function() {
-  TokenStore.init();
-};
-
-
-module.export = window.SsoDashbaord = SsoDashbaord;
+module.exports = window.SsoDashboard = SsoDashboard;

@@ -11,5 +11,4 @@ block content
   script.
     window.config = !{config};
     var lock = window.lock = new Auth0Lock(config.auth0_client_id, config.auth0_domain);
-    var app = new SsoDashbaord(document.body);
-    app.init();
+    SsoDashboard.init(config);

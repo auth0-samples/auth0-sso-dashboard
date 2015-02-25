@@ -1,18 +1,18 @@
 var React = require('react');
 
-var AppAdminSection = React.createClass({
+var AdminRoles = React.createClass({
   render: function() {
     return (
       <div className="container">
         <div className="row page-header">
-          <h2>App Administration</h2>
+          <h2>Administration: Roles</h2>
         </div>
         <div className="row" id="apps">
-          App Admin
+          Role Admin
         </div>
       </div>
     );
   }
 });
 
-module.exports = AppAdminSection;
+module.exports = AdminRoles;
