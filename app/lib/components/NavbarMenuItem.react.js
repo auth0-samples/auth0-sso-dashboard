@@ -1,28 +1,11 @@
 var React = require('react');
-var Router = require('../utils/Router');
-
-function getStateFromStores() {
-  return {
-    currentRoute: Router.getRoute()
-  }
-}
+var Router = require('../utils/Router').RouterMixin;
 
 var NavbarMenuItem = React.createClass({
-  getInitialState: function() {
-    return getStateFromStores();
-  },
-
-  componentDidMount: function() {
-    Router.addNavigatedListener(this._onChange);
-  },
-
-  componentWillUnmount: function() {
-    Router.removeNavigatedListener(this._onChange);
-  },
-
+  mixins: [Router],
   render: function() {
     var className;
-    if (this.props.route === this.state.currentRoute) {
+    if (this.state.currentRoute === this.props.route || this.state.currentRoute.indexOf(this.props.route + '/') === 0) {
       className = "active";
     }
     return (
@@ -31,11 +14,7 @@ var NavbarMenuItem = React.createClass({
   },
 
   handleClick: function(event) {
-    Router.navigate(this.props.route);
-  },
-
-  _onChange: function() {
-    this.setState(getStateFromStores());
+    this.navigate(this.props.route);
   }
 });
 

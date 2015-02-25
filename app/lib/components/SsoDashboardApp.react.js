@@ -5,17 +5,21 @@ var TokenStore = require('../stores/TokenStore');
 var ProfileStore = require('../stores/ProfileStore');
 var ApplicationList = require('./ApplicationList.react');
 var AdminSection = require('./AdminSection.react');
-var Router = require('../utils/Router');
+var UserAdminSection = require('./UserAdminSection.react');
+var SettingsAdminSection = require('./SettingsAdminSection.react');
+var AppAdminSection = require('./AppAdminSection.react');
+var Router = require('../utils/Router').RouterMixin;
 
 function getStateFromStores() {
   return {
     isAuthenticated: TokenStore.isAuthenticated(),
     profile: ProfileStore.getProfile(),
-    route: Router.getRoute()
   };
 }
 
 var SsoDashboardApp = React.createClass({
+  mixins: [Router],
+
   getInitialState: function() {
     return getStateFromStores();
   },
@@ -23,27 +27,34 @@ var SsoDashboardApp = React.createClass({
   componentDidMount: function() {
     TokenStore.addChangeListener(this._onChange);
     ProfileStore.addChangeListener(this._onChange);
-    Router.addNavigatedListener(this._onChange);
   },
 
   componentWillUnmount: function() {
     TokenStore.removeChangeListener(this._onChange);
     ProfileStore.removeChangeListener(this._onChange);
-    Router.removeNavigatedListener(this._onChange);
   },
 
-  render: function() {
-    var body;
+  getSection: function() {
+    var section;
     if (this.state.isAuthenticated) {
-      switch(this.state.route) {
+      switch(this.state.currentRoute) {
         case '/':
-          body = <ApplicationList />
+          section = <ApplicationList />
           break;
         case '/admin':
-          body = (<AdminSection />);
+          section = <AdminSection />;
+          break;
+        case '/admin/users':
+          section = <UserAdminSection />;
+          break;
+        case '/admin/clients':
+          section = <AppAdminSection />;
+          break;
+        case '/admin/settings':
+          section = <SettingsAdminSection />
           break;
         default:
-          body = (
+          section = (
             <div className="container">
               <div className="row page-header">
                 <h2>404: Page Not Found</h2>
@@ -55,12 +66,18 @@ var SsoDashboardApp = React.createClass({
           );
       }
     } else {
-      body = <LoginWidget />
+      section = <LoginWidget />
     }
+    return section;
+  },
+
+  render: function() {
+    var section = this.getSection();
+
     return (
       <div>
         <Navbar profile={this.state.profile} />
-        {body}
+        {section}
       </div>
     );
   },

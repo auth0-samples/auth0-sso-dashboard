@@ -31,7 +31,7 @@ gulp.task('clean', function(cb) {
   del(['build'], cb);
 });
 
-gulp.task('css', ['clean'], function () {
+gulp.task('css', function () {
   return gulp.src('app/styles/style.less')
     .pipe(less())
     .pipe(rename(function(path) {
@@ -90,7 +90,7 @@ function scripts(production, watch) {
 }
 
 gulp.task('js-watch', scripts.bind(null, false, true));
-gulp.task('js', ['clean'], scripts.bind(null, true, false));
+gulp.task('js', scripts.bind(null, true, false));
 gulp.task('js-minify', ['js'], function() {
   return gulp.src('./build/bundle.js')
     .pipe(uglify())
@@ -101,4 +101,4 @@ gulp.task('js-minify', ['js'], function() {
 });
 
 gulp.task('start', ['css-watch', 'js-watch', 'serve']);
-gulp.task('package', ['css-minify', 'js-minify']);
+gulp.task('package', ['clean', 'css-minify', 'js-minify']);

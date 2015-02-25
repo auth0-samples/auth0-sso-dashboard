@@ -4,10 +4,11 @@ var assign = require('object-assign');
 
 var NAVIGATED_EVENT = 'navigated';
 
-module.exports = assign({}, EventEmitter.prototype, {
+var Router = assign({}, EventEmitter.prototype, {
+
   navigate: function(route) {
     window.history.pushState(route, undefined, route);
-    this.emit(NAVIGATED_EVENT);
+    this.emitNavigated();
   },
 
   getRoute: function() {
@@ -17,6 +18,10 @@ module.exports = assign({}, EventEmitter.prototype, {
     } else {
       return window.location.pathname;
     }
+  },
+
+  emitNavigated: function() {
+    this.emit(NAVIGATED_EVENT);
   },
 
   /**
@@ -33,3 +38,47 @@ module.exports = assign({}, EventEmitter.prototype, {
     this.removeListener(NAVIGATED_EVENT, callback);
   }
 });
+
+// This is not exactly 'react' friendly because if you navigate too
+// quickly you can end up setting state on unmounted components which
+// will cause an error.
+window.onpopstate = function(event) {
+  Router.emitNavigated();
+}
+
+function getState() {
+  return {
+    currentRoute: Router.getRoute()
+  }
+}
+
+
+
+var RouterMixin = {
+  getInitialState: function() {
+    return getState();
+  },
+
+  navigate: function(route) {
+    Router.navigate(route);
+  },
+
+  componentWillMount: function() {
+    this.currentRoute = Router.getRoute();
+  },
+
+  componentDidMount: function() {
+    Router.addNavigatedListener(this._onNavigationChange);
+  },
+
+  componentWillUnmount: function() {
+    Router.removeNavigatedListener(this._onNavigationChange);
+  },
+
+  _onNavigationChange: function() {
+    this.setState(getState());
+  }
+};
+
+module.exports.Router = Router;
+module.exports.RouterMixin = RouterMixin;
