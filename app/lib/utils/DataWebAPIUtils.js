@@ -28,7 +28,6 @@ module.exports = {
     this._get(token, '/api/apps', null, AppActionCreators.receiveApps);
   },
 
-
   loadUsers: function(token, options) {
     this._get(token, '/api/proxy/users', options, UserActionCreators.receiveUsers);
   }

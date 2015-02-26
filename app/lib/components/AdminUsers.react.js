@@ -32,27 +32,12 @@ var AdminUsers = React.createClass({
     UserStore.removeChangeListener(this._onChange);
   },
 
+  handleClick: function(i) {
+    var user = this.state.users[i];
+    console.log('edit');
+  },
+
   render: function() {
-    var users = [];
-    if (this.state.users) {
-      this.state.users.map(function(user) {
-        var roles;
-        if (user.app_metadata && user.app_metadata.roles) {
-          roles = user.app_metadata.roles.join(', ');
-        }
-
-
-        users.push(
-          <tr>
-            <td>{user.name}</td>
-            <td>{user.email}</td>
-            <td>{moment(user.last_login).fromNow()}</td>
-            <td>{user.logins_count}</td>
-            <td>{roles}</td>
-          </tr>);
-      });
-    }
-
     return (
       <div className="container">
         <div className="row page-header">
@@ -67,10 +52,27 @@ var AdminUsers = React.createClass({
                 <td>Latest Login</td>
                 <td>Login Count</td>
                 <td>Roles</td>
+                <td width="20px"></td>
               </tr>
             </thead>
             <tbody>
-              {users}
+              {this.state.users.map(function(user, i) {
+                var boundClick = this.handleClick.bind(this, i);
+                var roles;
+                if (user.app_metadata && user.app_metadata.roles) {
+                  roles = user.app_metadata.roles.join(', ');
+                }
+                return (
+                  <tr key={user.user_id}>
+                    <td>{user.name}</td>
+                    <td>{user.email}</td>
+                    <td>{moment(user.last_login).fromNow()}</td>
+                    <td>{user.logins_count}</td>
+                    <td>{roles}</td>
+                    <td><span className="table-button glyphicon glyphicon-cog" aria-hidden="true" onClick={boundClick}></span></td>
+                  </tr>
+                );
+              }, this)}
             </tbody>
           </table>
         </div>
