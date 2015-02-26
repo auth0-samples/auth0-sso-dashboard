@@ -1,5 +1,6 @@
 var React = require('react');
 var AuthActionCreators = require('../actions/AuthActionCreators');
+var Link = require('react-router').Link;
 
 var ProfileMenu = React.createClass({
   render: function() {
@@ -16,10 +17,9 @@ var ProfileMenu = React.createClass({
           <img src={profileImageUrl} className="profile-image img-circle" /> <span id="name">{displayName}</span> <b className="caret"></b>
         </a>
         <ul className="dropdown-menu">
-          <li><a href="#"><i className="fa fa-cog"></i> Account</a>
-          </li>
+          <li><Link to="/account"><i className="glyphicon glyphicon-user logout"></i> Account</Link></li>
           <li className="divider"></li>
-          <li><a onClick={this.handleLogout} className="logout"><i className="fa fa-sign-out logout"></i> Logout</a>
+          <li><a onClick={this.handleLogout} className="logout"><i className="glyphicon glyphicon-log-out logout"></i> Logout</a>
           </li>
         </ul>
       </li>
