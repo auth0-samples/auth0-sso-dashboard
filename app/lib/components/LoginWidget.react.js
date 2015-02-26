@@ -10,8 +10,11 @@ var LoginWidget = React.createClass({
 
   componentDidMount: function() {
     var lock = window.lock;
-      
-    lock.show(function(err, profile, token) {
+
+    lock.show({
+      closable: false,
+      connections: [config.default_connection]
+    }, function(err, profile, token) {
       if (err) {
         // Error callback
         alert('There was an error');
