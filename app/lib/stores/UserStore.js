@@ -11,7 +11,7 @@ function setUsers(users) {
   _users = users;
 }
 
-function setUsers() {
+function getUsers() {
   return _users;
 }
 
