@@ -1,6 +1,7 @@
 var request = require('browser-request');
 var AppActionCreators = require('../actions/AppActionCreators');
 var UserActionCreators = require('../actions/UserActionCreators');
+var RoleActionCreators = require('../actions/RoleActionCreators');
 var qs = require('querystring');
 
 module.exports = {
@@ -26,6 +27,12 @@ module.exports = {
 
   loadUserApps: function(token) {
     this._get(token, '/api/apps', null, AppActionCreators.receiveApps);
+  },
+
+  loadRoles: function(token) {
+    this._get(token, '/api/roles', null, function(data) {
+      RoleActionCreators.receiveRoles(data.roles);
+    });
   },
 
   loadUsers: function(token, options) {
