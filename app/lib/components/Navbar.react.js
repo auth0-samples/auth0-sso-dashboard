@@ -1,6 +1,7 @@
 var React = require('react');
 var ProfileMenu = require('./ProfileMenu.react');
 var NavbarMenuItem = require('./NavbarMenuItem.react');
+var Link = require('react-router').Link;
 
 var Navbar = React.createClass({
   render: function() {
@@ -16,7 +17,7 @@ var Navbar = React.createClass({
               <span className="icon-bar"></span>
               <span className="icon-bar"></span>
             </button>
-            <a className="navbar-brand" href="/">{title}</a>
+            <Link className="navbar-brand" to="app">{title}</Link>
           </div>
           <div id="navbar" className="navbar-collapse collapse">
             <ul id="navbar-menu" className="nav navbar-nav navbar-right">

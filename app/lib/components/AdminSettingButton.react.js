@@ -7,7 +7,9 @@ var AdminSettingButton = React.createClass({
   render: function() {
     return (
       <div className="app" onClick={this.handleClick}>
-        <div className={'icon ' + this.props.icon}></div>
+        <div className="mui-paper mui-z-depth-3 mui-rounded icon">
+          <span className={'glyphicon ' + this.props.icon}></span>
+        </div>
         <a className="name" onClick={this.handleClick}>{this.props.name}</a>
       </div>
     );

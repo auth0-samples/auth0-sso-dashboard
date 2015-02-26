@@ -32,7 +32,7 @@ gulp.task('clean', function(cb) {
 });
 
 gulp.task('css', function () {
-  return gulp.src('app/styles/style.less')
+  return gulp.src('app/styles/main.less')
     .pipe(less())
     .pipe(rename(function(path) {
       path.basename = "bundle"

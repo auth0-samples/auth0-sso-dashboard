@@ -9,10 +9,10 @@ var AdminDashboard = React.createClass({
           <h2>Administration</h2>
         </div>
         <div className="row" id="apps">
-          <AdminSettingsButton name="Settings" route="admin-settings" icon="icon-budicon-330" />
-          <AdminSettingsButton name="Users" route="admin-users" icon="icon-budicon-292" />
-          <AdminSettingsButton name="Apps" route="admin-apps" icon="icon-budicon-375" />
-          <AdminSettingsButton name="Roles" route="admin-roles" icon="icon-budicon-294" />
+          <AdminSettingsButton name="Settings" route="admin-settings" icon="glyphicon-cog" />
+          <AdminSettingsButton name="Users" route="admin-users" icon="glyphicon-user" />
+          <AdminSettingsButton name="Apps" route="admin-apps" icon="glyphicon-th" />
+          <AdminSettingsButton name="Roles" route="admin-roles" icon="glyphicon-ok" />
         </div>
       </div>
     );
