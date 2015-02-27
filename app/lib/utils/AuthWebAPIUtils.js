@@ -17,6 +17,10 @@ module.exports = {
         ProfileActionCreators.receiveProfile(body);
       }
     });
+  },
+
+  refreshToken: function(token) {
+
   }
 
 };

@@ -2,6 +2,7 @@ var React = require('react');
 var DataWebAPIUtils = require('../utils/DataWebAPIUtils');
 var RoleStore = require('../stores/RoleStore');
 var Mixins = require('../mixins');
+var TableToolbar = require('./TableToolbar.react');
 
 function getStateFromStores() {
   return {
@@ -39,6 +40,7 @@ var AdminRoles = React.createClass({
           <h2>Administration: Roles</h2>
         </div>
         <div className="row" id="apps">
+          <TableToolbar />
           <table className="table">
             <thead>
               <tr>
