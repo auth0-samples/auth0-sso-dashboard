@@ -3,9 +3,9 @@ var Router = require('react-router');
 
 var Navbar = require('./Navbar.react');
 var LoginWidget = require('./LoginWidget.react');
-var TokenStore = require('../stores/TokenStore');
 var ProfileStore = require('../stores/ProfileStore');
 var SsoDashboardSection = require('./SsoDashboardSection.react');
+var Mixins = require('../mixins');
 
 var AdminSection = require('./AdminSection.react');
 var AdminUsers = require('./AdminUsers.react');
@@ -16,37 +16,34 @@ var AdminRoles = require('./AdminRoles.react')
 
 
 var DefaultRoute = Router.DefaultRoute;
-var Link = Router.Link;
 var Route = Router.Route;
 var RouteHandler = Router.RouteHandler;
 
 function getStateFromStores() {
   return {
-    isAuthenticated: TokenStore.isAuthenticated(),
     profile: ProfileStore.getProfile(),
   };
 }
 
 var App = React.createClass({
+  mixins: [Mixins.TokenState],
 
   getInitialState: function() {
     return getStateFromStores();
   },
 
   componentDidMount: function() {
-    TokenStore.addChangeListener(this._onChange);
     ProfileStore.addChangeListener(this._onChange);
   },
 
   componentWillUnmount: function() {
-    TokenStore.removeChangeListener(this._onChange);
     ProfileStore.removeChangeListener(this._onChange);
   },
 
   render: function() {
     var body = <LoginWidget/>;
     if (this.state.isAuthenticated) {
-      body = <RouteHandler {...this.props} />;
+      body = <RouteHandler />;
     }
 
     return (
@@ -79,7 +76,7 @@ var routes = (
 );
 
 module.exports.init = function(config) {
-  Router.run(routes, Router.HistoryLocation, function (Handler, state) {
+  Router.run(routes, Router.HistoryLocation, function (Handler) {
     React.render(<Handler />, document.body);
   });
 }

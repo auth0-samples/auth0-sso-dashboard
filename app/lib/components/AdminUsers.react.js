@@ -1,23 +1,23 @@
 var React = require('react');
 var DataWebAPIUtils = require('../utils/DataWebAPIUtils');
 var UserStore = require('../stores/UserStore');
-var TokenStore = require('../stores/TokenStore');
+var Mixins = require('../mixins');
 var moment = require('moment');
 
 function getStateFromStores() {
   return {
-    token: TokenStore.get(),
     users: UserStore.getAll()
   };
 }
 
 var AdminUsers = React.createClass({
+  mixins: [Mixins.TokenState],
+
   getInitialState: function() {
     return getStateFromStores();
   },
 
   componentDidMount: function() {
-    TokenStore.addChangeListener(this._onChange);
     UserStore.addChangeListener(this._onChange);
     if (this.state.token) {
       DataWebAPIUtils.loadUsers(this.state.token, {
@@ -28,7 +28,6 @@ var AdminUsers = React.createClass({
   },
 
   componentWillUnmount: function() {
-    TokenStore.removeChangeListener(this._onChange);
     UserStore.removeChangeListener(this._onChange);
   },
 

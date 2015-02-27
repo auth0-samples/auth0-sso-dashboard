@@ -1,22 +1,22 @@
 var React = require('react');
 var DataWebAPIUtils = require('../utils/DataWebAPIUtils');
 var RoleStore = require('../stores/RoleStore');
-var TokenStore = require('../stores/TokenStore');
+var Mixins = require('../mixins');
 
 function getStateFromStores() {
   return {
-    token: TokenStore.get(),
     roles: RoleStore.getAll()
   };
 }
 
 var AdminRoles = React.createClass({
+  mixins: [Mixins.TokenState],
+
   getInitialState: function() {
     return getStateFromStores();
   },
 
   componentDidMount: function() {
-    TokenStore.addChangeListener(this._onChange);
     RoleStore.addChangeListener(this._onChange);
     if (this.state.token) {
       DataWebAPIUtils.loadRoles(this.state.token);
@@ -24,7 +24,6 @@ var AdminRoles = React.createClass({
   },
 
   componentWillUnmount: function() {
-    TokenStore.removeChangeListener(this._onChange);
     RoleStore.removeChangeListener(this._onChange);
   },
 
@@ -57,7 +56,7 @@ var AdminRoles = React.createClass({
                   apps = role.apps.join(', ');
                 }
                 return (
-                  <tr key={role.name}>
+                  <tr key={role.id}>
                     <td>{role.name}</td>
                     <td>{role.all_apps == true ? 'Yes' : 'No'}</td>
                     <td>{apps}</td>
