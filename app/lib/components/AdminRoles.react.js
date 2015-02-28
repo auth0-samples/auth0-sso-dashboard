@@ -2,7 +2,7 @@ var React = require('react');
 var DataWebAPIUtils = require('../utils/DataWebAPIUtils');
 var RoleStore = require('../stores/RoleStore');
 var Mixins = require('../mixins');
-var TableToolbar = require('./TableToolbar.react');
+var Button = require('./Button.react');
 
 function getStateFromStores() {
   return {
@@ -37,10 +37,14 @@ var AdminRoles = React.createClass({
     return (
       <div className="container">
         <div className="row page-header">
-          <h2>Administration: Roles</h2>
+          <div className="col-md-8">
+            <h2>Administration: Roles</h2>
+          </div>
+          <div className="col-md-4">
+          <Button className="pull-right"><i className="glyphicon glyphicon-plus"></i> New Role</Button>
+          </div>
         </div>
         <div className="row" id="apps">
-          <TableToolbar />
           <table className="table">
             <thead>
               <tr>
