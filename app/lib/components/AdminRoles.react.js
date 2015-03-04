@@ -1,12 +1,13 @@
 var React = require('react');
 var DataWebAPIUtils = require('../utils/DataWebAPIUtils');
 var RoleStore = require('../stores/RoleStore');
+var AppStore = require('../stores/AppStore');
 var Mixins = require('../mixins');
-var Button = require('./Button.react');
 
 function getStateFromStores() {
   return {
-    roles: RoleStore.getAll()
+    roles: RoleStore.getAll(),
+    apps: AppStore.getAll()
   };
 }
 
@@ -19,13 +20,16 @@ var AdminRoles = React.createClass({
 
   componentDidMount: function() {
     RoleStore.addChangeListener(this._onChange);
+    AppStore.addChangeListener(this._onChange);
     if (this.state.token) {
       DataWebAPIUtils.loadRoles(this.state.token);
+      DataWebAPIUtils.loadApps(this.state.token);
     }
   },
 
   componentWillUnmount: function() {
     RoleStore.removeChangeListener(this._onChange);
+    AppStore.removeChangeListener(this._onChange);
   },
 
   handleClick: function(i) {
@@ -41,7 +45,8 @@ var AdminRoles = React.createClass({
             <h2>Administration: Roles</h2>
           </div>
           <div className="col-md-4">
-          <Button className="pull-right"><i className="glyphicon glyphicon-plus"></i> New Role</Button>
+            <button className="btn btn-primary pull-right" data-toggle="modal" data-target="#role-modal"><i className="glyphicon glyphicon-plus"></i> New Role</button>
+            <RoleModal id="role-modal" title="New Role" apps={this.state.apps} />
           </div>
         </div>
         <div className="row" id="apps">
@@ -84,5 +89,40 @@ var AdminRoles = React.createClass({
     this.setState(getStateFromStores());
   }
 });
+
+var Forms = require('./Forms.react');
+
+var RoleModal = React.createClass({
+  render: function() {
+    return(
+      <div className="modal fade" id={this.props.id} tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div className="modal-dialog">
+          <div className="modal-content">
+            <div className="modal-header">
+              <button type="button" className="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <h4 className="modal-title" id="myModalLabel">{this.props.title}</h4>
+            </div>
+            <div className="modal-body">
+              <form className="form-horizontal">
+                <Forms.TextInput name="name" label="Name" placeholder="Name" />
+                <Forms.Checkbox name="all-apps" label="Allow all apps" />
+                <fieldset>
+                  <label>Apps</label>
+                  {this.props.apps.map(function(app, i) {
+                    return <Forms.Checkbox name={'app-' + app.id} label={app.name} />
+                  })}
+                </fieldset>
+              </form>
+            </div>
+            <div className="modal-footer">
+              <button type="button" className="btn btn-default" data-dismiss="modal">Close</button>
+              <button type="button" className="btn btn-primary">Save changes</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+})
 
 module.exports = AdminRoles;

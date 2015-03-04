@@ -26,7 +26,11 @@ module.exports = {
   },
 
   loadUserApps: function(token) {
-    this._get(token, '/api/apps', null, AppActionCreators.receiveApps);
+    this._get(token, '/api/user/apps', null, AppActionCreators.receiveUserApps);
+  },
+
+  loadApps: function(token) {
+    this._get(token, '/api/apps', null, AppActionCreators.recieveApps)
   },
 
   loadRoles: function(token) {

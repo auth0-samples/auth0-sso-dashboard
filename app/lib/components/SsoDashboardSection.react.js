@@ -1,10 +1,10 @@
 var React = require('react');
-var AppStore = require('../stores/AppStore');
+var UserAppStore = require('../stores/UserAppStore');
 var ApplicationListItem = require('./ApplicationListItem.react');
 
 function getStateFromStores() {
   return {
-    apps: AppStore.getAll()
+    apps: UserAppStore.getAll()
   };
 }
 
@@ -23,11 +23,11 @@ var ApplicationList = React.createClass({
   },
 
   componentDidMount: function() {
-    AppStore.addChangeListener(this._onChange);
+    UserAppStore.addChangeListener(this._onChange);
   },
 
   componentWillUnmount: function() {
-    AppStore.removeChangeListener(this._onChange);
+    UserAppStore.removeChangeListener(this._onChange);
   },
 
   render: function() {

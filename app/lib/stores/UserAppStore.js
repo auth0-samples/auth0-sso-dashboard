@@ -50,11 +50,11 @@ AppDispatcher.register(function(action) {
   switch(action.actionType) {
     case AppConstants.RECEIVED_USER_APPS:
       setApps(action.apps);
-      AppStore.emitChange();
+      UserAppStore.emitChange();
       break;
     case AppConstants.USER_LOGGED_OUT:
       setApps();
-      AppStore.emitChange();
+      UserAppStore.emitChange();
     default:
       // no op
   }
