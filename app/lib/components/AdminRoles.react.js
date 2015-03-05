@@ -3,6 +3,7 @@ var DataWebAPIUtils = require('../utils/DataWebAPIUtils');
 var RoleStore = require('../stores/RoleStore');
 var AppStore = require('../stores/AppStore');
 var Mixins = require('../mixins');
+var UI = require('./UI.react');
 
 function getStateFromStores() {
   return {
@@ -40,15 +41,10 @@ var AdminRoles = React.createClass({
   render: function() {
     return (
       <div className="container">
-        <div className="row page-header">
-          <div className="col-md-8">
-            <h2>Administration: Roles</h2>
-          </div>
-          <div className="col-md-4">
-            <button className="btn btn-primary pull-right" data-toggle="modal" data-target="#role-modal"><i className="glyphicon glyphicon-plus"></i> New Role</button>
-            <RoleModal id="role-modal" title="New Role" apps={this.state.apps} />
-          </div>
-        </div>
+        <UI.PageHeader title="Administration: Apps">
+          <button className="btn btn-primary pull-right" data-toggle="modal" data-target="#role-modal"><i className="glyphicon glyphicon-plus"></i> New Role</button>
+          <RoleModal id="role-modal" title="New Role" apps={this.state.apps} />
+        </UI.PageHeader>
         <div className="row" id="apps">
           <table className="table">
             <thead>

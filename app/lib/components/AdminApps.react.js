@@ -2,6 +2,7 @@ var React = require('react');
 var DataWebAPIUtils = require('../utils/DataWebAPIUtils');
 var AppStore = require('../stores/AppStore');
 var Mixins = require('../mixins');
+var UI = require('./UI.react');
 
 function getStateFromStores() {
   return {
@@ -35,14 +36,7 @@ var AdminApps = React.createClass({
   render: function() {
     return (
       <div className="container">
-        <div className="row page-header">
-          <div className="col-md-8">
-            <h2>Administration: Apps</h2>
-          </div>
-          <div className="col-md-4">
-            
-          </div>
-        </div>
+        <UI.PageHeader title="Administration: Apps" />
         <div className="row" id="apps">
           <table className="table">
             <thead>
@@ -55,7 +49,7 @@ var AdminApps = React.createClass({
               {this.state.apps.map(function(app, i) {
                 var boundClick = this.handleClick.bind(this, i);
                 return (
-                  <tr key={app.id}>
+                  <tr key={app.client_id}>
                     <td>{app.name}</td>
                     <td><span className="table-button glyphicon glyphicon-cog" aria-hidden="true" onClick={boundClick}></span></td>
                   </tr>

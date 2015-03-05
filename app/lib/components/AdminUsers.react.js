@@ -3,6 +3,7 @@ var DataWebAPIUtils = require('../utils/DataWebAPIUtils');
 var UserStore = require('../stores/UserStore');
 var Mixins = require('../mixins');
 var moment = require('moment');
+var UI = require('./UI.react');
 
 function getStateFromStores() {
   return {
@@ -39,9 +40,7 @@ var AdminUsers = React.createClass({
   render: function() {
     return (
       <div className="container">
-        <div className="row page-header">
-          <h2>Administration: Users</h2>
-        </div>
+        <UI.PageHeader title="Administration: Users" />
         <div className="row" id="apps">
           <table className="table">
             <thead>

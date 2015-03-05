@@ -1,12 +1,11 @@
 var React = require('react');
+var UI = require('./UI.react');
 
 var AdminSettings = React.createClass({
   render: function() {
     return (
       <div className="container">
-        <div className="row page-header">
-          <h2>Administration: Settings</h2>
-        </div>
+        <UI.PageHeader title="Administration: Settings" />
         <div className="row" id="apps">
           Settings Admin
         </div>

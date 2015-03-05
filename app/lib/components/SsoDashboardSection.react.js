@@ -1,6 +1,7 @@
 var React = require('react');
 var UserAppStore = require('../stores/UserAppStore');
 var ApplicationListItem = require('./ApplicationListItem.react');
+var UI = require('./UI.react');
 
 function getStateFromStores() {
   return {
@@ -38,9 +39,7 @@ var ApplicationList = React.createClass({
     }
     return (
       <div className="container">
-        <div className="row page-header">
-          <h2>Your Applications</h2>
-        </div>
+        <UI.PageHeader title="Your Applications" />
         <div className="row" id="apps">
           {inner}
         </div>
