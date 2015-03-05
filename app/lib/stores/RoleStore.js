@@ -8,7 +8,7 @@ var CHANGE_EVENT = 'change';
 
 var _roles = [];
 function setRoles(roles) {
-  _roles = roles;
+  _roles = roles || [];
 }
 
 function getRoles() {

@@ -3,12 +3,13 @@ var AppDispatcher = require('../dispatcher/AppDispatcher');
 var EventEmitter = require('events').EventEmitter;
 var AppConstants = require('../constants/AppConstants');
 var assign = require('object-assign');
+var DataWebAPIUtils = require('../utils/DataWebAPIUtils');
 
 var CHANGE_EVENT = 'change';
 
 var _apps = [];
 function setApps(apps) {
-  _apps = apps;
+  _apps = apps || [];
 }
 
 function getApps() {
@@ -55,6 +56,9 @@ AppDispatcher.register(function(action) {
     case AppConstants.USER_LOGGED_OUT:
       setApps();
       UserAppStore.emitChange();
+    case AppConstants.USER_AUTHENTICATED:
+      DataWebAPIUtils.loadUserApps(action.token);
+      break;
     default:
       // no op
   }

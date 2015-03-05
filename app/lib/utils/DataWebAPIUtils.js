@@ -2,6 +2,7 @@ var request = require('browser-request');
 var AppActionCreators = require('../actions/AppActionCreators');
 var UserActionCreators = require('../actions/UserActionCreators');
 var RoleActionCreators = require('../actions/RoleActionCreators');
+var AuthActionCreators = require('../actions/AuthActionCreators');
 var qs = require('querystring');
 
 module.exports = {
@@ -16,8 +17,12 @@ module.exports = {
         'Authorization': 'Bearer ' + token
       }
     }, function(error, response, body) {
-      if (error) {
-        throw error;
+      if (error || response.statusCode !== 200) {
+        if (response.statusCode === 401) {
+          AuthActionCreators.logout();
+        }
+        console.log({ message: 'Error making HTTP Request', error: error, statusCode: response.statusCode });
+        return;
       } else {
         var data = JSON.parse(body);
         callback(data);

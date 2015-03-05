@@ -1,7 +1,5 @@
 var AppDispatcher = require('../dispatcher/AppDispatcher');
 var AppConstants = require('../constants/AppConstants');
-var AuthWebAPIUtils = require('../utils/AuthWebAPIUtils');
-var DataWebAPIUtils = require('../utils/DataWebAPIUtils');
 
 module.exports = {
 
@@ -13,8 +11,6 @@ module.exports = {
       actionType: AppConstants.USER_AUTHENTICATED,
       token: token
     });
-    AuthWebAPIUtils.loadUserProfile(token);
-    DataWebAPIUtils.loadUserApps(token);
   },
 
   logout: function() {

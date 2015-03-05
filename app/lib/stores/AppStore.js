@@ -8,7 +8,7 @@ var CHANGE_EVENT = 'change';
 
 var _apps = [];
 function setApps(apps) {
-  _apps = apps;
+  _apps = apps || [];
 }
 
 function getApps() {

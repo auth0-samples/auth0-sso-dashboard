@@ -3,6 +3,7 @@ var AppDispatcher = require('../dispatcher/AppDispatcher');
 var EventEmitter = require('events').EventEmitter;
 var AppConstants = require('../constants/AppConstants');
 var assign = require('object-assign');
+var AuthWebAPIUtils = require('../utils/AuthWebAPIUtils');
 
 var CHANGE_EVENT = 'change';
 
@@ -56,7 +57,9 @@ AppDispatcher.register(function(action) {
       setProfile();
       ProfileStore.emitChange();
       break;
-
+    case AppConstants.USER_AUTHENTICATED:
+      AuthWebAPIUtils.loadUserProfile(action.token);
+      break;
     default:
       // no op
   }

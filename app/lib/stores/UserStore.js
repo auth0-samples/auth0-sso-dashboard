@@ -8,7 +8,7 @@ var CHANGE_EVENT = 'change';
 
 var _users = [];
 function setUsers(users) {
-  _users = users;
+  _users = users || [];
 }
 
 function getUsers() {
