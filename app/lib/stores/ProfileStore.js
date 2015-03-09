@@ -1,18 +1,17 @@
-
-var AppDispatcher = require('../dispatcher/AppDispatcher');
-var AppConstants = require('../constants/AppConstants');
+var Dispatcher = require('../Dispatcher');
+var Constants = require('../Constants');
 var Store = require('./Store');
 
 var ProfileStore = new Store({});
 
 // Register callback to handle all updates
-AppDispatcher.register(function(action) {
+Dispatcher.register(function(action) {
 
   switch(action.actionType) {
-    case AppConstants.RECEIVED_PROFILE:
+    case Constants.RECEIVED_PROFILE:
       ProfileStore.set(action.profile);
       break;
-    case AppConstants.USER_LOGGED_OUT:
+    case Constants.USER_LOGGED_OUT:
       ProfileStore.set();
       break;
     default:

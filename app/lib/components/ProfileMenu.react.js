@@ -1,5 +1,5 @@
 var React = require('react');
-var AuthActionCreators = require('../actions/AuthActionCreators');
+var AuthActions = require('../actions/AuthActions');
 var Link = require('react-router').Link;
 
 var ProfileMenu = React.createClass({
@@ -27,7 +27,7 @@ var ProfileMenu = React.createClass({
   },
 
   handleLogout: function(event) {
-    AuthActionCreators.logout();
+    AuthActions.logout();
   }
 
 });

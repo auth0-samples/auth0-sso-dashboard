@@ -1,5 +1,6 @@
 var React = require('react');
-var RoleActionCreators = require('../actions/RoleActionCreators');
+var RoleActions = require('../actions/RoleActions');
+var AppActions = require('../actions/AppActions');
 var RoleStore = require('../stores/RoleStore');
 var AppStore = require('../stores/AppStore');
 var Mixins = require('../mixins');
@@ -24,7 +25,8 @@ var AdminRoles = React.createClass({
     RoleStore.addChangeListener(this._onChange);
     AppStore.addChangeListener(this._onChange);
     if (this.state.token) {
-      RoleActionCreators.getRoles(this.state.token);
+      AppActions.getApps(this.state.token);
+      RoleActions.getRoles(this.state.token);
     }
   },
 
@@ -41,7 +43,7 @@ var AdminRoles = React.createClass({
   render: function() {
     return (
       <div className="container">
-        <UI.PageHeader title="Administration: Apps">
+        <UI.PageHeader title="Administration: Roles">
           <BS.ModalTrigger modal={<RoleModal apps={this.state.apps} />}>
             <BS.Button bsStyle="primary" className="pull-right">
               <i className="glyphicon glyphicon-plus"></i> New Role
@@ -142,8 +144,8 @@ var RoleModal = React.createClass({
       name: this.state.name,
       all_apps: this.state.all_apps,
       apps: this.state.apps
-    }
-    console.log(JSON.stringify(role));
+    };
+    RoleActions.save(role);
   },
 
   allAppsChanged: function(event) {

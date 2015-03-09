@@ -2,7 +2,7 @@ var React = require('react');
 var AppStore = require('../stores/AppStore');
 var Mixins = require('../mixins');
 var UI = require('./UI.react');
-var AppActionCreators = require('../Actions/AppActionCreators');
+var AppActions = require('../Actions/AppActions');
 
 function getStateFromStores() {
   return {
@@ -20,7 +20,7 @@ var AdminApps = React.createClass({
   componentDidMount: function() {
     AppStore.addChangeListener(this._onChange);
     if (this.state.token) {
-      AppActionCreators.getApps(this.state.token);
+      AppActions.getApps(this.state.token);
     }
   },
 

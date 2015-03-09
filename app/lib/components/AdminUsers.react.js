@@ -1,5 +1,5 @@
 var React = require('react');
-var DataWebAPIUtils = require('../utils/DataWebAPIUtils');
+var UserActions = require('../actions/UserActions');
 var UserStore = require('../stores/UserStore');
 var Mixins = require('../mixins');
 var moment = require('moment');
@@ -21,10 +21,7 @@ var AdminUsers = React.createClass({
   componentDidMount: function() {
     UserStore.addChangeListener(this._onChange);
     if (this.state.token) {
-      DataWebAPIUtils.loadUsers(this.state.token, {
-        per_page: 10,
-        page: 0
-      });
+      UserActions.getUsers();
     }
   },
 

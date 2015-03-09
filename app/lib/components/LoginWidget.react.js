@@ -1,5 +1,5 @@
 var React = require('react');
-var AuthActionCreators = require('../actions/AuthActionCreators');
+var AuthActions = require('../actions/AuthActions');
 
 var LoginWidget = React.createClass({
   render: function() {

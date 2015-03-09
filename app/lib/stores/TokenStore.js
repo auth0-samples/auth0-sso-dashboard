@@ -1,8 +1,7 @@
-
-var AppDispatcher = require('../dispatcher/AppDispatcher');
-var AppConstants = require('../constants/AppConstants');
+var Dispatcher = require('../Dispatcher');
+var Constants = require('../Constants');
 var Store = require('./Store');
-var AuthActionCreators = require('../actions/AuthActionCreators')
+var AuthActions = require('../actions/AuthActions')
 
 var TokenStore = new Store({});
 TokenStore.get = function() {
@@ -27,21 +26,20 @@ TokenStore.isAuthenticated = function() {
 TokenStore.init = function() {
   var token = this.get();
   if (token) {
-    AuthActionCreators.authenticated(token);
+    AuthActions.authenticated(token);
   }
 }
 
 // Register callback to handle all updates
-AppDispatcher.register(function(action) {
+Dispatcher.register(function(action) {
 
   switch(action.actionType) {
-    case AppConstants.USER_AUTHENTICATED:
+    case Constants.USER_AUTHENTICATED:
       TokenStore.set(action.token);
       break;
-    case AppConstants.USER_LOGGED_OUT:
+    case Constants.USER_LOGGED_OUT:
       TokenStore.set();
       break;
-
     default:
       // no op
   }

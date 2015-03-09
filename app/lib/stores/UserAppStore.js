@@ -1,18 +1,17 @@
-
-var AppDispatcher = require('../dispatcher/AppDispatcher');
-var AppConstants = require('../constants/AppConstants');
+var Dispatcher = require('../Dispatcher');
+var Constants = require('../Constants');
 var Store = require('./Store');
 
 var UserAppStore = new Store([]);
 
 // Register callback to handle all updates
-AppDispatcher.register(function(action) {
+Dispatcher.register(function(action) {
 
   switch(action.actionType) {
-    case AppConstants.RECEIVED_USER_APPS:
+    case Constants.RECEIVED_USER_APPS:
       UserAppStore.set(action.apps);
       break;
-    case AppConstants.USER_LOGGED_OUT:
+    case Constants.USER_LOGGED_OUT:
       UserAppStore.set();
       break;
     default:
