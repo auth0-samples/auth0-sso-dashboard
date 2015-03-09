@@ -9,10 +9,12 @@
     "debug": "~2.1.1",
     "express": "~4.11.1",
     "express-jwt": "^1.0.0",
+    "immutable": "^3.6.4",
     "jade": "^1.9.2",
     "json-proxy": "^0.3.0",
     "lodash": "^3.2.0",
     "morgan": "~1.5.1",
+    "react-bootstrap": "^0.16.1",
     "request": "^2.53.0",
     "serve-favicon": "~2.2.0"
   },

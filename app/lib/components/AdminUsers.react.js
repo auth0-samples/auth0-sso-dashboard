@@ -7,7 +7,7 @@ var UI = require('./UI.react');
 
 function getStateFromStores() {
   return {
-    users: UserStore.getAll()
+    users: UserStore.get()
   };
 }
 

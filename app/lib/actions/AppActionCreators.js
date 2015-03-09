@@ -1,5 +1,6 @@
 var AppDispatcher = require('../dispatcher/AppDispatcher');
 var AppConstants = require('../constants/AppConstants');
+var DataWebAPIUtils = require('../utils/DataWebAPIUtils');
 
 module.exports = {
 
@@ -13,6 +14,10 @@ module.exports = {
     });
   },
 
+  getApps: function(token) {
+    DataWebAPIUtils.loadApps(token);
+  },
+ 
   recieveApps: function(apps) {
     AppDispatcher.dispatch({
       actionType: AppConstants.RECEIVED_APPS,

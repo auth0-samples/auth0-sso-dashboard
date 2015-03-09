@@ -1,7 +1,8 @@
 var request = require('browser-request');
 var AppActionCreators = require('../actions/AppActionCreators');
 var UserActionCreators = require('../actions/UserActionCreators');
-var RoleActionCreators = require('../actions/RoleActionCreators');
+var Dispatcher = require('../dispatcher/AppDispatcher');
+var AppConstants = require('../constants/AppConstants');
 var AuthActionCreators = require('../actions/AuthActionCreators');
 var qs = require('querystring');
 
@@ -40,8 +41,15 @@ module.exports = {
 
   loadRoles: function(token) {
     this._get(token, '/api/roles', null, function(data) {
-      RoleActionCreators.receiveRoles(data.roles);
+      Dispatcher.dispatch({
+        actionType: AppConstants.RECEIVED_ROLES,
+        roles: data.roles
+      });
     });
+  },
+
+  saveRole: function(token, role, callback) {
+    console.log('saving role');;
   },
 
   loadUsers: function(token, options) {

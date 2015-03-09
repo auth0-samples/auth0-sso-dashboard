@@ -1,60 +1,19 @@
 
 var AppDispatcher = require('../dispatcher/AppDispatcher');
-var EventEmitter = require('events').EventEmitter;
 var AppConstants = require('../constants/AppConstants');
-var assign = require('object-assign');
+var Store = require('./Store');
 
-var CHANGE_EVENT = 'change';
-
-var _apps = [];
-function setApps(apps) {
-  _apps = apps || [];
-}
-
-function getApps() {
-  return _apps;
-}
-
-var AppStore = assign({}, EventEmitter.prototype, {
-
-  /**
-   * Get the entire collection of TODOs.
-   * @return {object}
-   */
-  getAll: function() {
-    return getApps();
-  },
-
-  emitChange: function() {
-    this.emit(CHANGE_EVENT);
-  },
-
-  /**
-   * @param {function} callback
-   */
-  addChangeListener: function(callback) {
-    this.on(CHANGE_EVENT, callback);
-  },
-
-  /**
-   * @param {function} callback
-   */
-  removeChangeListener: function(callback) {
-    this.removeListener(CHANGE_EVENT, callback);
-  }
-});
+var AppStore = new Store([]);
 
 // Register callback to handle all updates
 AppDispatcher.register(function(action) {
 
   switch(action.actionType) {
     case AppConstants.RECEIVED_APPS:
-      setApps(action.apps);
-      AppStore.emitChange();
+      AppStore.set(action.apps);
       break;
     case AppConstants.USER_LOGGED_OUT:
-      setApps();
-      AppStore.emitChange();
+      AppStore.set();
     default:
       // no op
   }

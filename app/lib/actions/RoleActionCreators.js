@@ -1,15 +1,15 @@
 var AppDispatcher = require('../dispatcher/AppDispatcher');
 var AppConstants = require('../constants/AppConstants');
+var DataWebAPIUtils = require('../utils/DataWebAPIUtils');
 
 module.exports = {
 
-  /**
-   * @param  {array} roles
-   */
-  receiveRoles: function(roles) {
-    AppDispatcher.dispatch({
-      actionType: AppConstants.RECEIVED_ROLES,
-      roles: roles
+  getRoles: function(token) {
+    DataWebAPIUtils.loadRoles(token);
+  },
+
+  save: function(token, role) {
+    DataWebAPIUtils.saveRole(token, role, function(err) {
     });
   }
 

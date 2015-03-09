@@ -1,12 +1,12 @@
 var React = require('react');
-var DataWebAPIUtils = require('../utils/DataWebAPIUtils');
 var AppStore = require('../stores/AppStore');
 var Mixins = require('../mixins');
 var UI = require('./UI.react');
+var AppActionCreators = require('../Actions/AppActionCreators');
 
 function getStateFromStores() {
   return {
-    apps: AppStore.getAll()
+    apps: AppStore.get()
   };
 }
 
@@ -20,7 +20,7 @@ var AdminApps = React.createClass({
   componentDidMount: function() {
     AppStore.addChangeListener(this._onChange);
     if (this.state.token) {
-      DataWebAPIUtils.loadApps(this.state.token);
+      AppActionCreators.getApps(this.state.token);
     }
   },
 
@@ -42,6 +42,7 @@ var AdminApps = React.createClass({
             <thead>
               <tr>
                 <td>Name</td>
+                <td>Roles</td>
                 <td width="20px"></td>
               </tr>
             </thead>
@@ -51,6 +52,7 @@ var AdminApps = React.createClass({
                 return (
                   <tr key={app.client_id}>
                     <td>{app.name}</td>
+                    <td></td>
                     <td><span className="table-button glyphicon glyphicon-cog" aria-hidden="true" onClick={boundClick}></span></td>
                   </tr>
                 );

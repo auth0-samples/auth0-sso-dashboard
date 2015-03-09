@@ -1,14 +1,15 @@
 var React = require('react');
-var DataWebAPIUtils = require('../utils/DataWebAPIUtils');
+var RoleActionCreators = require('../actions/RoleActionCreators');
 var RoleStore = require('../stores/RoleStore');
 var AppStore = require('../stores/AppStore');
 var Mixins = require('../mixins');
 var UI = require('./UI.react');
+var BS = require('react-bootstrap');
 
 function getStateFromStores() {
   return {
-    roles: RoleStore.getAll(),
-    apps: AppStore.getAll()
+    roles: RoleStore.get(),
+    apps: AppStore.get()
   };
 }
 
@@ -23,8 +24,7 @@ var AdminRoles = React.createClass({
     RoleStore.addChangeListener(this._onChange);
     AppStore.addChangeListener(this._onChange);
     if (this.state.token) {
-      DataWebAPIUtils.loadRoles(this.state.token);
-      DataWebAPIUtils.loadApps(this.state.token);
+      RoleActionCreators.getRoles(this.state.token);
     }
   },
 
@@ -35,15 +35,18 @@ var AdminRoles = React.createClass({
 
   handleClick: function(i) {
     var role = this.state.roles[i];
-    console.log('edit');
+    this.setState({ activeRole: role });
   },
 
   render: function() {
     return (
       <div className="container">
         <UI.PageHeader title="Administration: Apps">
-          <button className="btn btn-primary pull-right" data-toggle="modal" data-target="#role-modal"><i className="glyphicon glyphicon-plus"></i> New Role</button>
-          <RoleModal id="role-modal" title="New Role" apps={this.state.apps} />
+          <BS.ModalTrigger modal={<RoleModal apps={this.state.apps} />}>
+            <BS.Button bsStyle="primary" className="pull-right">
+              <i className="glyphicon glyphicon-plus"></i> New Role
+            </BS.Button>
+          </BS.ModalTrigger>
         </UI.PageHeader>
         <div className="row" id="apps">
           <table className="table">
@@ -67,7 +70,11 @@ var AdminRoles = React.createClass({
                     <td>{role.name}</td>
                     <td>{role.all_apps == true ? 'Yes' : 'No'}</td>
                     <td>{apps}</td>
-                    <td><span className="table-button glyphicon glyphicon-cog" aria-hidden="true" onClick={boundClick}></span></td>
+                    <td>
+                      <BS.ModalTrigger modal={<RoleModal apps={this.state.apps} role={role} />}>
+                        <span className="table-button glyphicon glyphicon-cog" aria-hidden="true"></span>
+                      </BS.ModalTrigger>
+                    </td>
                   </tr>
                 );
               }, this)}
@@ -89,36 +96,76 @@ var AdminRoles = React.createClass({
 var Forms = require('./Forms.react');
 
 var RoleModal = React.createClass({
+  getInitialState: function() {
+    var role = this.props.role || {};
+    return {
+      name: role.name,
+      all_apps: role.all_apps || false,
+      apps: role.apps || [],
+    };
+  },
+
+
   render: function() {
+
+    var appList = [];
+
+    if (!this.state.all_apps) {
+      {this.props.apps.map((function(app, i) {
+        var checked = this.state.apps.indexOf(app.client_id) > -1;
+        appList.push(<Forms.Checkbox key={app.client_id} name={app.client_id} label={app.name} checked={checked} onChange={this.onAppSelected} />);
+      }).bind(this))}
+    }
+
     return(
-      <div className="modal fade" id={this.props.id} tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div className="modal-dialog">
-          <div className="modal-content">
-            <div className="modal-header">
-              <button type="button" className="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-              <h4 className="modal-title" id="myModalLabel">{this.props.title}</h4>
-            </div>
-            <div className="modal-body">
-              <form className="form-horizontal">
-                <Forms.TextInput name="name" label="Name" placeholder="Name" />
-                <Forms.Checkbox name="all-apps" label="Allow all apps" />
-                <fieldset>
-                  <label>Apps</label>
-                  {this.props.apps.map(function(app, i) {
-                    return <Forms.Checkbox name={'app-' + app.id} label={app.name} />
-                  })}
-                </fieldset>
-              </form>
-            </div>
-            <div className="modal-footer">
-              <button type="button" className="btn btn-default" data-dismiss="modal">Close</button>
-              <button type="button" className="btn btn-primary">Save changes</button>
-            </div>
-          </div>
+      <BS.Modal {...this.props} title="Modal heading" animation={false} title="New Role">
+        <div className="modal-body">
+          <form className="form-horizontal">
+            <Forms.TextInput name="name" label="Name" placeholder="Name" value={this.state.name} onChange={this.onNameChanged} />
+            <Forms.RadioGroup label="Apps">
+              <Forms.Radio label="All Apps" name="all_apps" value="1" checked={this.state.all_apps} onChange={this.allAppsChanged} />
+              <Forms.Radio label="Specific Apps" name="all_apps" value="0" checked={!this.state.all_apps} onChange={this.allAppsChanged} />
+            </Forms.RadioGroup>
+            {appList}
+          </form>
         </div>
-      </div>
+        <div className="modal-footer">
+          <BS.Button onClick={this.props.onRequestHide}>Close</BS.Button>
+          <BS.Button className="btn btn-primary" onClick={this.saveChanges}>Save changes</BS.Button>
+        </div>
+      </BS.Modal>
     )
+  },
+
+  saveChanges: function() {
+    var role = {
+      name: this.state.name,
+      all_apps: this.state.all_apps,
+      apps: this.state.apps
+    }
+    console.log(JSON.stringify(role));
+  },
+
+  allAppsChanged: function(event) {
+    this.setState({all_apps: event.target.value === "1" });
+  },
+
+  onNameChanged: function(event) {
+    this.setState({name: event.target.value });
+  },
+
+  onAppSelected: function(event) {
+    var apps = this.state.apps;
+    var client_id = event.target.name;
+    var i = apps.indexOf(client_id);
+    if (i > -1) {
+      apps.splice(i, 1);
+    } else {
+      apps.push(client_id);
+    }
+    this.setState({ apps: apps });
   }
-})
+
+});
 
 module.exports = AdminRoles;

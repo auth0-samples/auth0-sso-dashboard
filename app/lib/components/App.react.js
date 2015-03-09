@@ -1,27 +1,13 @@
 var React = require('react');
 var Router = require('react-router');
-
 var Navbar = require('./Navbar.react');
 var LoginWidget = require('./LoginWidget.react');
 var ProfileStore = require('../stores/ProfileStore');
-var SsoDashboardSection = require('./SsoDashboardSection.react');
 var Mixins = require('../mixins');
-
-var AdminSection = require('./AdminSection.react');
-var AdminUsers = require('./AdminUsers.react');
-var AdminSettings = require('./AdminSettings.react');
-var AdminApps = require('./AdminApps.react');
-var AdminDashboard = require('./AdminDashboard.react');
-var AdminRoles = require('./AdminRoles.react')
-
-
-var DefaultRoute = Router.DefaultRoute;
-var Route = Router.Route;
-var RouteHandler = Router.RouteHandler;
 
 function getStateFromStores() {
   return {
-    profile: ProfileStore.getProfile(),
+    profile: ProfileStore.get(),
   };
 }
 
@@ -43,7 +29,7 @@ var App = React.createClass({
   render: function() {
     var body = <LoginWidget/>;
     if (this.state.isAuthenticated) {
-      body = <RouteHandler />;
+      body = <Router.RouteHandler />;
     }
 
     return (
@@ -62,17 +48,25 @@ var App = React.createClass({
   }
 });
 
+var AdminSection = require('./AdminSection.react');
+var AdminUsers = require('./AdminUsers.react');
+var AdminSettings = require('./AdminSettings.react');
+var AdminApps = require('./AdminApps.react');
+var AdminDashboard = require('./AdminDashboard.react');
+var AdminRoles = require('./AdminRoles.react');
+var SsoDashboardSection = require('./SsoDashboardSection.react');
+
 var routes = (
-  <Route name="app" path="/" handler={App}>
-    <Route name="admin" handler={AdminSection}>
-      <Route name="admin-users" path="users" handler={AdminUsers} title="User Administration" />
-      <Route name="admin-settings" path="settings" handler={AdminSettings} />
-      <Route name="admin-apps" path="apps" handler={AdminApps} />
-      <Route name="admin-roles" path="roles" handler={AdminRoles} />
-      <DefaultRoute handler={AdminDashboard} />
-    </Route>
-    <DefaultRoute handler={SsoDashboardSection} />
-  </Route>
+  <Router.Route name="app" path="/" handler={App}>
+    <Router.Route name="admin" handler={AdminSection}>
+      <Router.Route name="admin-users" path="users" handler={AdminUsers} title="User Administration" />
+      <Router.Route name="admin-settings" path="settings" handler={AdminSettings} />
+      <Router.Route name="admin-apps" path="apps" handler={AdminApps} />
+      <Router.Route name="admin-roles" path="roles" handler={AdminRoles} />
+      <Router.DefaultRoute handler={AdminDashboard} />
+    </Router.Route>
+    <Router.DefaultRoute handler={SsoDashboardSection} />
+  </Router.Route>
 );
 
 module.exports.init = function(config) {

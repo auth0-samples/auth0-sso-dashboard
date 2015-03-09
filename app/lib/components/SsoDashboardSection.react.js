@@ -5,7 +5,7 @@ var UI = require('./UI.react');
 
 function getStateFromStores() {
   return {
-    apps: UserAppStore.getAll()
+    apps: UserAppStore.get()
   };
 }
 
