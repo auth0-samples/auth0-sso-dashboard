@@ -9,9 +9,7 @@ module.exports = {
   },
 
   save: function(token, role) {
-    API.saveRole(token, role, function(err) {
-
-    });
+    API.saveRole(token, role);
   }
 
 };

@@ -40,6 +40,10 @@ var AdminRoles = React.createClass({
     this.setState({ activeRole: role });
   },
 
+  saveRole: function(role) {
+    RoleActions.save(this.state.token, role);
+  },
+
   render: function() {
     return (
       <div className="container">
@@ -73,7 +77,7 @@ var AdminRoles = React.createClass({
                     <td>{role.all_apps == true ? 'Yes' : 'No'}</td>
                     <td>{apps}</td>
                     <td>
-                      <BS.ModalTrigger modal={<RoleModal apps={this.state.apps} role={role} />}>
+                      <BS.ModalTrigger modal={<RoleModal apps={this.state.apps} role={role} onRoleSaved={this.saveRole} />}>
                         <span className="table-button glyphicon glyphicon-cog" aria-hidden="true"></span>
                       </BS.ModalTrigger>
                     </td>
@@ -145,7 +149,7 @@ var RoleModal = React.createClass({
       all_apps: this.state.all_apps,
       apps: this.state.apps
     };
-    RoleActions.save(role);
+    this.props.onRoleSaved(role);
   },
 
   allAppsChanged: function(event) {

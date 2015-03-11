@@ -19,7 +19,7 @@ var LoginWidget = React.createClass({
         // Error callback
         alert('There was an error');
       } else {
-        AuthActionCreators.authenticated(token);
+        AuthActions.authenticated(token);
       }
     });
   }

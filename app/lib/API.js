@@ -31,6 +31,33 @@ module.exports = {
     });
   },
 
+  _post: function(token, url, options, json, callback) {
+    if (options) {
+      url + '?' + qs.stringify(options);
+    }
+    request({
+      url: url,
+      method: 'POST',
+      json: json,
+      headers: {
+        'Authorization': 'Bearer ' + token
+      }
+    }, function(error, response, body) {
+      if (error || response.statusCode !== 200) {
+        if (response.statusCode === 401) {
+          Dispatcher.dispatch({
+            actionType: Constants.USER_LOGGED_OUT
+          });
+        }
+        console.log({ message: 'Error making HTTP Request', error: error, statusCode: response.statusCode });
+        return;
+      } else {
+        var data = JSON.parse(body);
+        callback(data);
+      }
+    });
+  },
+
   loadUserApps: function(token) {
     this._get(token, '/api/user/apps', null, function(data) {
       Dispatcher.dispatch({
@@ -59,7 +86,12 @@ module.exports = {
   },
 
   saveRole: function(token, role, callback) {
-    console.log('saving role');;
+    this._post(token, '/api/roles', null, role, function(data) {
+      Dispatcher.dispatch({
+        actionType: Constants.SAVED_ROLE,
+        role: data
+      });
+    })
   },
 
   loadUsers: function(token, options) {
