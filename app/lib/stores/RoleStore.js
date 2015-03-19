@@ -1,7 +1,6 @@
 var Dispatcher = require('../Dispatcher');
 var Constants = require('../Constants');
 var Store = require('./Store');
-var _ = require('lodash');
 
 var RoleStore = new Store([]);
 
@@ -16,16 +15,10 @@ Dispatcher.register(function(action) {
       RoleStore.set();
       break;
     case Constants.SAVED_ROLE:
-      var roles = RoleStore.get();
-      var i = _.findIndex(roles, function(current) {
+      RoleStore.update(action.role, function(current) {
         return current.id === action.role.id;
       });
-      if (i > -1) {
-        roles[i] = action.role;
-      } else {
-        roles.push(action.role)
-      }
-      RoleStore.set(roles);
+      break;
     default:
       // no op
   }

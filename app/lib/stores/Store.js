@@ -1,5 +1,7 @@
 var EventEmitter = require('events').EventEmitter;
 var util = require('util');
+//var Immutable = require('immutable');
+var _ = require('lodash');
 
 var CHANGE_EVENT = 'change';
 
@@ -16,6 +18,16 @@ Store.prototype.set = function(data) {
 
 Store.prototype.get = function(data) {
   return this._data;
+}
+
+Store.prototype.update = function(data, comparison) {
+  var i = _.findIndex(this._data, comparison);
+  if (i > -1) {
+    this._data[i] = data;
+  } else {
+    this._data.push(data)
+  }
+  this.emitChange();
 }
 
 Store.prototype.emitChange = function() {
