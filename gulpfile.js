@@ -101,4 +101,4 @@ gulp.task('js-minify', ['js'], function() {
 });
 
 gulp.task('start', ['css-watch', 'js-watch', 'serve']);
-gulp.task('package', ['clean', 'css-minify', 'js-minify']);
+gulp.task('build', ['clean', 'css', 'js']);
