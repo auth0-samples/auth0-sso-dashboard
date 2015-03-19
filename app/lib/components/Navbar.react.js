@@ -5,7 +5,7 @@ var Link = require('react-router').Link;
 
 var Navbar = React.createClass({
   render: function() {
-    var title = window.config.app_title;
+    var title = window.config.title;
 
     return (
       <nav className="navbar navbar-inverse navbar-fixed-top" role="navigation">
