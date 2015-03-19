@@ -3,12 +3,13 @@ var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
+var bodyParser = require('body-parser')
 
 var app = express();
 
 //app.use(express.bodyParser());
 //app.use(express.urlencoded());
-//app.use(express.json());
+app.use(bodyParser.json());
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

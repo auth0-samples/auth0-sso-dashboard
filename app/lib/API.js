@@ -52,8 +52,7 @@ module.exports = {
         console.log({ message: 'Error making HTTP Request', error: error, statusCode: response.statusCode });
         return;
       } else {
-        var data = JSON.parse(body);
-        callback(data);
+        callback(body);
       }
     });
   },

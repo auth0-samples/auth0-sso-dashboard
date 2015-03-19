@@ -6,6 +6,7 @@ var AppStore = require('../stores/AppStore');
 var Mixins = require('../mixins');
 var UI = require('./UI.react');
 var BS = require('react-bootstrap');
+var _ = require('lodash');
 
 function getStateFromStores() {
   return {
@@ -48,7 +49,7 @@ var AdminRoles = React.createClass({
     return (
       <div className="container">
         <UI.PageHeader title="Administration: Roles">
-          <BS.ModalTrigger modal={<RoleModal apps={this.state.apps} />}>
+          <BS.ModalTrigger modal={<RoleModal apps={this.state.apps} onRoleSaved={this.saveRole} />}>
             <BS.Button bsStyle="primary" className="pull-right">
               <i className="glyphicon glyphicon-plus"></i> New Role
             </BS.Button>
@@ -105,9 +106,10 @@ var RoleModal = React.createClass({
   getInitialState: function() {
     var role = this.props.role || {};
     return {
+      id: role.id,
       name: role.name,
       all_apps: role.all_apps || false,
-      apps: role.apps || [],
+      apps: role.apps || []
     };
   },
 
@@ -145,11 +147,13 @@ var RoleModal = React.createClass({
 
   saveChanges: function() {
     var role = {
+      id: this.state.id,
       name: this.state.name,
       all_apps: this.state.all_apps,
       apps: this.state.apps
     };
     this.props.onRoleSaved(role);
+    this.props.onRequestHide();
   },
 
   allAppsChanged: function(event) {
