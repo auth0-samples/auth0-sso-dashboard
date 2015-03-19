@@ -36,11 +36,6 @@ var AdminRoles = React.createClass({
     AppStore.removeChangeListener(this._onChange);
   },
 
-  handleClick: function(i) {
-    var role = this.state.roles[i];
-    this.setState({ activeRole: role });
-  },
-
   saveRole: function(role) {
     RoleActions.save(this.state.token, role);
   },
@@ -67,7 +62,6 @@ var AdminRoles = React.createClass({
             </thead>
             <tbody>
               {this.state.roles.map(function(role, i) {
-                var boundClick = this.handleClick.bind(this, i);
                 var apps;
                 if (role.apps) {
                   apps = role.apps.join(', ');
@@ -146,6 +140,7 @@ var RoleModal = React.createClass({
   },
 
   saveChanges: function() {
+    // TODO: Validation logic
     var role = {
       id: this.state.id,
       name: this.state.name,

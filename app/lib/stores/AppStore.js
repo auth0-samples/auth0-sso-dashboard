@@ -13,6 +13,12 @@ Dispatcher.register(function(action) {
       break;
     case Constants.USER_LOGGED_OUT:
       AppStore.set();
+      break;
+    case Constants.SAVED_APP:
+      AppStore.update(action.app, function(current) {
+        return current.client_id === action.app.client_id;
+      });
+      break;
     default:
       // no op
   }

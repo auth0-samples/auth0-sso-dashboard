@@ -75,6 +75,15 @@ module.exports = {
     })
   },
 
+  saveApp: function(token, app, callback) {
+    this._post(token, '/api/apps', null, app, function(data) {
+      Dispatcher.dispatch({
+        actionType: Constants.SAVED_APP,
+        app: data
+      });
+    })
+  },
+
   loadRoles: function(token) {
     this._get(token, '/api/roles', null, function(data) {
       Dispatcher.dispatch({

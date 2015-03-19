@@ -19,7 +19,8 @@
     "morgan": "~1.5.1",
     "react-bootstrap": "^0.16.1",
     "request": "^2.53.0",
-    "serve-favicon": "~2.2.0"
+    "serve-favicon": "~2.2.0",
+    "uuid": "^2.0.1"
   },
   "devDependencies": {
     "bootstrap": "^3.3.2",

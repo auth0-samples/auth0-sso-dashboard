@@ -6,4 +6,8 @@ module.exports = {
   getApps: function(token) {
     API.loadApps(token);
   },
+
+  save: function(token, app) {
+    API.saveApp(token, app);
+  }
 };

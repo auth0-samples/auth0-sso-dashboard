@@ -3,6 +3,7 @@ var AppStore = require('../stores/AppStore');
 var Mixins = require('../mixins');
 var UI = require('./UI.react');
 var AppActions = require('../Actions/AppActions');
+var BS = require('react-bootstrap');
 
 function getStateFromStores() {
   return {
@@ -28,9 +29,8 @@ var AdminApps = React.createClass({
     AppStore.removeChangeListener(this._onChange);
   },
 
-  handleClick: function(i) {
-    var role = this.state.roles[i];
-    console.log('edit');
+  saveApp: function(app) {
+    AppActions.save(this.state.token, app);
   },
 
   render: function() {
@@ -42,18 +42,21 @@ var AdminApps = React.createClass({
             <thead>
               <tr>
                 <td>Name</td>
-                <td>Roles</td>
+                <td>Logo</td>
                 <td width="20px"></td>
               </tr>
             </thead>
             <tbody>
               {this.state.apps.map(function(app, i) {
-                var boundClick = this.handleClick.bind(this, i);
                 return (
                   <tr key={app.client_id}>
                     <td>{app.name}</td>
-                    <td></td>
-                    <td><span className="table-button glyphicon glyphicon-cog" aria-hidden="true" onClick={boundClick}></span></td>
+                    <td>{app.logo_url}</td>
+                    <td>
+                      <BS.ModalTrigger modal={<AppModal app={app} roles={this.state.roles} onAppSaved={this.saveApp} />}>
+                        <span className="table-button glyphicon glyphicon-cog" aria-hidden="true"></span>
+                      </BS.ModalTrigger>
+                    </td>
                   </tr>
                 );
               }, this)}
@@ -71,5 +74,51 @@ var AdminApps = React.createClass({
     this.setState(getStateFromStores());
   }
 });
+
+
+
+var Forms = require('./Forms.react');
+
+var AppModal = React.createClass({
+  getInitialState: function() {
+    var app = this.props.app || {};
+    return {
+      logo_url: app.logo_url
+    };
+  },
+
+
+  render: function() {
+
+    return(
+      <BS.Modal {...this.props} title="Modal heading" animation={false} title="Edit App">
+        <div className="modal-body">
+          <form className="form-horizontal">
+            <Forms.TextInput name="name" label="Name" placeholder="Name" value={this.props.app.name} disabled="true" />
+            <Forms.TextInput name="logo_url" label="Logo" placeholder="/img/logos/logo.png" value={this.state.logo_url} onChange={this.onLogoUrlChanged} />
+          </form>
+        </div>
+        <div className="modal-footer">
+          <BS.Button onClick={this.props.onRequestHide}>Close</BS.Button>
+          <BS.Button className="btn btn-primary" onClick={this.saveChanges}>Save changes</BS.Button>
+        </div>
+      </BS.Modal>
+    )
+  },
+
+  saveChanges: function() {
+    // TODO: Validation logic
+    var app = this.props.app;
+    app.logo_url = this.state.logo_url;
+    this.props.onAppSaved(app);
+    this.props.onRequestHide();
+  },
+
+  onLogoUrlChanged: function(event) {
+    this.setState({logo_url: event.target.value });
+  }
+
+});
+
 
 module.exports = AdminApps;

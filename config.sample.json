@@ -20,20 +20,5 @@
     }
   ],
   "roles": [
-    {
-      "id": 1,
-      "name": "admin",
-      "all_apps": true
-    },
-    {
-      "id": 2,
-      "name": "group1",
-      "apps": ["salesforce"]
-    },
-    {
-      "id": 3,
-      "name": "group2",
-      "apps": ["concur"]
-    }
   ]
 }
