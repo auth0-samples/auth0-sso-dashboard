@@ -13,7 +13,7 @@ var LoginWidget = React.createClass({
 
     lock.show({
       closable: false,
-      connections: [config.default_connection]
+      connections: [config.auth0_connection]
     }, function(err, profile, token) {
       if (err) {
         // Error callback
