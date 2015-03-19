@@ -21,7 +21,7 @@ var AdminUsers = React.createClass({
   componentDidMount: function() {
     UserStore.addChangeListener(this._onChange);
     if (this.state.token) {
-      UserActions.getUsers();
+      UserActions.getUsers(this.state.token);
     }
   },
 

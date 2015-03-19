@@ -3,6 +3,7 @@ logs
 *.log
 build
 config.json
+.env
 
 # Runtime data
 pids
