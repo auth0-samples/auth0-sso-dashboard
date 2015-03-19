@@ -2,7 +2,7 @@ var React = require('react');
 var AppStore = require('../stores/AppStore');
 var Mixins = require('../mixins');
 var UI = require('./UI.react');
-var AppActions = require('../Actions/AppActions');
+var AppActions = require('../actions/AppActions');
 var BS = require('react-bootstrap');
 
 function getStateFromStores() {
