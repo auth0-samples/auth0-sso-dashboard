@@ -4,9 +4,11 @@
 ## Environmental Variables
 
 ~~~
-AUTH0_CLIENT_ID
-AUTH0_CLIENT_SECRET
-AUTH0_DOMAIN
+AUTH0_DOMAIN=my_domain.auth0.com
+AUTH0_CLIENT_ID=
+AUTH0_CLIENT_SECRET=
+AUTH0_CONNECTION=google-oauth2
+TITLE=Company Dashboard
 ~~~
 
 

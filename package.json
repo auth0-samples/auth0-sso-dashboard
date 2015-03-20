@@ -8,8 +8,7 @@
     "test": "mocha --compilers js:babel/register"
   },
   "engines": {
-    "node": "0.12.x",
-    "npm": "2.5.x"
+    "node": "0.10.x"
   },
   "dependencies": {
     "babel": "^4.7.8",
