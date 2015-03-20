@@ -11,4 +11,8 @@ module.exports = {
     });
   },
 
+  saveUserRoles: function(token, user_id, roles) {
+    API.saveUserRoles(token, user_id, roles);
+  }
+
 };

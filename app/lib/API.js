@@ -2,6 +2,7 @@ var request = require('browser-request');
 var Dispatcher = require('./Dispatcher');
 var Constants = require('./Constants');
 var qs = require('querystring');
+//var fetch = require('whatwg-fetch');
 
 
 module.exports = {
@@ -31,13 +32,13 @@ module.exports = {
     });
   },
 
-  _post: function(token, url, options, json, callback) {
+  _postOrPatch: function(method, token, url, options, json, callback) {
     if (options) {
       url + '?' + qs.stringify(options);
     }
     request({
       url: url,
-      method: 'POST',
+      method: method,
       json: json,
       headers: {
         'Authorization': 'Bearer ' + token
@@ -55,6 +56,14 @@ module.exports = {
         callback(body);
       }
     });
+  },
+
+  _post: function(token, url, options, json, callback) {
+    this._postOrPatch('POST', token, url, options, json, callback);
+  },
+
+  _patch: function(token, url, options, json, callback) {
+    this._postOrPatch('PATCH', token, url, options, json, callback);
   },
 
   loadUserApps: function(token) {
@@ -93,7 +102,7 @@ module.exports = {
     });
   },
 
-  saveRole: function(token, role, callback) {
+  saveRole: function(token, role) {
     this._post(token, '/api/roles', null, role, function(data) {
       Dispatcher.dispatch({
         actionType: Constants.SAVED_ROLE,
@@ -133,6 +142,20 @@ module.exports = {
           profile: data
         });
       }
+    });
+  },
+
+  saveUserRoles: function(token, user_id, roles) {
+    var body = {
+      app_metadata: {
+        roles: roles
+      }
+    }
+    this._patch(token, '/api/users/' + user_id, null, body, function(data) {
+      Dispatcher.dispatch({
+        actionType: Constants.SAVED_USER,
+        user: data
+      })
     });
   },
 
