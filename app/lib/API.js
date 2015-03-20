@@ -119,8 +119,14 @@ module.exports = {
         id_token: token
       }
     }, function(error, response, data) {
-      if (error) {
-        throw error;
+      if (error || response.statusCode !== 200) {
+        if (response.statusCode === 401) {
+          Dispatcher.dispatch({
+            actionType: Constants.USER_LOGGED_OUT
+          });
+        }
+        console.log({ message: 'Error making HTTP Request', error: error, statusCode: response.statusCode });
+        return;
       } else {
         Dispatcher.dispatch({
           actionType: Constants.RECEIVED_PROFILE,
