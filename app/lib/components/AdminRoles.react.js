@@ -62,15 +62,24 @@ var AdminRoles = React.createClass({
             </thead>
             <tbody>
               {this.state.roles.map(function(role, i) {
-                var apps;
+                var apps = [];
                 if (role.apps) {
-                  apps = role.apps.join(', ');
+                  apps = role.apps;
                 }
+                var app_names = [];
+                apps.map(function(client_id) {
+                  var app = _.find(this.state.apps, { client_id: client_id });
+                  if (app) {
+                    app_names.push(app.name);
+                  } else {
+                    app_names.push(client_id);
+                  }
+                }, this);
                 return (
                   <tr key={role.id}>
                     <td>{role.name}</td>
                     <td>{role.all_apps == true ? 'Yes' : 'No'}</td>
-                    <td>{apps}</td>
+                    <td>{app_names.join(', ')}</td>
                     <td>
                       <BS.ModalTrigger modal={<RoleModal apps={this.state.apps} role={role} onRoleSaved={this.saveRole} />}>
                         <span className="table-button glyphicon glyphicon-cog" aria-hidden="true"></span>
