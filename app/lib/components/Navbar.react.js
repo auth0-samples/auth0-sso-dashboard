@@ -1,34 +1,39 @@
 var React = require('react');
-var ProfileMenu = require('./ProfileMenu.react');
 var NavbarMenuItem = require('./NavbarMenuItem.react');
 var Link = require('react-router').Link;
+var BS = require('react-bootstrap');
+var AuthActions = require('../actions/AuthActions');
 
 var Navbar = React.createClass({
   render: function() {
     var title = window.config.title;
+    var displayName = "Login";
+    var profileImageUrl = 'https://graph.facebook.com/3/picture';
+    if (this.props.profile) {
+      displayName = this.props.profile.name;
+      profileImageUrl = this.props.profile.picture;
+    }
+
+    var profileMenuContent = (
+      <span><img src={profileImageUrl} className="profile-image img-circle" /> {displayName}</span>
+    );
 
     return (
-      <nav className="navbar navbar-inverse navbar-fixed-top" role="navigation">
-        <div className="container">
-          <div className="navbar-header">
-            <button type="button" className="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-              <span className="sr-only">Toggle navigation</span>
-              <span className="icon-bar"></span>
-              <span className="icon-bar"></span>
-              <span className="icon-bar"></span>
-            </button>
-            <Link className="navbar-brand" to="app">{title}</Link>
-          </div>
-          <div id="navbar" className="navbar-collapse collapse">
-            <ul id="navbar-menu" className="nav navbar-nav navbar-right">
-              <NavbarMenuItem title="Apps" route="/" />
-              <NavbarMenuItem title="Admin" route="/admin" />
-              <ProfileMenu profile={this.props.profile} />
-            </ul>
-          </div>
-        </div>
-      </nav>
+      <BS.Navbar className="navbar navbar-inverse navbar-fixed-top" brand={title}>
+        <BS.Nav right>
+          <NavbarMenuItem title="Apps" route="/" />
+          <NavbarMenuItem title="Admin" route="/admin" />
+          <BS.DropdownButton title={profileMenuContent}>
+            <NavbarMenuItem title="Account" route="/account" />
+            <BS.MenuItem onClick={this.handleLogout}>Logout</BS.MenuItem>
+          </BS.DropdownButton>
+        </BS.Nav>
+      </BS.Navbar>
     );
+  },
+
+  handleLogout: function(event) {
+    AuthActions.logout();
   }
 });
 
