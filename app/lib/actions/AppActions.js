@@ -9,5 +9,9 @@ module.exports = {
 
   save: function(token, app) {
     API.saveApp(token, app);
+  },
+
+  loadUserApps: function(token) {
+    API.loadUserApps(token);
   }
 };

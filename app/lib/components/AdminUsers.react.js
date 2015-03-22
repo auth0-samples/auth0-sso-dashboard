@@ -70,7 +70,8 @@ var AdminUsers = React.createClass({
                     role_names.push(role.name);
                   } else {
                     // Role has probably been deleted
-                    role_names.push(role_id);
+                    //role_names.push(role_id);
+                    console.warn('Role not found: ' + role_id);
                   }
                 }, this);
 

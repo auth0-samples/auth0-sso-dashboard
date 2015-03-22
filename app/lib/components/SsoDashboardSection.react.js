@@ -2,6 +2,8 @@ var React = require('react');
 var UserAppStore = require('../stores/UserAppStore');
 var ApplicationListItem = require('./ApplicationListItem.react');
 var UI = require('./UI.react');
+var Mixins = require('../mixins');
+var AppActions = require('../actions/AppActions');
 
 function getStateFromStores() {
   return {
@@ -19,12 +21,17 @@ function getAppListItem(app) {
 }
 
 var ApplicationList = React.createClass({
+  mixins: [Mixins.TokenState],
+
   getInitialState: function() {
     return getStateFromStores();
   },
 
   componentDidMount: function() {
     UserAppStore.addChangeListener(this._onChange);
+    if (this.state.token) {
+      AppActions.loadUserApps(this.state.token);
+    }
   },
 
   componentWillUnmount: function() {
