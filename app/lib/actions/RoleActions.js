@@ -10,6 +10,10 @@ module.exports = {
 
   save: function(token, role) {
     API.saveRole(token, role);
+  },
+
+  delete: function(token, role_id) {
+    API.deleteRole(token, role_id);
   }
 
 };

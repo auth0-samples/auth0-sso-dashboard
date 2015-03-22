@@ -28,6 +28,16 @@ Store.prototype.update = function(data, comparison) {
     this._data.push(data)
   }
   this.emitChange();
+};
+
+Store.prototype.delete = function(comparison) {
+  var i = _.findIndex(this._data, comparison);
+  if (i > -1) {
+    this._data.splice(i, 1);
+  } else {
+    throw 'Invalid role_id';
+  }
+  this.emitChange();
 }
 
 Store.prototype.emitChange = function() {

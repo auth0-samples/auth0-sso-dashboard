@@ -19,6 +19,11 @@ Dispatcher.register(function(action) {
         return current.id === action.role.id;
       });
       break;
+    case Constants.DELETED_ROLE:
+      RoleStore.delete(function(current) {
+        return current.id === action.role_id;
+      });
+      break;
     default:
       // no op
   }

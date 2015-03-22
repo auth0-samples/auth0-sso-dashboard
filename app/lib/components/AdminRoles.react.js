@@ -40,6 +40,10 @@ var AdminRoles = React.createClass({
     RoleActions.save(this.state.token, role);
   },
 
+  deleteRole: function(role) {
+    RoleActions.delete(this.state.token, role.id);
+  },
+
   render: function() {
     return (
       <div className="container">
@@ -58,6 +62,7 @@ var AdminRoles = React.createClass({
                 <td>All Apps</td>
                 <td>Apps</td>
                 <td width="20px"></td>
+                <td width="20px"></td>
               </tr>
             </thead>
             <tbody>
@@ -75,11 +80,17 @@ var AdminRoles = React.createClass({
                     app_names.push(client_id);
                   }
                 }, this);
+
                 return (
                   <tr key={role.id}>
                     <td>{role.name}</td>
                     <td>{role.all_apps == true ? 'Yes' : 'No'}</td>
                     <td>{app_names.join(', ')}</td>
+                    <td>
+                      <BS.ModalTrigger modal={<UI.PromptModal message="Are you sure you want to delete this role?" onAcceptDialog={this.deleteRole.bind(this, role)} />}>
+                        <span className="table-button glyphicon glyphicon-trash" aria-hidden="true"></span>
+                      </BS.ModalTrigger>
+                    </td>
                     <td>
                       <BS.ModalTrigger modal={<RoleModal apps={this.state.apps} role={role} onRoleSaved={this.saveRole} />}>
                         <span className="table-button glyphicon glyphicon-cog" aria-hidden="true"></span>

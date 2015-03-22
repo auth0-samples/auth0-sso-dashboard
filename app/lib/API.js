@@ -58,6 +58,31 @@ module.exports = {
     });
   },
 
+  _delete: function(token, url, options, callback) {
+    if (options) {
+      url + '?' + qs.stringify(options);
+    }
+    request({
+      url: url,
+      method: 'DELETE',
+      headers: {
+        'Authorization': 'Bearer ' + token
+      }
+    }, function(error, response, body) {
+      if (error || response.statusCode !== 200) {
+        if (response.statusCode === 401) {
+          Dispatcher.dispatch({
+            actionType: Constants.USER_LOGGED_OUT
+          });
+        }
+        console.log({ message: 'Error making HTTP Request', error: error, statusCode: response.statusCode });
+        return;
+      } else {
+        callback(body);
+      }
+    });
+  },
+
   _post: function(token, url, options, json, callback) {
     this._postOrPatch('POST', token, url, options, json, callback);
   },
@@ -107,6 +132,15 @@ module.exports = {
       Dispatcher.dispatch({
         actionType: Constants.SAVED_ROLE,
         role: data
+      });
+    })
+  },
+
+  deleteRole: function(token, role_id) {
+    this._delete(token, '/api/roles/' + role_id, null, function(data) {
+      Dispatcher.dispatch({
+        actionType: Constants.DELETED_ROLE,
+        role_id: role_id
       });
     })
   },

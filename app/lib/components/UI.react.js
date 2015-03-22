@@ -1,4 +1,5 @@
 var React = require('react');
+var BS = require('react-bootstrap');
 
 
 module.exports.PageHeader = React.createClass({
@@ -14,4 +15,26 @@ module.exports.PageHeader = React.createClass({
       </div>
     );
   }
+});
+
+module.exports.PromptModal = React.createClass({
+  render: function() {
+    return(
+      <BS.Modal {...this.props} title="Modal heading" animation={false} title="New Role">
+        <div className="modal-body">
+          <p>{this.props.message}</p>
+        </div>
+        <div className="modal-footer">
+          <BS.Button className="btn btn-primary" onClick={this.props.onRequestHide}>No</BS.Button>
+          <BS.Button onClick={this.handleAcceptDialog}>Yes</BS.Button>
+        </div>
+      </BS.Modal>
+    )
+  },
+
+  handleAcceptDialog: function() {
+    this.props.onAcceptDialog();
+    this.props.onRequestHide();
+  }
+
 });
