@@ -1,0 +1,27 @@
+@import "variables";
+@import "../../node_modules/bootstrap/less/mixins.less";
+
+@btn-primary-bg: @theme_color;
+
+.navbar-inverse {
+  background-color: @theme_color;
+}
+.app .icon {
+  background-color: @theme_color;
+}
+#btn(@class,@bg) {
+  .btn-@{class} {
+    #gradient > .radial(@bg 80%, darken(@bg, 6%) 81%);
+
+    &:active {
+      background-color: darken(@bg, 6%);
+      #gradient > .radial(darken(@bg, 6%) 10%, @bg 11%);
+    }
+  }
+}
+//#btn(default,@btn-default-bg);
+#btn(primary,@btn-primary-bg);
+//#btn(success,@btn-success-bg);
+//#btn(info,@btn-info-bg);
+//#btn(warning,@btn-warning-bg);
+//#btn(danger,@btn-danger-bg);
