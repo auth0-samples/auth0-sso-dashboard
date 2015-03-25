@@ -7,6 +7,14 @@ var AuthActions = require('../actions/AuthActions');
 var Navbar = React.createClass({
   render: function() {
     var title = window.config.title;
+    var logo_url = window.config.logo_url;
+
+    var brand = title;
+    if (logo_url) {
+      brand = <span><img src={logo_url} className="brand-image" /> {title}</span>
+    }
+
+
     var displayName = "Login";
     var profileImageUrl = 'https://graph.facebook.com/3/picture';
     if (this.props.profile) {
@@ -19,7 +27,7 @@ var Navbar = React.createClass({
     );
 
     return (
-      <BS.Navbar className="navbar navbar-inverse navbar-fixed-top" brand={title}>
+      <BS.Navbar className="navbar navbar-inverse navbar-fixed-top" brand={brand}>
         <BS.Nav right>
           <NavbarMenuItem title="Apps" route="/" />
           <NavbarMenuItem title="Admin" route="/admin" />

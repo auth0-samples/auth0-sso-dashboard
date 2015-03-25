@@ -72,6 +72,12 @@ var routes = (
 );
 
 module.exports.init = function(config) {
+  require('../actions/SettingsActions').loadSettings({
+    title: config.title,
+    theme_color: config.theme_color,
+    logo_url: config.logo_url
+  });
+
   Router.run(routes, Router.HistoryLocation, function (Handler) {
     React.render(<Handler />, document.body);
   });
