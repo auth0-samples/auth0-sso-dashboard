@@ -24,7 +24,7 @@ var Navbar = React.createClass({
           <NavbarMenuItem title="Apps" route="/" />
           <NavbarMenuItem title="Admin" route="/admin" />
           <BS.DropdownButton title={profileMenuContent}>
-            <NavbarMenuItem title="Account" route="/account" />
+            <NavbarMenuItem title="Profile" route="/profile" />
             <BS.MenuItem onClick={this.handleLogout}>Logout</BS.MenuItem>
           </BS.DropdownButton>
         </BS.Nav>

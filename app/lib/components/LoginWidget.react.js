@@ -14,12 +14,12 @@ var LoginWidget = React.createClass({
     lock.show({
       closable: false,
       connections: [config.auth0_connection]
-    }, function(err, profile, token) {
+    }, function(err, profile, token, access_token) {
       if (err) {
         // Error callback
         alert('There was an error');
       } else {
-        AuthActions.authenticated(token);
+        AuthActions.authenticated(token, access_token);
       }
     });
   }

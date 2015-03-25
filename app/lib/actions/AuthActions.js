@@ -13,12 +13,13 @@ module.exports = {
   /**
    * @param  {string} token
    */
-  authenticated: function(token) {
+  authenticated: function(token, access_token) {
     //API.loadUserApps(token);
     API.loadUserProfile(token);
     Dispatcher.dispatch({
       actionType: Constants.USER_AUTHENTICATED,
-      token: token
+      token: token,
+      access_token: access_token
     });
   },
 

@@ -155,27 +155,23 @@ module.exports = {
   },
 
   loadUserProfile: function(token) {
-    request({
-      url: 'https://' + config.auth0_domain + '/tokeninfo',
-      method: 'POST',
-      json: {
-        id_token: token
-      }
-    }, function(error, response, data) {
-      if (error || response.statusCode !== 200) {
-        if (response.statusCode === 401) {
-          Dispatcher.dispatch({
-            actionType: Constants.USER_LOGGED_OUT
-          });
-        }
-        console.log({ message: 'Error making HTTP Request', error: error, statusCode: response.statusCode });
-        return;
-      } else {
-        Dispatcher.dispatch({
-          actionType: Constants.RECEIVED_PROFILE,
-          profile: data
-        });
-      }
+    this._get(token, '/api/userprofile', null, function(data) {
+      Dispatcher.dispatch({
+        actionType: Constants.RECEIVED_PROFILE,
+        profile: data
+      });
+    });
+  },
+
+  saveUserProfile: function(token, user_id, profile) {
+    var body = {
+      user_metadata: profile
+    }
+    this._patch(token, '/api/users/' + user_id, null, body, function(data) {
+      Dispatcher.dispatch({
+        actionType: Constants.RECEIVED_PROFILE,
+        profile: data
+      })
     });
   },
 

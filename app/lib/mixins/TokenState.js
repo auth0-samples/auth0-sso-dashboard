@@ -2,9 +2,16 @@ var TokenStore = require('../stores/TokenStore');
 
 
 function getStateFromStores() {
+  var tokens = TokenStore.get();
+  var token, access_token;
+  if (tokens) {
+    token = tokens.token;
+    access_token = tokens.access_token
+  }
   return {
     isAuthenticated: TokenStore.isAuthenticated(),
-    token: TokenStore.get()
+    token: token,
+    access_token: access_token
   };
 }
 

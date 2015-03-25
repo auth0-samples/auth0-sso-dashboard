@@ -55,6 +55,7 @@ var AdminApps = require('./AdminApps.react');
 var AdminDashboard = require('./AdminDashboard.react');
 var AdminRoles = require('./AdminRoles.react');
 var SsoDashboardSection = require('./SsoDashboardSection.react');
+var UserProfile = require('./UserProfileSection.react');
 
 var routes = (
   <Router.Route name="app" path="/" handler={App}>
@@ -65,6 +66,7 @@ var routes = (
       <Router.Route name="admin-roles" path="roles" handler={AdminRoles} />
       <Router.DefaultRoute handler={AdminDashboard} />
     </Router.Route>
+    <Router.Route name="user-profile" path="profile" handler={UserProfile} />
     <Router.DefaultRoute handler={SsoDashboardSection} />
   </Router.Route>
 );

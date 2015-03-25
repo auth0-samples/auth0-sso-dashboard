@@ -5,28 +5,34 @@ var AuthActions = require('../actions/AuthActions')
 
 var TokenStore = new Store({});
 TokenStore.get = function() {
-  return store.get('token');
+  return {
+    token: store.get('token'),
+    access_token: store.get('access_token')
+  };
 };
 
-TokenStore.set = function(token) {
-  if (token) {
+TokenStore.set = function(token, access_token) {
+  if (token && access_token) {
     store.set('token', token);
+    store.set('access_token', access_token);
   } else {
     store.remove('token');
+    store.remove('access_token')
   }
 }
 TokenStore.isAuthenticated = function() {
-  var token = this.get();
-  if (token) {
+  var obj = this.get();
+  if (obj && obj.token && obj.access_token) {
     return true;
   }
   return false;
 };
 
 TokenStore.init = function() {
-  var token = this.get();
-  if (token) {
-    AuthActions.authenticated(token);
+
+  if (this.isAuthenticated()) {
+    var obj = this.get();
+    AuthActions.authenticated(obj.token, obj.access_token);
   }
 }
 
@@ -35,7 +41,7 @@ Dispatcher.register(function(action) {
 
   switch(action.actionType) {
     case Constants.USER_AUTHENTICATED:
-      TokenStore.set(action.token);
+      TokenStore.set(action.token, action.access_token);
       break;
     case Constants.USER_LOGGED_OUT:
       TokenStore.set();
