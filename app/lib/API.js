@@ -167,7 +167,7 @@ module.exports = {
     var body = {
       user_metadata: profile
     }
-    this._patch(token, '/api/users/' + user_id, null, body, function(data) {
+    this._patch(token, '/api/userprofile', null, body, function(data) {
       Dispatcher.dispatch({
         actionType: Constants.RECEIVED_PROFILE,
         profile: data

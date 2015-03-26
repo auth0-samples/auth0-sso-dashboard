@@ -44,10 +44,9 @@ var Navbar = React.createClass({
       profileImageUrl = this.state.profile.picture;
     }
 
-    var menu = [];
+    var adminMenu;
     if (this.state.profile.is_admin) {
-      menu.push(<NavbarMenuItem key={0} title="Apps" route="/" />)
-      menu.push(<NavbarMenuItem key={1} title="Admin" route="/admin" />);
+      adminMenu = (<NavbarMenuItem title="Admin" route="/admin" />);
     }
 
     var profileMenuContent = (
@@ -57,7 +56,8 @@ var Navbar = React.createClass({
     return (
       <BS.Navbar className="navbar navbar-inverse navbar-fixed-top" brand={brand}>
         <BS.Nav right>
-          {menu.map(function(item) { return item; })}
+          <NavbarMenuItem title="Apps" route="/" />
+          {adminMenu}
           <BS.DropdownButton title={profileMenuContent}>
             <NavbarMenuItem title="Profile" route="/profile" />
             <BS.MenuItem onClick={this.handleLogout}>Logout</BS.MenuItem>
