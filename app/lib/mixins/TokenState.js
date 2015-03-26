@@ -33,5 +33,15 @@ module.exports  = {
    */
   _onTokenChange: function() {
     this.setState(getStateFromStores());
+  },
+
+  statics: {
+    willTransitionTo: function (transition) {
+      var nextPath = transition.path;
+      if (!TokenStore.isAuthenticated()) {
+        transition.redirect('/login',{},
+          { 'nextPath' : nextPath });
+      }
+    }
   }
 }

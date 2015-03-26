@@ -7,12 +7,13 @@ var CHANGE_EVENT = 'change';
 
 var Store = function(initial) {
   EventEmitter.call(this);
+  this._initial = JSON.parse(JSON.stringify(initial));
   this._data = initial;
 };
 util.inherits(Store, EventEmitter);
 
 Store.prototype.set = function(data) {
-  this._data = data || this._data;
+  this._data = data || this._initial;
   this.emitChange();
 }
 

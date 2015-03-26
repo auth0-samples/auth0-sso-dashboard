@@ -1,50 +1,18 @@
 var React = require('react');
 var Router = require('react-router');
 var Navbar = require('./Navbar.react');
-var LoginWidget = require('./LoginWidget.react');
-var ProfileStore = require('../stores/ProfileStore');
+
 var Mixins = require('../mixins');
 
-function getStateFromStores() {
-  return {
-    profile: ProfileStore.get(),
-  };
-}
-
 var App = React.createClass({
-  mixins: [Mixins.TokenState],
-
-  getInitialState: function() {
-    return getStateFromStores();
-  },
-
-  componentDidMount: function() {
-    ProfileStore.addChangeListener(this._onChange);
-  },
-
-  componentWillUnmount: function() {
-    ProfileStore.removeChangeListener(this._onChange);
-  },
 
   render: function() {
-    var body = <LoginWidget/>;
-    if (this.state.isAuthenticated) {
-      body = <Router.RouteHandler />;
-    }
-
     return (
       <div>
-        <Navbar profile={this.state.profile} />
-        {body}
+        <Navbar />
+        <Router.RouteHandler />
       </div>
     );
-  },
-
-  /**
-   * Event handler for 'change' events coming from the stores
-   */
-  _onChange: function() {
-    this.setState(getStateFromStores());
   }
 });
 
@@ -56,9 +24,11 @@ var AdminDashboard = require('./AdminDashboard.react');
 var AdminRoles = require('./AdminRoles.react');
 var SsoDashboardSection = require('./SsoDashboardSection.react');
 var UserProfile = require('./UserProfileSection.react');
+var LoginWidget = require('./LoginWidget.react');
 
 var routes = (
   <Router.Route name="app" path="/" handler={App}>
+    <Router.Route name="login" path="/login" handler={LoginWidget} />
     <Router.Route name="admin" handler={AdminSection}>
       <Router.Route name="admin-users" path="users" handler={AdminUsers} title="User Administration" />
       <Router.Route name="admin-settings" path="settings" handler={AdminSettings} />
