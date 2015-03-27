@@ -52,19 +52,15 @@ var AdminUsers = React.createClass({
                 <td>Name</td>
                 <td>Email</td>
                 <td>Latest Login</td>
-                <td>Login Count</td>
+                {/*<td>Login Count</td>*/}
                 <td>Roles</td>
                 <td width="20px"></td>
               </tr>
             </thead>
             <tbody>
               {this.state.users.map(function(user, i) {
-                var roles = [];
-                if (user.app_metadata && user.app_metadata.roles) {
-                  roles = user.app_metadata.roles;
-                }
                 var role_names = [];
-                roles.map(function(role_id) {
+                user.roles.map(function(role_id) {
                   var role = _.find(this.state.roles, { id: role_id});
                   if (role) {
                     role_names.push(role.name);
@@ -80,10 +76,16 @@ var AdminUsers = React.createClass({
                     <td>{user.name}</td>
                     <td>{user.email}</td>
                     <td>{moment(user.last_login).fromNow()}</td>
-                    <td>{user.logins_count}</td>
-                    <td>{role_names.join(', ')}</td>
+                    {/* <td>{user.logins_count}</td> */}
                     <td>
-                      <BS.ModalTrigger modal={<RolesModal roles={this.state.roles} selectedRoles={roles} user={user} onRolesSaved={this.saveRoles} />}>
+                      <ul className="role-list">
+                      {role_names.map(function(role) {
+                        return (<li key={role}>{role}</li>);
+                      })}
+                      </ul>
+                    </td>
+                    <td>
+                      <BS.ModalTrigger modal={<RolesModal roles={this.state.roles} user={user} onRolesSaved={this.saveRoles} />}>
                         <span className="table-button glyphicon glyphicon-cog" aria-hidden="true"></span>
                       </BS.ModalTrigger>
                     </td>
@@ -111,8 +113,16 @@ var Forms = require('./Forms.react');
 var RolesModal = React.createClass({
   getInitialState: function() {
     return {
-      selected_roles: this.props.selectedRoles
+      selected_roles: []
     };
+  },
+
+  componentWillReceiveProps: function(nextProps) {
+    var selected_roles = [];
+    if (nextProps.profile.user_metadata) {
+      selected_roles = nextProps.user.roles;
+    }
+    this.setState({ selected_roles: selected_roles });
   },
 
 

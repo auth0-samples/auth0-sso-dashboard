@@ -85,7 +85,13 @@ var AdminRoles = React.createClass({
                   <tr key={role.id}>
                     <td>{role.name}</td>
                     <td>{role.all_apps == true ? 'Yes' : 'No'}</td>
-                    <td>{app_names.join(', ')}</td>
+                    <td>
+                      <ul className="role-list">
+                      {app_names.map(function(app) {
+                        return (<li key={app}>{app}</li>);
+                      })}
+                      </ul>
+                    </td>
                     <td>
                       <BS.ModalTrigger modal={<UI.PromptModal message="Are you sure you want to delete this role?" onAcceptDialog={this.deleteRole.bind(this, role)} />}>
                         <span className="table-button glyphicon glyphicon-trash" aria-hidden="true"></span>

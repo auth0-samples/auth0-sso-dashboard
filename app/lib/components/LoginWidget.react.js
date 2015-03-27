@@ -19,7 +19,7 @@ var LoginWidget = React.createClass({
     }, (function(err, profile, token, access_token) {
       if (err) {
         // Error callback
-        alert('There was an error');
+        console.log(err);
       } else {
         AuthActions.authenticated(token, access_token);
         var nextPath = this.getQuery().nextPath;

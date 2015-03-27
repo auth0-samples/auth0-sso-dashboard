@@ -146,7 +146,7 @@ module.exports = {
   },
 
   loadUsers: function(token, options) {
-    this._get(token, '/api/proxy/users', options, function(data) {
+    this._get(token, '/api/users', options, function(data) {
       Dispatcher.dispatch({
         actionType: Constants.RECEIVED_USERS,
         users: data
