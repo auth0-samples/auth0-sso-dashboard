@@ -12,7 +12,6 @@ Dispatcher.register(function(action) {
       ProfileStore.set(action.profile);
       break;
     case Constants.USER_LOGGED_OUT:
-      console.log('loggedout')
       ProfileStore.set();
       break;
     default:

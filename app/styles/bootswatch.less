@@ -1,8 +1,8 @@
-// Paper 3.3.2
+// Paper 3.3.4
 // Bootswatch
 // -----------------------------------------------------
 
-@import url("//fonts.googleapis.com/css?family=Roboto:300,400,500");
+@import url("//fonts.googleapis.com/css?family=Roboto:300,400,500,700");
 
 // Navbar =====================================================================
 
@@ -38,14 +38,13 @@
 
 #btn(@class,@bg) {
   .btn-@{class} {
-    #gradient > .radial(@bg 80%, darken(@bg, 6%) 81%);
     background-size: 200%;
     background-position: 50%;
-    transition: background-size 2s;
 
-    &:hover {
-      background-size: 100%;
-      border-color: darken(@bg, 6%);
+    &:hover,
+    &:active:hover,
+    &:focus {
+      background-color: darken(@bg, 6%);
     }
 
     &:active {
@@ -223,13 +222,20 @@ select.form-control {
   label {
     padding-left: 25px;
   }
+
+  input[type="radio"],
+  input[type="checkbox"] {
+    margin-left: -25px;
+  }
 }
 
 input[type="radio"],
 .radio input[type="radio"],
 .radio-inline input[type="radio"] {
+  position: relative;
   margin-top: 5px;
-  margin-left: -25px;
+  margin-right: 4px;
+  vertical-align: -4px;
   border: none;
   background-color: transparent;
   -webkit-appearance: none;
@@ -284,7 +290,8 @@ input[type="radio"],
 input[type="checkbox"],
 .checkbox input[type="checkbox"],
 .checkbox-inline input[type="checkbox"] {
-  margin-left: -25px;
+  position: relative;
+  vertical-align: -4px;
   border: none;
   -webkit-appearance: none;
   appearance: none;
@@ -472,7 +479,7 @@ input[type="checkbox"],
     &:last-child {
       &:before {
         display: block;
-        content: 'div::before';
+        content: "";
         position: absolute;
         width: 100%;
         height: 100%;
@@ -543,49 +550,17 @@ input[type="checkbox"],
   &-footer {
     border-top: none;
   }
-
-  &-success {
-    .panel-heading {
-      background-color: @brand-success;
-    }
-
-    .panel-title {
-      color: #fff;
-    }
-  }
-
-  &-info {
-    .panel-heading {
-      background-color: @brand-info;
-    }
-
-    .panel-title {
-      color: #fff;
-    }
-  }
-
-  &-warning {
-    .panel-heading {
-      background-color: @brand-warning;
-    }
-
-    .panel-title {
-      color: #fff;
-    }
-  }
-
-  &-danger {
-    .panel-heading {
-      background-color: @brand-danger;
-    }
-
-    .panel-title {
-      color: #fff;
-    }
-  }
 }
 
 .popover {
   border: none;
   .box-shadow(0 1px 4px rgba(0,0,0,.3));
+}
+
+.carousel {
+  &-caption {
+    h1, h2, h3, h4, h5, h6 {
+      color: inherit;
+    }
+  }
 }
