@@ -2,7 +2,6 @@ var React = require('react');
 var ProfileStore = require('../stores/ProfileStore');
 var UI = require('./UI.react');
 var BS = require('react-bootstrap');
-var Mixins = require('../mixins');
 var UserActions = require('../actions/UserActions');
 var MUI = require('material-ui');
 
@@ -13,7 +12,6 @@ function getStateFromStores() {
 }
 
 var UserProfile = React.createClass({
-  mixins: [Mixins.TokenState],
 
   getInitialState: function() {
     return getStateFromStores();
@@ -28,7 +26,7 @@ var UserProfile = React.createClass({
   },
 
   saveChanges: function(user_metadata) {
-    UserActions.saveUserProfile(this.state.token, this.state.profile.user_id, user_metadata);
+    UserActions.saveUserProfile(this.props.token, this.state.profile.user_id, user_metadata);
     this.refs.snackbar.show();
     setTimeout((function() {
       this.refs.snackbar.dismiss();

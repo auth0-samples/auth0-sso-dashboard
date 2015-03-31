@@ -1,8 +1,8 @@
 var React = require('react');
 
 
-var ApplicationItem = React.createClass({
-  render: function() {
+export default class ApplicationItem extends React.Component {
+  render() {
     var app = this.props.app;
 
     return (
@@ -12,6 +12,4 @@ var ApplicationItem = React.createClass({
       </div>
     );
   }
-});
-
-module.exports = ApplicationItem;
+}

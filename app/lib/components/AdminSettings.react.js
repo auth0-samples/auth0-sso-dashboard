@@ -1,7 +1,6 @@
 var React = require('react');
 var UI = require('./UI.react');
 var BS = require('react-bootstrap');
-var Mixins = require('../mixins');
 var SettingsStore = require('../stores/SettingsStore');
 var SettingsActions = require('../actions/SettingsActions');
 var MUI = require('material-ui');
@@ -13,7 +12,6 @@ function getStateFromStores() {
 }
 
 var AdminSettings = React.createClass({
-  mixins: [Mixins.TokenState],
 
   getInitialState: function() {
     return getStateFromStores();
@@ -28,7 +26,7 @@ var AdminSettings = React.createClass({
   },
 
   saveChanges: function(settings) {
-    SettingsActions.saveSettings(this.state.token, settings);
+    SettingsActions.saveSettings(this.props.token, settings);
     this.refs.snackbar.show();
   },
 

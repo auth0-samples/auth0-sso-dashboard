@@ -2,7 +2,6 @@ var React = require('react');
 var UserAppStore = require('../stores/UserAppStore');
 var ApplicationListItem = require('./ApplicationListItem.react');
 var UI = require('./UI.react');
-var Mixins = require('../mixins');
 var AppActions = require('../actions/AppActions');
 var _ = require('lodash');
 
@@ -13,7 +12,6 @@ function getStateFromStores() {
 }
 
 var ApplicationList = React.createClass({
-  mixins: [Mixins.TokenState],
 
   getInitialState: function() {
     return getStateFromStores();
@@ -21,8 +19,8 @@ var ApplicationList = React.createClass({
 
   componentDidMount: function() {
     UserAppStore.addChangeListener(this._onChange);
-    if (this.state.token) {
-      AppActions.loadUserApps(this.state.token);
+    if (this.props.token) {
+      AppActions.loadUserApps(this.props.token);
     }
   },
 

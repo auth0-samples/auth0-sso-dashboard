@@ -1,5 +1,7 @@
+var React = require('react');
+var Router = require('react-router');
+var Navbar = require('./Navbar.react');
 var TokenStore = require('../stores/TokenStore');
-
 
 function getStateFromStores() {
   var tokens = TokenStore.get();
@@ -15,7 +17,8 @@ function getStateFromStores() {
   };
 }
 
-module.exports  = {
+
+module.exports = React.createClass({
   getInitialState: function() {
     return getStateFromStores();
   },
@@ -43,5 +46,15 @@ module.exports  = {
           { 'nextPath' : nextPath });
       }
     }
+  },
+
+  render: function() {
+    return (
+      <div>
+        <Navbar />
+        <Router.RouteHandler {...this.props} token={this.state.token}/>
+      </div>
+    )
   }
-}
+
+});

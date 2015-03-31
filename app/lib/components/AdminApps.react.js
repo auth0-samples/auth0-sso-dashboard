@@ -1,6 +1,5 @@
 var React = require('react');
 var AppStore = require('../stores/AppStore');
-var Mixins = require('../mixins');
 var UI = require('./UI.react');
 var AppActions = require('../actions/AppActions');
 var BS = require('react-bootstrap');
@@ -12,7 +11,6 @@ function getStateFromStores() {
 }
 
 var AdminApps = React.createClass({
-  mixins: [Mixins.TokenState],
 
   getInitialState: function() {
     return getStateFromStores();
@@ -20,8 +18,8 @@ var AdminApps = React.createClass({
 
   componentDidMount: function() {
     AppStore.addChangeListener(this._onChange);
-    if (this.state.token) {
-      AppActions.getApps(this.state.token);
+    if (this.props.token) {
+      AppActions.getApps(this.props.token);
     }
   },
 
@@ -30,7 +28,7 @@ var AdminApps = React.createClass({
   },
 
   saveApp: function(app) {
-    AppActions.save(this.state.token, app);
+    AppActions.save(this.props.token, app);
   },
 
   render: function() {

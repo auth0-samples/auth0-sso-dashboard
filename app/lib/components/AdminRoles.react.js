@@ -3,7 +3,6 @@ var RoleActions = require('../actions/RoleActions');
 var AppActions = require('../actions/AppActions');
 var RoleStore = require('../stores/RoleStore');
 var AppStore = require('../stores/AppStore');
-var Mixins = require('../mixins');
 var UI = require('./UI.react');
 var BS = require('react-bootstrap');
 var _ = require('lodash');
@@ -16,7 +15,6 @@ function getStateFromStores() {
 }
 
 var AdminRoles = React.createClass({
-  mixins: [Mixins.TokenState],
 
   getInitialState: function() {
     return getStateFromStores();
@@ -25,9 +23,9 @@ var AdminRoles = React.createClass({
   componentDidMount: function() {
     RoleStore.addChangeListener(this._onChange);
     AppStore.addChangeListener(this._onChange);
-    if (this.state.token) {
-      AppActions.getApps(this.state.token);
-      RoleActions.getRoles(this.state.token);
+    if (this.props.token) {
+      AppActions.getApps(this.props.token);
+      RoleActions.getRoles(this.props.token);
     }
   },
 
@@ -37,11 +35,11 @@ var AdminRoles = React.createClass({
   },
 
   saveRole: function(role) {
-    RoleActions.save(this.state.token, role);
+    RoleActions.save(this.props.token, role);
   },
 
   deleteRole: function(role) {
-    RoleActions.delete(this.state.token, role.id);
+    RoleActions.delete(this.props.token, role.id);
   },
 
   render: function() {

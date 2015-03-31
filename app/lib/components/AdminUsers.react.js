@@ -3,7 +3,6 @@ var UserActions = require('../actions/UserActions');
 var RoleActions = require('../actions/RoleActions');
 var UserStore = require('../stores/UserStore');
 var RoleStore = require('../stores/RoleStore');
-var Mixins = require('../mixins');
 var moment = require('moment');
 var UI = require('./UI.react');
 var BS = require('react-bootstrap');
@@ -17,7 +16,6 @@ function getStateFromStores() {
 }
 
 var AdminUsers = React.createClass({
-  mixins: [Mixins.TokenState],
 
   getInitialState: function() {
     return getStateFromStores();
@@ -27,8 +25,8 @@ var AdminUsers = React.createClass({
     UserStore.addChangeListener(this._onChange);
     RoleStore.addChangeListener(this._onChange);
     if (this.state.token) {
-      UserActions.getUsers(this.state.token);
-      RoleActions.getRoles(this.state.token);
+      UserActions.getUsers(this.props.token);
+      RoleActions.getRoles(this.props.token);
     }
   },
 
@@ -38,7 +36,7 @@ var AdminUsers = React.createClass({
   },
 
   saveRoles: function(user_id, roles) {
-    UserActions.saveUserRoles(this.state.token, user_id, roles);
+    UserActions.saveUserRoles(this.props.token, user_id, roles);
   },
 
   render: function() {

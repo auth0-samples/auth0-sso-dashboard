@@ -1,8 +1,8 @@
 var React = require('react');
 var BS = require('react-bootstrap');
 
-module.exports.TextInput = React.createClass({
-  render: function() {
+export class TextInput extends React.Component {
+  render() {
     return (
       <div className="form-group">
         <label htmlFor="inputName" className="col-lg-2 control-label">{this.props.label}</label>
@@ -12,10 +12,10 @@ module.exports.TextInput = React.createClass({
       </div>
     );
   }
-});
+}
 
-module.exports.Checkbox = React.createClass({
-  render: function() {
+export class Checkbox extends React.Component {
+  render() {
     return (
       <div className="form-group">
         <div className="col-lg-2"></div>
@@ -28,10 +28,10 @@ module.exports.Checkbox = React.createClass({
       </div>
     );
   }
-});
+}
 
-module.exports.CheckboxSimple = React.createClass({
-  render: function() {
+export class CheckboxSimple extends React.Component {
+  render() {
     return (
       <div className="form-group">
         <div className="checkbox">
@@ -43,12 +43,11 @@ module.exports.CheckboxSimple = React.createClass({
       </div>
     );
   }
-});
+}
 
 
-module.exports.RadioGroup = React.createClass({
-
-  render: function() {
+export class RadioGroup extends React.Component {
+  render() {
     return (
       <div className="form-group">
         <label className="col-lg-2 control-label">{this.props.label}</label>
@@ -58,11 +57,10 @@ module.exports.RadioGroup = React.createClass({
       </div>
     );
   }
+}
 
-});
-
-module.exports.Radio = React.createClass({
-  render: function() {
+export class Radio extends React.Component {
+  render() {
     return (
       <div className="radio">
         <label>
@@ -72,4 +70,4 @@ module.exports.Radio = React.createClass({
       </div>
     );
   }
-});
+}
