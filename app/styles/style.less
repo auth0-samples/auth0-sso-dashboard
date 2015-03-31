@@ -24,7 +24,11 @@ a {
  */
 
 .navbar > .container .navbar-brand {
- margin-left: -30px;
+ //margin-left: -30px;
+}
+
+.navbar-collapse {
+  overflow: hidden;
 }
 
 .profile-image {
@@ -42,7 +46,30 @@ a {
   margin-right: 10px;
 }
 
-.search-box {
+.page-header {
+  margin-right: 0px;
+  margin-left: 5px;
+  @media (max-width: @screen-xs-max) {
+    border-bottom: none;
+    margin-top: 20px;
+    margin-bottom: 10px;
+  }
+}
+
+.page-header .col-md-8,
+.page-header .col-md-4 {
+  padding-left: 0;
+  padding-right: 0;
+}
+.page-header h2 {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.home .page-header h2 {
+  @media (max-width: @screen-xs-max) {
+    display: none;
+  }
 }
 
 .search-box .glyphicon {
@@ -53,7 +80,7 @@ a {
 }
 
 .search-box input {
-  width: 297px;
+  width: 100% - 9px;
   height: 40px;
 }
 
@@ -62,23 +89,42 @@ a {
 //  padding-bottom: 10px;
 // }
 
+.table {
+  margin-right: 2.5%;
+  margin-left: 2.5%;
+  width: 95%;
+}
+
 .table-button {
   cursor: pointer;
   font-size: 15px;
 }
 
-#apps {
+.apps {
   margin-top: 50px;
+  @media (max-width: @screen-xs-max) {
+    margin-top: 10px;
+  }
+  @media (min-width: @screen-xs-min) {
+    margin-right: 2.5%;
+    margin-left: 2.5%;
+    width: 95%;
+  }
 }
 
 .app {
   float: left;
   height: 180px;
   width: 120px;
-  margin-right: 20px;
+  margin-right: 10px;
+  margin-left: 10px;
   margin-bottom: 10px;
   text-align: center;
   cursor: pointer;
+  @media (max-width: @screen-xs-max) {
+    height: 150px;
+    width: 100px;
+  }
 }
 
 .app .icon {
@@ -87,16 +133,28 @@ a {
   color: white;
   text-align: center;
   background-color: @brand-primary;
+  @media (max-width: @screen-xs-max) {
+    height: 100px;
+    width: 100px;
+  }
 }
 
 .app img {
   height: 120px;
   width: 120px;
+  @media (max-width: @screen-xs-max) {
+    height: 100px;
+    width: 100px;
+  }
 }
 
 .app .icon span {
   font-size: 40px;
   line-height: 120px;
+  @media (max-width: @screen-xs-max) {
+    font-size: 30px;
+    line-height: 100px;
+  }
 }
 
 .app .name {
@@ -114,16 +172,6 @@ a {
 .table-toolbar {
   padding-right: 20px;
   padding-left: 20px;
-}
-
-.page-header .col-md-8,
-.page-header .col-md-4 {
-  padding-left: 0;
-  padding-right: 0;
-}
-.page-header h2 {
-  margin-top: 0;
-  margin-bottom: 0;
 }
 
 .role-list {

@@ -35,7 +35,7 @@ var AdminApps = React.createClass({
     return (
       <div className="container">
         <UI.PageHeader title="Administration: Apps" />
-        <div className="row" id="apps">
+        <div className="row">
           <table className="table">
             <thead>
               <tr>

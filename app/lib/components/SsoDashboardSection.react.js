@@ -56,14 +56,14 @@ var ApplicationList = React.createClass({
     }
 
     return (
-      <div className="container">
+      <div className="container home">
         <UI.PageHeader title="Your Applications">
           <div className="search-box">
             <span className="glyphicon glyphicon-search"></span>
             <input type="text" placeholder="Search" onChange={this.onSearchChange} />
           </div>
         </UI.PageHeader>
-        <div className="row" id="apps">
+        <div className="row apps">
           {inner}
         </div>
       </div>

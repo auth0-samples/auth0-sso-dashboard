@@ -7,7 +7,7 @@ var AdminDashboard = React.createClass({
     return (
       <div className="container">
         <UI.PageHeader title="Administration" />
-        <div className="row" id="apps">
+        <div className="row">
           <AdminSettingsButton name="Settings" route="admin-settings" icon="glyphicon-cog" />
           <AdminSettingsButton name="Users" route="admin-users" icon="glyphicon-user" />
           <AdminSettingsButton name="Apps" route="admin-apps" icon="glyphicon-th" />

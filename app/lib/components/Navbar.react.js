@@ -53,13 +53,13 @@ export default class Navbar extends React.Component {
     );
 
     return (
-      <BS.Navbar className="navbar navbar-inverse navbar-fixed-top" brand={brand}>
-        <BS.Nav right>
+      <BS.Navbar inverse fixedTop brand={brand} toggleNavKey={0}>
+        <BS.Nav right eventKey={0}>
           <NavbarMenuItem title="Apps" route="/" />
           {adminMenu}
           <BS.DropdownButton title={profileMenuContent}>
             <NavbarMenuItem title="Profile" route="/profile" />
-            <BS.MenuItem onClick={this.handleLogout.bind(this)}>Logout</BS.MenuItem>
+            <BS.MenuItem eventKey={3} onClick={this.handleLogout.bind(this)}>Logout</BS.MenuItem>
           </BS.DropdownButton>
         </BS.Nav>
       </BS.Navbar>

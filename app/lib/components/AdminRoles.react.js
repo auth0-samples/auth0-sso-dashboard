@@ -52,7 +52,7 @@ var AdminRoles = React.createClass({
             </BS.Button>
           </BS.ModalTrigger>
         </UI.PageHeader>
-        <div className="row" id="apps">
+        <div className="row">
           <table className="table">
             <thead>
               <tr>
