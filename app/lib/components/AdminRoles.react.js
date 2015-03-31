@@ -146,7 +146,7 @@ var RoleModal = React.createClass({
     }
 
     return(
-      <BS.Modal {...this.props} title="Modal heading" animation={false} title="New Role">
+      <BS.Modal {...this.props} animation={false} title="New Role">
         <div className="modal-body">
           <form className="form-horizontal">
             <Forms.TextInput name="name" label="Name" placeholder="Name" value={this.state.name} onChange={this.onNameChanged} />

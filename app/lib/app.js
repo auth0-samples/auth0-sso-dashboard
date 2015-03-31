@@ -1,6 +1,6 @@
 
 var React = require('react');
-injectTapEventPlugin = require("react-tap-event-plugin");
+var injectTapEventPlugin = require("react-tap-event-plugin");
 injectTapEventPlugin();
 
 window.React = React;

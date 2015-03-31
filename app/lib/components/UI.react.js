@@ -20,7 +20,7 @@ module.exports.PageHeader = React.createClass({
 module.exports.PromptModal = React.createClass({
   render: function() {
     return(
-      <BS.Modal {...this.props} title="Modal heading" animation={false} title="New Role">
+      <BS.Modal {...this.props} animation={false} title="New Role">
         <div className="modal-body">
           <p>{this.props.message}</p>
         </div>

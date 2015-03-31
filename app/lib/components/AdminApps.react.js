@@ -91,7 +91,7 @@ var AppModal = React.createClass({
   render: function() {
 
     return(
-      <BS.Modal {...this.props} title="Modal heading" animation={false} title="Edit App">
+      <BS.Modal {...this.props} animation={false} title="Edit App">
         <div className="modal-body">
           <form className="form-horizontal">
             <Forms.TextInput name="name" label="Name" placeholder="Name" value={this.props.app.name} disabled="true" />
