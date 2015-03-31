@@ -176,7 +176,11 @@ var RoleModal = React.createClass({
   },
 
   allAppsChanged: function(event) {
-    this.setState({all_apps: event.target.value === "1" });
+    var all_apps = event.target.value === "1";
+    this.setState({all_apps: all_apps });
+    if (all_apps) {
+      this.setState({ apps: [] }) ;
+    }
   },
 
   onNameChanged: function(event) {
