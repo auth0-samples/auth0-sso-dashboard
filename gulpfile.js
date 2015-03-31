@@ -72,7 +72,8 @@ function scripts(production, watch) {
   // bundler.external('lodash')
   // bundler.external('react')
 
-  bundler.transform('reactify', {"es6": true});
+  //bundler.transform('reactify', {"es6": true});
+  bundler.transform('babelify')
   bundler.transform('envify');
 
   rebundle = function() {
