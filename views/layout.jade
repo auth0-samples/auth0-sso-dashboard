@@ -2,7 +2,10 @@ doctype html
 html
   head
     title= title
-    link(rel='stylesheet', href='/bundle.css')
+    if process.env.NODE_ENV === 'production'
+      link(rel='stylesheet', href='/bundle.min.css')
+    else
+      link(rel='stylesheet', href='/bundle.css')
     link(rel='stylesheet', href='/style/theme')
   body
     block content
