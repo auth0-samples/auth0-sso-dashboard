@@ -12,22 +12,21 @@ function getStateFromStores() {
   };
 }
 
-var Navbar = React.createClass({
-  mixins : [ Router.Navigation, Router.State ],
+export default class Navbar extends React.Component {
 
-  getInitialState: function() {
-    return getStateFromStores();
-  },
+  constructor() {
+    this.state = getStateFromStores();
+  }
 
-  componentDidMount: function() {
-    ProfileStore.addChangeListener(this._onChange);
-  },
+  componentDidMount() {
+    ProfileStore.addChangeListener(this._onChange.bind(this));
+  }
 
-  componentWillUnmount: function() {
+  componentWillUnmount() {
     ProfileStore.removeChangeListener(this._onChange);
-  },
+  }
 
-  render: function() {
+  render() {
     var title = window.config.title;
     var logo_url = window.config.logo_url;
 
@@ -60,25 +59,27 @@ var Navbar = React.createClass({
           {adminMenu}
           <BS.DropdownButton title={profileMenuContent}>
             <NavbarMenuItem title="Profile" route="/profile" />
-            <BS.MenuItem onClick={this.handleLogout}>Logout</BS.MenuItem>
+            <BS.MenuItem onClick={this.handleLogout.bind(this)}>Logout</BS.MenuItem>
           </BS.DropdownButton>
         </BS.Nav>
       </BS.Navbar>
     );
-  },
+  }
 
   /**
    * Event handler for 'change' events coming from the stores
    */
-  _onChange: function() {
+  _onChange() {
     this.setState(getStateFromStores());
-  },
+  }
 
-  handleLogout: function(event) {
+  handleLogout(event) {
     event.preventDefault();
     AuthActions.logout();
-    this.transitionTo('/login');
+    this.context.router.transitionTo('/login');
   }
-});
+}
 
-module.exports = Navbar;
+Navbar.contextTypes = {
+  router: React.PropTypes.func
+};
