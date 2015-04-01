@@ -10,6 +10,7 @@ var TokenStore = require('./stores/TokenStore');
 
 var SsoDashboard = {
   init: function(config) {
+    document.title = config.title;
     App.init(config);
     TokenStore.init();
   }

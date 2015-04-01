@@ -15,7 +15,7 @@ module.exports = {
    */
   authenticated: function(token, access_token) {
     //API.loadUserApps(token);
-    API.loadUserProfile(token);
+    API.loadUserProfile(access_token);
     Dispatcher.dispatch({
       actionType: Constants.USER_AUTHENTICATED,
       token: token,

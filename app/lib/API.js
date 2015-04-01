@@ -154,8 +154,8 @@ module.exports = {
     });
   },
 
-  loadUserProfile: function(token) {
-    this._get(token, '/api/userprofile', null, function(data) {
+  loadUserProfile: function(access_token) {
+    this._get(access_token, 'https://' + window.config.auth0_domain + '/userinfo', null, function(data) {
       Dispatcher.dispatch({
         actionType: Constants.RECEIVED_PROFILE,
         profile: data

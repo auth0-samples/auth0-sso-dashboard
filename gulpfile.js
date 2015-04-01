@@ -8,24 +8,15 @@ var watchify = require('watchify');
 var less = require('gulp-less');
 var rename = require('gulp-rename');
 var uglify = require('gulp-uglify');
-var nodemon = require('nodemon');
 var minifyCSS = require('gulp-minify-css');
 var del = require('del');
 var path = require('path');
 var pkg = require('./package');
+var handlebars = require('gulp-compile-handlebars');
+var config = require('./config.json');
+var serve = require('gulp-serve');
 
-gulp.task('serve', function () {
-  nodemon({
-    script: 'bin/www',
-    ext: 'js',
-    ignore: ['public/*', 'build/*', 'app/*', 'gulpfile.js'],
-    env: { 'NODE_ENV': 'development' }
-  })
-    .on('restart', function () {
-      console.log('restarted!')
-    })
-});
-
+gulp.task('serve', serve(['app', 'build']));
 
 gulp.task('clean', function(cb) {
   del(['build'], cb);
@@ -102,5 +93,24 @@ gulp.task('js-minify', ['js'], function() {
     .pipe(gulp.dest('./build'));
 });
 
-gulp.task('start', ['css-watch', 'js-watch', 'serve']);
-gulp.task('build', ['clean', 'css-minify', 'js-minify']);
+gulp.task('img', ['clean'], function() {
+  gulp.src('./app/img/**/*.*').pipe(gulp.dest('./build/img'));
+});
+
+gulp.task('font', ['clean'], function() {
+  gulp.src('./app/fonts/**/*.*').pipe(gulp.dest('./build/font'));
+});
+
+gulp.task('html', ['clean'], function() {
+  var data = {
+    bundle_js_path: '/bundle.js',
+    bundle_css_path: '/bundle.css',
+    config: JSON.stringify(config)
+  }
+  gulp.src('./app/html/index.html')
+  .pipe(handlebars(data))
+  .pipe(gulp.dest('build'));
+});
+
+gulp.task('start', ['css-watch', 'js-watch', 'html', 'serve']);
+gulp.task('build', ['clean', 'css-minify', 'js-minify', 'html', 'img', 'font']);
