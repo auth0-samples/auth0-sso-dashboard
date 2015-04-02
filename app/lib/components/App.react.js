@@ -44,7 +44,7 @@ module.exports.init = function(config) {
     logo_url: config.logo_url
   });
 
-  Router.run(routes, Router.HistoryLocation, function (Handler, state) {
+  Router.run(routes, function (Handler, state) {
     React.render(<Handler {...state} />, document.body);
   });
 }
