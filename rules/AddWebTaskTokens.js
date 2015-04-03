@@ -6,6 +6,8 @@ function(user, context, cb) {
     return cb(null, user, context);
   }
 
+  user.is_admin = user.groups && user.groups.indexOf('{{admin_group}}') > -1;
+
   var camelToSnake = function(str) {
     return str.replace(/\W+/g, '_')
               .replace(/([a-z\d])([A-Z])/g, '$1_$2').toLowerCase();
@@ -18,7 +20,7 @@ function(user, context, cb) {
         return true;
       default:
         // Everything else is for admins only
-        return user.groups && user.groups.indexOf('{{admin_group}}') > -1;
+        return user.is_admin;
     }
 
   };
