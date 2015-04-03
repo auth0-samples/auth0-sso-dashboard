@@ -4,12 +4,6 @@ var API = require('../API');
 
 module.exports = {
 
-  init: function() {
-    Dispacher.dispatch({
-      actionType: Constants.CHECK_AUTHENTICATED
-    })
-  },
-
   /**
    * @param  {string} token
    */
@@ -18,6 +12,13 @@ module.exports = {
       actionType: Constants.USER_AUTHENTICATED,
       token: token,
       task_tokens: task_tokens
+    });
+  },
+
+  receiveProfile: function(profile) {
+    Dispatcher.dispatch({
+      actionType: Constants.RECEIVED_PROFILE,
+      profile: profile
     });
   },
 

@@ -185,15 +185,6 @@ module.exports = {
     });
   },
 
-  saveSettings: function(token, settings) {
-    this._patch(token, '/api/settings', null, settings, function(data) {
-      Dispatcher.dispatch({
-        actionType: Constants.SETTINGS_SAVED,
-        settings: data
-      })
-    });
-  },
-
   refreshToken: function(token) {
 
   }

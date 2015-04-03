@@ -22,7 +22,7 @@ var LoginWidget = React.createClass({
         console.log(err);
       } else {
         ProfileActions.authenticated(token);
-        ProfileActions.loadProfile(profile);
+        ProfileActions.receiveProfile(profile);
         var nextPath = this.getQuery().nextPath;
 
         if (nextPath) {
