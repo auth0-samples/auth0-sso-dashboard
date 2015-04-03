@@ -13,7 +13,6 @@ var App = React.createClass({
 var Authenticated = require('./Authenticated.react');
 var AdminSection = require('./AdminSection.react');
 var AdminUsers = require('./AdminUsers.react');
-var AdminSettings = require('./AdminSettings.react');
 var AdminApps = require('./AdminApps.react');
 var AdminDashboard = require('./AdminDashboard.react');
 var AdminRoles = require('./AdminRoles.react');
@@ -27,7 +26,6 @@ var routes = (
     <Router.Route handler={Authenticated}>
       <Router.Route name="admin" handler={AdminSection}>
         <Router.Route name="admin-users" path="users" handler={AdminUsers} title="User Administration" />
-        <Router.Route name="admin-settings" path="settings" handler={AdminSettings} />
         <Router.Route name="admin-apps" path="apps" handler={AdminApps} />
         <Router.Route name="admin-roles" path="roles" handler={AdminRoles} />
         <Router.DefaultRoute handler={AdminDashboard} />
@@ -39,12 +37,6 @@ var routes = (
 );
 
 module.exports.init = function(config) {
-  require('../actions/SettingsActions').loadSettings({
-    title: config.title,
-    theme_color: config.theme_color,
-    logo_url: config.logo_url
-  });
-
   if (TokenStore.isAuthenticated()) {
     var token = TokenStore.get();
     API.loadUserProfile(token);
