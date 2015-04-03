@@ -1,8 +1,8 @@
 var React = require('react');
-var RoleActions = require('../actions/RoleActions');
-var AppActions = require('../actions/AppActions');
 var RoleStore = require('../stores/RoleStore');
 var AppStore = require('../stores/AppStore');
+var AppActions = require('../actions/AppActions');
+var RoleActions = require('../actions/RoleActions');
 var UI = require('./UI.react');
 var BS = require('react-bootstrap');
 var _ = require('lodash');
@@ -23,9 +23,16 @@ var AdminRoles = React.createClass({
   componentDidMount: function() {
     RoleStore.addChangeListener(this._onChange);
     AppStore.addChangeListener(this._onChange);
-    if (this.props.token) {
-      AppActions.getApps(this.props.token);
-      RoleActions.getRoles(this.props.token);
+    if (this.props.tokens.auth0_proxy) {
+      AppActions.loadApps(nextProps.tokens.auth0_proxy);
+      RoleActions.loadRoles(nextProps.tokens.auth0_proxy);
+    }
+  },
+
+  componentWillReceiveProps: function(nextProps) {
+    if (!this.props.tokens.auth0_proxy) {
+      AppActions.loadApps(nextProps.tokens.auth0_proxy);
+      RoleActions.loadRoles(nextProps.tokens.auth0_proxy);
     }
   },
 

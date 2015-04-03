@@ -3,7 +3,7 @@ var Constants = require('../Constants');
 var API = require('../API');
 
 module.exports = {
-  loadApps: function() {
+  loadApps: function(token) {
     API.loadApps(token);
   },
 

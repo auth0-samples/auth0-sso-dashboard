@@ -1,14 +1,13 @@
 var React = require('react');
 var AppStore = require('../stores/AppStore');
 var UI = require('./UI.react');
-var API = require('../API');
+var AppActions = require('../actions/AppActions');
 var ProfileStore = require('../stores/ProfileStore');
 var BS = require('react-bootstrap');
 
 function getStateFromStores() {
   return {
-    apps: AppStore.get(),
-    auth0ProxyToken: ProfileStore.getTaskToken('auth0_proxy')
+    apps: AppStore.get()
   };
 }
 
@@ -20,8 +19,14 @@ var AdminApps = React.createClass({
 
   componentDidMount: function() {
     AppStore.addChangeListener(this._onChange);
-    if (this.state.auth0ProxyToken) {
-      API.loadApps(this.state.auth0ProxyToken);
+    if (this.props.tokens.auth0_proxy) {
+      AppActions.loadApps(this.props.tokens.auth0_proxy);
+    }
+  },
+
+  componentWillReceiveProps: function(nextProps) {
+    if (!this.props.tokens.auth0_proxy) {
+      AppActions.loadApps(nextProps.tokens.auth0_proxy);
     }
   },
 

@@ -1,5 +1,5 @@
-var Dispatcher = require('./Dispatcher');
-var Constants = require('./Constants');
+var Dispatcher = require('../Dispatcher');
+var Constants = require('../Constants');
 
 module.exports = {
 
@@ -13,8 +13,6 @@ module.exports = {
    * @param  {string} token
    */
   authenticated: function(token, task_tokens) {
-    //API.loadUserApps(token);
-    //API.loadUserProfile(access_token);
     Dispatcher.dispatch({
       actionType: Constants.USER_AUTHENTICATED,
       token: token,

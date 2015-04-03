@@ -1,8 +1,8 @@
 var React = require('react');
 var Router = require('react-router');
 var Navbar = require('./Navbar.react');
-var TokenStore = require('../stores/TokenStore');
-var API = require('../API');
+var ProfileStore = require('../stores/ProfileStore');
+var ProfileActions = require('../actions/ProfileActions');
 
 var App = React.createClass({
   render: function() {
@@ -37,9 +37,9 @@ var routes = (
 );
 
 module.exports.init = function(config) {
-  if (TokenStore.isAuthenticated()) {
-    var token = TokenStore.get();
-    API.loadUserProfile(token);
+  if (ProfileStore.isAuthenticated()) {
+    var token = ProfileStore.getToken();
+    ProfileActions.loadUserProfile(token);
   }
 
   Router.run(routes, function (Handler, state) {

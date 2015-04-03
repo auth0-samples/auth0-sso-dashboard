@@ -1,5 +1,5 @@
 var React = require('react');
-var Actions = require('../Actions');
+var ProfileActions = require('../actions/ProfileActions');
 var Router = require('react-router');
 
 var LoginWidget = React.createClass({
@@ -21,8 +21,8 @@ var LoginWidget = React.createClass({
         // Error callback
         console.log(err);
       } else {
-        Actions.authenticated(token);
-        Actions.loadProfile(profile);
+        ProfileActions.authenticated(token);
+        ProfileActions.loadProfile(profile);
         var nextPath = this.getQuery().nextPath;
 
         if (nextPath) {

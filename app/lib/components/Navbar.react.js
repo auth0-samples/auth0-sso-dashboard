@@ -1,8 +1,7 @@
 var React = require('react');
 var NavbarMenuItem = require('./NavbarMenuItem.react');
 var Link = require('react-router').Link;
-var BS = require('react-bootstrap');
-var Actions = require('../Actions');
+var ProfileActions = require('../actions/ProfileActions');
 var ProfileStore = require('../stores/ProfileStore');
 var Router = require('react-router');
 
@@ -75,7 +74,7 @@ export default class Navbar extends React.Component {
 
   handleLogout(event) {
     event.preventDefault();
-    Actions.logout();
+    ProfileActions.logout();
     this.context.router.transitionTo('/login');
   }
 }
