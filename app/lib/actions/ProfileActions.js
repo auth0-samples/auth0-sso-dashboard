@@ -1,5 +1,6 @@
 var Dispatcher = require('../Dispatcher');
 var Constants = require('../Constants');
+var API = require('../API');
 
 module.exports = {
 
@@ -20,11 +21,8 @@ module.exports = {
     });
   },
 
-  loadProfile: function(profile) {
-    Dispatcher.dispatch({
-      actionType: Constants.RECEIVED_PROFILE,
-      profile: profile
-    });
+  loadProfile: function(token) {
+    API.loadUserProfile(token);
   },
 
   logout: function() {

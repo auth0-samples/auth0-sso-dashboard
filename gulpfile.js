@@ -67,7 +67,7 @@ gulp.task('css-minify', ['css'], function() {
 
 function scripts(watch) {
   var bundler, rebundle;
-  bundler = browserify('./app/lib/app.js', {
+  bundler = browserify('./app/lib/Main.js', {
     basedir: __dirname,
     debug: !PROD,
     cache: {}, // required for watchify

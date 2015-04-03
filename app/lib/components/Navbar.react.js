@@ -1,6 +1,7 @@
 var React = require('react');
 var NavbarMenuItem = require('./NavbarMenuItem.react');
 var Link = require('react-router').Link;
+var BS = require('react-bootstrap');
 var ProfileActions = require('../actions/ProfileActions');
 var ProfileStore = require('../stores/ProfileStore');
 var Router = require('react-router');

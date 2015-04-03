@@ -39,7 +39,7 @@ var routes = (
 module.exports.init = function(config) {
   if (ProfileStore.isAuthenticated()) {
     var token = ProfileStore.getToken();
-    ProfileActions.loadUserProfile(token);
+    ProfileActions.loadProfile(token);
   }
 
   Router.run(routes, function (Handler, state) {
