@@ -13,10 +13,10 @@ module.exports = {
 
   saveUserRoles: function(token, user_id, roles) {
     API.saveUserRoles(token, user_id, roles);
-  },
-
-  saveUserProfile: function(token, user_id, profile) {
-    API.saveUserProfile(token, user_id, profile);
   }
+
+  // saveUserProfile: function(token, user_id, profile) {
+  //   API.saveUserProfile(token, user_id, profile);
+  // }
 
 };

@@ -1,6 +1,5 @@
-var Dispatcher = require('../Dispatcher');
-var Constants = require('../Constants');
-var API = require('../API');
+var Dispatcher = require('./Dispatcher');
+var Constants = require('./Constants');
 
 module.exports = {
 
@@ -13,13 +12,20 @@ module.exports = {
   /**
    * @param  {string} token
    */
-  authenticated: function(token, access_token) {
+  authenticated: function(token, task_tokens) {
     //API.loadUserApps(token);
-    API.loadUserProfile(access_token);
+    //API.loadUserProfile(access_token);
     Dispatcher.dispatch({
       actionType: Constants.USER_AUTHENTICATED,
       token: token,
-      access_token: access_token
+      task_tokens: task_tokens
+    });
+  },
+
+  loadProfile: function(profile) {
+    Dispatcher.dispatch({
+      actionType: Constants.RECEIVED_PROFILE,
+      profile: profile
     });
   },
 

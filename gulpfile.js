@@ -26,10 +26,18 @@ var s3 = require('gulp-s3-upload')({
 
 var PROD = process.env.NODE_ENV === 'production';
 
-gulp.task('serve', serve(['app', 'build']));
+gulp.task('serve', serve(['app', 'build/app']));
 
 gulp.task('clean', function(cb) {
-  del(['build'], cb);
+  del(['build/app'], cb);
+});
+
+gulp.task('rules-clean', function(cb) {
+  del(['build/rules'], cb);
+});
+
+gulp.task('webtasks-clean', function(cb) {
+  del(['build/tasks'], cb);
 });
 
 gulp.task('css', function () {
@@ -38,7 +46,7 @@ gulp.task('css', function () {
     .pipe(rename(function(path) {
       path.basename = "bundle"
     }))
-    .pipe(gulp.dest('build'));
+    .pipe(gulp.dest('build/app'));
 });
 
 gulp.task('css-watch', ['css'], function() {
@@ -49,12 +57,12 @@ gulp.task('css-watch', ['css'], function() {
 });
 
 gulp.task('css-minify', ['css'], function() {
-  return gulp.src('./build/bundle.css')
+  return gulp.src('./build/app/bundle.css')
     .pipe(minifyCSS())
     .pipe(rename(function(path) {
       path.extname = '.min.css';
     }))
-    .pipe(gulp.dest('build'))
+    .pipe(gulp.dest('build/app'))
 });
 
 function scripts(watch) {
@@ -85,7 +93,7 @@ function scripts(watch) {
       .pipe(buffer())
       .pipe(sourcemaps.init({loadMaps: true})) // loads map from browserify file
       .pipe(sourcemaps.write('./')) // writes .map file
-      .pipe(gulp.dest('./build'));
+      .pipe(gulp.dest('./build/app'));
   };
 
   bundler.on('update', rebundle);
@@ -95,20 +103,20 @@ function scripts(watch) {
 gulp.task('js-watch', scripts.bind(null, true));
 gulp.task('js', scripts.bind(null, false));
 gulp.task('js-minify', ['js'], function() {
-  return gulp.src('./build/bundle.js')
+  return gulp.src('./build/app/bundle.js')
     .pipe(uglify())
     .pipe(rename(function(path) {
       path.extname = '.min.js'
     }))
-    .pipe(gulp.dest('./build'));
+    .pipe(gulp.dest('./build/app'));
 });
 
 gulp.task('img', ['clean'], function() {
-  gulp.src('./app/img/**/*.*').pipe(gulp.dest('./build/img'));
+  gulp.src('./app/img/**/*.*').pipe(gulp.dest('./build/app/img'));
 });
 
 gulp.task('font', ['clean'], function() {
-  gulp.src('./app/fonts/**/*.*').pipe(gulp.dest('./build/font'));
+  gulp.src('./app/fonts/**/*.*').pipe(gulp.dest('./build/app/fonts'));
 });
 
 gulp.task('html', ['clean'], function() {
@@ -126,10 +134,18 @@ gulp.task('html', ['clean'], function() {
   }
   gulp.src('./app/html/index.html')
   .pipe(handlebars(data))
-  .pipe(gulp.dest('build'));
+  .pipe(gulp.dest('build/app'));
 });
 
-gulp.task('webtasks-build', ['clean'], function() {
+gulp.task('app-publish', ['build', 'webtasks', 'rules'], function() {
+  gulp.src("./build/app/**/*.*")
+  .pipe(s3({
+      Bucket: process.env.AWS_S3_BUCKET,
+      ACL:    'public-read'
+  }));
+})
+
+gulp.task('webtasks-build', ['webtasks-clean'], function() {
   return gulp.src("tasks/*.js")
     .pipe(babel())
     .pipe(gulp.dest("build/tasks"));
@@ -146,8 +162,16 @@ gulp.task('webtasks-publish', ['webtasks-build'], function() {
   }));
 });
 
-gulp.task('rules-build', ['clean'], function() {
+gulp.task('rules-build', ['rules-clean'], function() {
+  var data = {
+    auth0_client_id: process.env.AUTH0_CLIENT_ID,
+    admin_group: process.env.SSO_DASHBOARD_ADMIN_GROUP,
+    auth0_domain: process.env.AUTH0_DOMAIN,
+    aws_region: process.env.AWS_REGION,
+    aws_s3_bucket: process.env.AWS_S3_BUCKET
+  }
   return gulp.src("rules/*.js")
+    .pipe(handlebars(data))
     .pipe(gulp.dest("build/rules"));
 });
 
@@ -158,15 +182,9 @@ gulp.task('rules-publish', ['rules-build'], function() {
 gulp.task('webtasks', ['webtasks-publish']);
 gulp.task('rules', ['rules-publish']);
 
-gulp.task('publish-s3', ['build', 'webtasks', 'rules'], function() {
-  gulp.src("./build/**/*.*")
-  .pipe(s3({
-      Bucket: process.env.AWS_S3_BUCKET,
-      ACL:    'public-read'
-  }));
-})
+
 
 
 gulp.task('start', ['css-watch', 'js-watch', 'html', 'serve']);
 gulp.task('build', ['clean', 'css-minify', 'js-minify', 'html', 'img', 'font']);
-gulp.task('publish', ['publish-s3', 'webtasks-build', 'rules']);
+gulp.task('publish', ['app-publish', 'webtasks', 'rules']);

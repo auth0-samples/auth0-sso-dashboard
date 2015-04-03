@@ -1,31 +1,35 @@
 var qs = require('querystring');
+var request = require('request');
 
-return function(context, cb) {
+return function(context, req, res) {
   var data = context.data;
-  var url = data.url;
-  var method = data.method;
-  var query = JSON.parse(data.query);
-  var url = 'https://' + data.auth0_domain + url + '?' + qs.stringify(query);
+  var path = data.path;
+
+  var url = 'https://' + data.auth0_domain + path;
+  if (data.query) {
+    var query = JSON.parse(data.query);
+    url = url + '?' + qs.stringify(query);
+  }
 
   var options = {
     url: url,
-    method: data.method,
+    method: req.method,
     headers: {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer ' + data.auth0_api_key
     }
   };
 
-  if (data.method !== 'GET') {
+  if (req.method !== 'GET') {
     data.json = context.body;
   }
   request(options, function(error, response, body) {
     if (error) {
-      var err = JSON.parse(error);
-      cb(err);
+      res.writeHead(500, { 'Content-Type': 'application/json'});
+      res.end(error);
     } else {
-      var obj = JSON.parse(body);
-      cb(null, obj);
+      res.writeHead(200, { 'Content-Type': 'application/json'});
+      res.end(body);
     }
   });
 }

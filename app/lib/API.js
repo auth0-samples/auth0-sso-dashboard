@@ -2,21 +2,25 @@ var request = require('browser-request');
 var Dispatcher = require('./Dispatcher');
 var Constants = require('./Constants');
 var qs = require('querystring');
-//var fetch = require('whatwg-fetch');
 
+var sbUrlBase = 'https://sandbox.it.auth0.com/api/run/auth0-sso-dashboard?path=';
 
 module.exports = {
 
-  _get: function(token, url, options, callback) {
-    if (options) {
-      url + '?' + qs.stringify(options);
-    }
-    request({
+  _makeRequest: function(method, token, url, json, callback) {
+    var options = {
+      method: method,
       url: url,
-      headers: {
-        'Authorization': 'Bearer ' + token
-      }
-    }, function(error, response, body) {
+      headers: {}
+    }
+    if (token) {
+      options.headers['Authorization'] = 'Bearer ' + token
+    }
+    if (json) {
+      options.json = json;
+    }
+
+    request(options, function(error, response, body) {
       if (error || response.statusCode !== 200) {
         if (response.statusCode === 401) {
           Dispatcher.dispatch({
@@ -26,73 +30,44 @@ module.exports = {
         console.log({ message: 'Error making HTTP Request', error: error, statusCode: response.statusCode });
         return;
       } else {
-        var data = JSON.parse(body);
+        var data;
+        if (typeof body === "string") {
+          data = JSON.parse(body)
+        } else {
+          data = body;
+        }
         callback(data);
       }
     });
   },
 
-  _postOrPatch: function(method, token, url, options, json, callback) {
-    if (options) {
-      url + '?' + qs.stringify(options);
+  _get: function(token, url, callback) {
+    this._makeRequest('GET', token, url, null, callback);
+  },
+
+  _post: function(token, url, json, callback) {
+    this._makeRequest('POST', token, url, json, callback);
+  },
+
+  _patch: function(token, path, url, callback) {
+    this._makeRequest('PATCH', token, url, json, callback);
+  },
+
+  _delete: function(token, url, callback) {
+    this._makeRequest('DELETE', token, url, null, callback);
+  },
+
+  _proxyUrl: function(path, query) {
+    var url = sbUrlBase + path;
+    if (query) {
+      url = url + '&query=' + JSON.stringify(query);
     }
-    request({
-      url: url,
-      method: method,
-      json: json,
-      headers: {
-        'Authorization': 'Bearer ' + token
-      }
-    }, function(error, response, body) {
-      if (error || response.statusCode !== 200) {
-        if (response.statusCode === 401) {
-          Dispatcher.dispatch({
-            actionType: Constants.USER_LOGGED_OUT
-          });
-        }
-        console.log({ message: 'Error making HTTP Request', error: error, statusCode: response.statusCode });
-        return;
-      } else {
-        callback(body);
-      }
-    });
-  },
-
-  _delete: function(token, url, options, callback) {
-    if (options) {
-      url + '?' + qs.stringify(options);
-    }
-    request({
-      url: url,
-      method: 'DELETE',
-      headers: {
-        'Authorization': 'Bearer ' + token
-      }
-    }, function(error, response, body) {
-      if (error || response.statusCode !== 200) {
-        if (response.statusCode === 401) {
-          Dispatcher.dispatch({
-            actionType: Constants.USER_LOGGED_OUT
-          });
-        }
-        console.log({ message: 'Error making HTTP Request', error: error, statusCode: response.statusCode });
-        return;
-      } else {
-        callback(body);
-      }
-    });
-  },
-
-  _post: function(token, url, options, json, callback) {
-    this._postOrPatch('POST', token, url, options, json, callback);
-  },
-
-  _patch: function(token, url, options, json, callback) {
-    this._postOrPatch('PATCH', token, url, options, json, callback);
+    return url;
   },
 
   loadUserApps: function(token) {
-    this._get(token, '/api/user/apps', null, function(data) {
+    var url = this._proxyUrl('/api/user/apps');
+    this._get(token, url, function(data) {
       Dispatcher.dispatch({
         actionType: Constants.RECEIVED_USER_APPS,
         apps: data
@@ -101,16 +76,27 @@ module.exports = {
   },
 
   loadApps: function(token) {
-    this._get(token, '/api/apps', null, function(data) {
+    var url = this._proxyUrl('/api/v2/clients', {"fields": "name,client_id,global"});
+    this._get(token, url, function(data) {
+      var apps = [];
+      for (var i = 0; i < data.length; i++) {
+        var app = data[i];
+        // Filter out this app and the global 'all applications' app
+        if (window.config.auth0_client_id !== app.client_id && app.global === false) {
+          // App is allowed, now check permissions
+          apps.push(app);
+        }
+      }
       Dispatcher.dispatch({
         actionType: Constants.RECEIVED_APPS,
-        apps: data
+        apps: apps
       });
     })
   },
 
   saveApp: function(token, app, callback) {
-    this._post(token, '/api/apps', null, app, function(data) {
+    this._proxyUrl('/api/v2/clients');
+    this._post(token, url, app, function(data) {
       Dispatcher.dispatch({
         actionType: Constants.SAVED_APP,
         app: data
@@ -119,7 +105,8 @@ module.exports = {
   },
 
   loadRoles: function(token) {
-    this._get(token, '/api/roles', null, function(data) {
+    var url = this._proxyUrl('/api/roles');
+    this._get(token, url, function(data) {
       Dispatcher.dispatch({
         actionType: Constants.RECEIVED_ROLES,
         roles: data.roles
@@ -128,7 +115,8 @@ module.exports = {
   },
 
   saveRole: function(token, role) {
-    this._post(token, '/api/roles', null, role, function(data) {
+    var url = this._proxyUrl('/api/roles');
+    this._post(token, url, role, function(data) {
       Dispatcher.dispatch({
         actionType: Constants.SAVED_ROLE,
         role: data
@@ -137,7 +125,8 @@ module.exports = {
   },
 
   deleteRole: function(token, role_id) {
-    this._delete(token, '/api/roles/' + role_id, null, function(data) {
+    var url = this._proxyUrl('/api/roles/' + role_id);
+    this._delete(token, url, function(data) {
       Dispatcher.dispatch({
         actionType: Constants.DELETED_ROLE,
         role_id: role_id
@@ -146,7 +135,8 @@ module.exports = {
   },
 
   loadUsers: function(token, options) {
-    this._get(token, '/api/users', options, function(data) {
+    var url = this._proxyUrl('/api/v2/users', options)
+    this._get(token, url, function(data) {
       Dispatcher.dispatch({
         actionType: Constants.RECEIVED_USERS,
         users: data
@@ -154,8 +144,12 @@ module.exports = {
     });
   },
 
-  loadUserProfile: function(access_token) {
-    this._get(access_token, 'https://' + window.config.auth0_domain + '/userinfo', null, function(data) {
+  loadUserProfile: function(token) {
+    var url = 'https://' + window.config.auth0_domain + '/tokeninfo';
+    var data = {
+      id_token: token
+    };
+    this._post(null, url, data, function(data) {
       Dispatcher.dispatch({
         actionType: Constants.RECEIVED_PROFILE,
         profile: data
@@ -167,7 +161,8 @@ module.exports = {
     var body = {
       user_metadata: profile
     }
-    this._patch(token, '/api/userprofile', null, body, function(data) {
+    var url = this._proxyUrl('/api/userprofile');
+    this._patch(token, url, body, function(data) {
       Dispatcher.dispatch({
         actionType: Constants.RECEIVED_PROFILE,
         profile: data
@@ -181,7 +176,8 @@ module.exports = {
         roles: roles
       }
     }
-    this._patch(token, '/api/users/' + user_id, null, body, function(data) {
+    var url = this._proxyUrl('/api/users/' + user_id);
+    this._patch(token, url, body, function(data) {
       Dispatcher.dispatch({
         actionType: Constants.SAVED_USER,
         user: data

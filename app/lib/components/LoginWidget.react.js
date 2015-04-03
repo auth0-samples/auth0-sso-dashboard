@@ -1,5 +1,5 @@
 var React = require('react');
-var AuthActions = require('../actions/AuthActions');
+var Actions = require('../Actions');
 var Router = require('react-router');
 
 var LoginWidget = React.createClass({
@@ -16,12 +16,13 @@ var LoginWidget = React.createClass({
     lock.show({
       closable: false,
       connections: [config.auth0_connection]
-    }, (function(err, profile, token, access_token) {
+    }, (function(err, profile, token) {
       if (err) {
         // Error callback
         console.log(err);
       } else {
-        AuthActions.authenticated(token, access_token);
+        Actions.authenticated(token);
+        Actions.loadProfile(profile);
         var nextPath = this.getQuery().nextPath;
 
         if (nextPath) {

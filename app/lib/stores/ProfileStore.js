@@ -4,6 +4,13 @@ var Store = require('./Store');
 
 var ProfileStore = new Store({});
 
+ProfileStore.getTaskToken = function(taskName) {
+  var profile = this.get();
+  if (profile.task_tokens) {
+    return profile.task_tokens[taskName];
+  }
+}
+
 // Register callback to handle all updates
 Dispatcher.register(function(action) {
 
