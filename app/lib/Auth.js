@@ -85,13 +85,10 @@ var Auth = {
       role: is_admin ? config.aws_iam_admin : config.aws_iam_user,
       principal: config.aws_iam_principal
     };
-    lock.$auth0.getDelegationToken(options, function(err, delegationResult) {
+    lock.$auth0.getDelegationToken(options, (function(err, delegationResult) {
       if (err) throw err;
-      Dispatcher.dispatch({
-        actionType: Constants.AWS_CREDENTIALS_RECIEVED,
-        credentials: delegationResult.Credentials
-      });
-    });
+      this.setAwsCredentials(delegationResult.Credentials);
+    }).bind(this));
   },
 
   setAwsCredentials: function(credentials) {
@@ -121,9 +118,6 @@ module.exports = Auth;
 Dispatcher.register(function(action) {
 
   switch(action.actionType) {
-    case Constants.AWS_CREDENTIALS_RECIEVED:
-      Auth.setAwsCredentials(action.credentials);
-      break;
     case Constants.RECEIVED_PROFILE:
       Auth.loadAwsCredentials(action.profile.is_admin);
       Auth.setTaskTokens(action.profile.task_tokens);
