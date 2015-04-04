@@ -4,6 +4,7 @@ var Link = require('react-router').Link;
 var BS = require('react-bootstrap');
 var ProfileActions = require('../actions/ProfileActions');
 var ProfileStore = require('../stores/ProfileStore');
+var Auth = require('../Auth');
 var Router = require('react-router');
 
 function getStateFromStores() {
@@ -75,7 +76,7 @@ export default class Navbar extends React.Component {
 
   handleLogout(event) {
     event.preventDefault();
-    ProfileActions.logout();
+    Auth.logout();
     this.context.router.transitionTo('/login');
   }
 }

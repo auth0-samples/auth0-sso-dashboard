@@ -1,11 +1,12 @@
 var React = require('react');
 var Router = require('react-router');
 var Navbar = require('./Navbar.react');
-var ProfileStore = require('../stores/ProfileStore');
+var Auth = require('../Auth');
 
 function getStateFromStores() {
-  var tokens = ProfileStore.getTaskTokens() || {};
-  tokens.auth = ProfileStore.getToken();
+  var tokens = Auth.getTaskTokens() || {};
+  tokens.auth = Auth.getIdToken();
+  tokens.aws_credentials = Auth.getAwsCredentials();
   return tokens;
 }
 
@@ -16,17 +17,17 @@ module.exports = React.createClass({
   },
 
   componentDidMount: function() {
-    ProfileStore.addChangeListener(this._onChange);
+    Auth.addChangeListener(this._onChange);
   },
 
   componentWillUnmount: function() {
-    ProfileStore.removeChangeListener(this._onChange);
+    Auth.removeChangeListener(this._onChange);
   },
 
   statics: {
     willTransitionTo: function (transition) {
       var nextPath = transition.path;
-      if (!ProfileStore.isAuthenticated()) {
+      if (!Auth.isAuthenticated()) {
         transition.redirect('/login',{},
           { 'nextPath' : nextPath });
       }

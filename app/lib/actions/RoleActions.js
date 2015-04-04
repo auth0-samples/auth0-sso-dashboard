@@ -4,7 +4,7 @@ var API = require('../API');
 
 module.exports = {
 
-  getRoles: function(token) {
+  loadRoals: function(token) {
     API.loadRoles(token);
   },
 

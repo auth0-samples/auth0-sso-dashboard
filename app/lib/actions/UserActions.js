@@ -4,7 +4,7 @@ var API = require('../API');
 
 module.exports = {
 
-  getUsers: function(token) {
+  loadUsers: function(token) {
     API.loadUsers(token, {
       per_page: 10,
       page: 0

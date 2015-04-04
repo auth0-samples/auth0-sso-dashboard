@@ -19,8 +19,13 @@ var ApplicationList = React.createClass({
 
   componentDidMount: function() {
     UserAppStore.addChangeListener(this._onChange);
-    if (this.props.token) {
-      AppActions.loadUserApps(this.props.token);
+    if (this.props.tokens.get_user_clients)
+    AppActions.loadUserApps(this.state.tokens.get_user_clients);
+  },
+
+  componentWillReceiveProps: function(nextProps) {
+    if (!this.props.tokens.get_user_clients) {
+      AppActions.loadUserApps(nextProps.tokens.get_user_clients);
     }
   },
 

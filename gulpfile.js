@@ -125,7 +125,11 @@ gulp.task('html', ['clean'], function() {
     logo_url: process.env.LOGO_URL,
     auth0_domain: process.env.AUTH0_DOMAIN,
     auth0_client_id: process.env.AUTH0_CLIENT_ID,
-    auth0_connection: process.env.AUTH0_CONNECTION
+    auth0_connection: process.env.AUTH0_CONNECTION,
+    aws_s3_bucket: process.env.AWS_S3_BUCKET,
+    aws_iam_principal: process.env.AWS_IAM_PRINCIPAL,
+    aws_iam_user: process.env.AWS_IAM_USER,
+    aws_iam_admin: process.env.AWS_IAM_ADMIN
   }
   var data = {
     bundle_js_path: PROD ? '/bundle.min.js' : '/bundle.js',

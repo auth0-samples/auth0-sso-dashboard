@@ -2,19 +2,20 @@ var request = require('browser-request');
 var Dispatcher = require('./Dispatcher');
 var Constants = require('./Constants');
 var qs = require('querystring');
+var ProfileStore = require('./stores/ProfileStore');
 
-var sbUrlBase = 'https://sandbox.it.auth0.com/api/run/auth0-sso-dashboard?path=';
+var sbUrlBase = 'https://sandbox.it.auth0.com/api/run/auth0-sso-dashboard';
 
 module.exports = {
 
-  _makeRequest: function(method, token, url, json, callback) {
+  _makeRequest: function(method, id_token, url, json, callback) {
     var options = {
       method: method,
       url: url,
       headers: {}
     }
-    if (token) {
-      options.headers['Authorization'] = 'Bearer ' + token
+    if (id_token) {
+      options.headers['Authorization'] = 'Bearer ' + id_token
     }
     if (json) {
       options.json = json;
@@ -41,33 +42,32 @@ module.exports = {
     });
   },
 
-  _get: function(token, url, callback) {
-    this._makeRequest('GET', token, url, null, callback);
+  _get: function(id_token, url, callback) {
+    this._makeRequest('GET', id_token, url, null, callback);
   },
 
-  _post: function(token, url, json, callback) {
-    this._makeRequest('POST', token, url, json, callback);
+  _post: function(id_token, url, json, callback) {
+    this._makeRequest('POST', id_token, url, json, callback);
   },
 
-  _patch: function(token, path, url, callback) {
-    this._makeRequest('PATCH', token, url, json, callback);
+  _patch: function(id_token, path, url, callback) {
+    this._makeRequest('PATCH', id_token, url, json, callback);
   },
 
-  _delete: function(token, url, callback) {
-    this._makeRequest('DELETE', token, url, null, callback);
+  _delete: function(id_token, url, callback) {
+    this._makeRequest('DELETE', id_token, url, null, callback);
   },
 
   _proxyUrl: function(path, query) {
-    var url = sbUrlBase + path;
+    var url = sbUrlBase + '?path=' + path;
     if (query) {
       url = url + '&query=' + JSON.stringify(query);
     }
     return url;
   },
 
-  loadUserApps: function(token) {
-    var url = this._proxyUrl('/api/user/apps');
-    this._get(token, url, function(data) {
+  loadUserApps: function(task_token) {
+    this._get(task_token, sbUrlBase, function(data) {
       Dispatcher.dispatch({
         actionType: Constants.RECEIVED_USER_APPS,
         apps: data
@@ -75,9 +75,9 @@ module.exports = {
     });
   },
 
-  loadApps: function(token) {
+  loadApps: function(id_token) {
     var url = this._proxyUrl('/api/v2/clients', {"fields": "name,client_id,global"});
-    this._get(token, url, function(data) {
+    this._get(id_token, url, function(data) {
       var apps = [];
       for (var i = 0; i < data.length; i++) {
         var app = data[i];
@@ -94,9 +94,9 @@ module.exports = {
     })
   },
 
-  saveApp: function(token, app, callback) {
+  saveApp: function(id_token, app, callback) {
     this._proxyUrl('/api/v2/clients');
-    this._post(token, url, app, function(data) {
+    this._post(id_token, url, app, function(data) {
       Dispatcher.dispatch({
         actionType: Constants.SAVED_APP,
         app: data
@@ -104,9 +104,10 @@ module.exports = {
     })
   },
 
-  loadRoles: function(token) {
+  loadRoles: function(id_token) {
+    var bucket = new AWS.S3({ params: { Bucket: window.config.aws_s3_bucket }});
     var url = this._proxyUrl('/api/roles');
-    this._get(token, url, function(data) {
+    this._get(id_token, url, function(data) {
       Dispatcher.dispatch({
         actionType: Constants.RECEIVED_ROLES,
         roles: data.roles
@@ -114,9 +115,9 @@ module.exports = {
     });
   },
 
-  saveRole: function(token, role) {
+  saveRole: function(id_token, role) {
     var url = this._proxyUrl('/api/roles');
-    this._post(token, url, role, function(data) {
+    this._post(id_token, url, role, function(data) {
       Dispatcher.dispatch({
         actionType: Constants.SAVED_ROLE,
         role: data
@@ -124,9 +125,9 @@ module.exports = {
     })
   },
 
-  deleteRole: function(token, role_id) {
+  deleteRole: function(id_token, role_id) {
     var url = this._proxyUrl('/api/roles/' + role_id);
-    this._delete(token, url, function(data) {
+    this._delete(id_token, url, function(data) {
       Dispatcher.dispatch({
         actionType: Constants.DELETED_ROLE,
         role_id: role_id
@@ -134,9 +135,9 @@ module.exports = {
     })
   },
 
-  loadUsers: function(token, options) {
+  loadUsers: function(id_token, options) {
     var url = this._proxyUrl('/api/v2/users', options)
-    this._get(token, url, function(data) {
+    this._get(id_token, url, function(data) {
       Dispatcher.dispatch({
         actionType: Constants.RECEIVED_USERS,
         users: data
@@ -144,25 +145,25 @@ module.exports = {
     });
   },
 
-  loadUserProfile: function(token) {
+  loadUserProfile: function(id_token) {
     var url = 'https://' + window.config.auth0_domain + '/tokeninfo';
     var data = {
-      id_token: token
+      id_token: id_token
     };
-    this._post(null, url, data, function(data) {
+    this._post(null, url, data, function(profile) {
       Dispatcher.dispatch({
         actionType: Constants.RECEIVED_PROFILE,
-        profile: data
+        profile: profile
       });
     });
   },
 
-  saveUserProfile: function(token, user_id, profile) {
+  saveUserProfile: function(id_token, user_id, profile) {
     var body = {
       user_metadata: profile
     }
     var url = this._proxyUrl('/api/userprofile');
-    this._patch(token, url, body, function(data) {
+    this._patch(id_token, url, body, function(data) {
       Dispatcher.dispatch({
         actionType: Constants.RECEIVED_PROFILE,
         profile: data
@@ -170,22 +171,24 @@ module.exports = {
     });
   },
 
-  saveUserRoles: function(token, user_id, roles) {
+  saveUserRoles: function(id_token, user_id, roles) {
     var body = {
       app_metadata: {
         roles: roles
       }
     }
     var url = this._proxyUrl('/api/users/' + user_id);
-    this._patch(token, url, body, function(data) {
+    this._patch(id_token, url, body, function(data) {
       Dispatcher.dispatch({
         actionType: Constants.SAVED_USER,
         user: data
-      })
+      });
     });
   },
 
-  refreshToken: function(token) {
+  refreshToken: function(id_token) {
 
-  }
+  },
+
+
 };

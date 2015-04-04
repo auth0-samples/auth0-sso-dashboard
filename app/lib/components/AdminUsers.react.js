@@ -24,9 +24,9 @@ var AdminUsers = React.createClass({
   componentDidMount: function() {
     UserStore.addChangeListener(this._onChange);
     RoleStore.addChangeListener(this._onChange);
-    if (this.props.token) {
-      UserActions.getUsers(this.props.token);
-      RoleActions.getRoles(this.props.token);
+    if (this.props.tokens.auth0_proxy) {
+      UserActions.loadUsers(this.props.tokens.auth0_proxy);
+      RoleActions.loadRoals(this.props.token);
     }
   },
 

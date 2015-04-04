@@ -1,5 +1,5 @@
 var React = require('react');
-var ProfileActions = require('../actions/ProfileActions');
+var Auth = require('../Auth');
 var Router = require('react-router');
 
 var LoginWidget = React.createClass({
@@ -12,24 +12,13 @@ var LoginWidget = React.createClass({
   },
 
   componentDidMount: function() {
-    var lock = window.lock;
-    lock.show({
-      closable: false,
-      connections: [config.auth0_connection]
-    }, (function(err, profile, token) {
-      if (err) {
-        // Error callback
-        console.log(err);
-      } else {
-        ProfileActions.authenticated(token);
-        ProfileActions.receiveProfile(profile);
-        var nextPath = this.getQuery().nextPath;
+    Auth.login((function() {
+      var nextPath = this.getQuery().nextPath;
 
-        if (nextPath) {
-          this.transitionTo(nextPath);
-        } else {
-          this.transitionTo('/');
-        }
+      if (nextPath) {
+        this.transitionTo(nextPath);
+      } else {
+        this.transitionTo('/');
       }
     }).bind(this));
   }

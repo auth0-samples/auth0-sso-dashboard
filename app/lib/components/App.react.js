@@ -2,7 +2,7 @@ var React = require('react');
 var Router = require('react-router');
 var Navbar = require('./Navbar.react');
 var ProfileStore = require('../stores/ProfileStore');
-var ProfileActions = require('../actions/ProfileActions');
+var Auth = require('../Auth');
 
 var App = React.createClass({
   render: function() {
@@ -37,10 +37,7 @@ var routes = (
 );
 
 module.exports.init = function(config) {
-  if (ProfileStore.isAuthenticated()) {
-    var token = ProfileStore.getToken();
-    ProfileActions.loadProfile(token);
-  }
+  Auth.reauthenticate();
 
   Router.run(routes, function (Handler, state) {
     React.render(<Handler {...state} />, document.body);
