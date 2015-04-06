@@ -25,14 +25,19 @@ var AdminRoles = React.createClass({
     AppStore.addChangeListener(this._onChange);
     if (this.props.tokens.auth0_proxy) {
       AppActions.loadApps(this.props.tokens.auth0_proxy);
-      RoleActions.loadRoles(this.props.tokens.auth0_proxy);
+    }
+    if (this.props.tokens.aws_credentials) {
+      RoleActions.loadRoles(this.props.tokens.aws_credentials);
     }
   },
 
   componentWillReceiveProps: function(nextProps) {
-    if (!this.props.tokens.auth0_proxy) {
+    if (!this.props.tokens.auth0_proxy && nextProps.tokens.auth0_proxy) {
       AppActions.loadApps(nextProps.tokens.auth0_proxy);
-      RoleActions.loadRoles(nextProps.tokens.auth0_proxy);
+    }
+
+    if (!this.props.tokens.id_token && nextProps.tokens.aws_credentials) {
+      RoleActions.loadRoles(nextProps.tokens.aws_credentials);
     }
   },
 

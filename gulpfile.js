@@ -18,11 +18,16 @@ var serve = require('gulp-serve');
 var babel = require("gulp-babel");
 var through = require('through2');
 var Stream = require('stream');
-var s3 = require('gulp-s3-upload')({
+var AWS = require('aws-sdk');
+var s3Upload = require('gulp-s3-upload')({
   accessKeyId: process.env.AWS_ACCESS_KEY_ID,
   secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
   region: process.env.AWS_REGION
 });
+var s3 = new AWS.S3({params: {Bucket: process.env.AWS_S3_BUCKET }});
+s3.config.credentials = new AWS.Credentials(
+  process.env.AWS_ACCESS_KEY_ID,
+  process.env.AWS_SECRET_ACCESS_KEY);
 
 var PROD = process.env.NODE_ENV === 'production';
 
@@ -141,9 +146,47 @@ gulp.task('html', ['clean'], function() {
   .pipe(gulp.dest('build/app'));
 });
 
-gulp.task('app-publish', ['build', 'webtasks', 'rules'], function() {
+gulp.task('create-bucket', function(cb) {
+  var params = {
+    Bucket: process.env.AWS_S3_BUCKET,
+    ACL: 'public-read',
+    CreateBucketConfiguration: {
+      LocationConstraint: process.env.AWS_REGION
+    }
+  };
+  s3.createBucket(params, cb);
+});
+
+gulp.task('set-cors', function(cb) {
+  var params = {
+    Bucket: process.env.AWS_S3_BUCKET,
+    CORSConfiguration: {
+      CORSRules: [
+        {
+          AllowedHeaders: [
+            '*',
+          ],
+          AllowedMethods: [
+            'GET',
+            'PUT'
+          ],
+          AllowedOrigins: [
+            '*',
+          ],
+          // ExposeHeaders: [
+          //   '*',
+          // ],
+          MaxAgeSeconds: 0
+        },
+      ]
+    }
+  };
+  s3.putBucketCors(params, cb);
+});
+
+gulp.task('app-publish', ['build', 'webtasks', 'rules', 'set-cors'], function() {
   gulp.src("./build/app/**/*.*")
-  .pipe(s3({
+  .pipe(s3Upload({
       Bucket: process.env.AWS_S3_BUCKET,
       ACL:    'public-read'
   }));
@@ -157,13 +200,20 @@ gulp.task('webtasks-build', ['webtasks-clean'], function() {
 
 gulp.task('webtasks-publish', ['webtasks-build'], function() {
   gulp.src("./build/tasks/**/*.js")
-  .pipe(s3({
+  .pipe(s3Upload({
       Bucket: process.env.AWS_S3_BUCKET,
       ACL:    'public-read',
       keyTransform: function(relative_filename) {
           return 'tasks/' + relative_filename;
       }
   }));
+});
+
+gulp.task('webtasks-watch', ['webtasks-publish'], function() {
+  var watcher = gulp.watch("./tasks/**/*.js", ['webtasks-publish']);
+  watcher.on('change', function(event) {
+    console.log('File ' + event.path + ' was ' + event.type + ', running tasks...');
+  });
 });
 
 gulp.task('rules-build', ['rules-clean'], function() {
@@ -186,9 +236,39 @@ gulp.task('rules-publish', ['rules-build'], function() {
 gulp.task('webtasks', ['webtasks-publish']);
 gulp.task('rules', ['rules-publish']);
 
+gulp.task('data-publish', ['set-cors'], function(cb) {
+  var createObjectIfNotExists = function(obj) {
+    return new Promise(function(resolve, reject) {
+      var params = {
+        Key: obj
+      }
+      s3.getObject(params, function(err, data) {
+        if (err) {
+          params.Body = "{ result: [] }";
+          params.ContentType = "application/json";
+          s3.putObject(params, function(err, data) {
+            if (err) {
+              console.log(err);
+              reject(err);
+            }
+            else {
+              console.log('Uplaoded ' + obj);
+              resolve(data);
+            }
+          })
+        } else {
+          console.log('Data file already exists at ' + obj);
+          resolve();
+        }
+      });
+    });
+  };
+
+  var objs = ['data/apps.json', 'data/roles.json'];
+  return Promise.all(objs.map(createObjectIfNotExists));
+});
 
 
-
-gulp.task('start', ['css-watch', 'js-watch', 'html', 'serve']);
+gulp.task('start', ['css-watch', 'js-watch', 'webtasks-watch', 'html', 'data-publish', 'serve']);
 gulp.task('build', ['clean', 'css-minify', 'js-minify', 'html', 'img', 'font']);
-gulp.task('publish', ['app-publish', 'webtasks', 'rules']);
+gulp.task('publish', ['app-publish', 'webtasks', 'rules', 'data-publish']);

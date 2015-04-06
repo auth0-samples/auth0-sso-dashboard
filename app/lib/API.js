@@ -104,13 +104,22 @@ module.exports = {
     })
   },
 
-  loadRoles: function(id_token) {
-    var bucket = new AWS.S3({ params: { Bucket: window.config.aws_s3_bucket }});
-    var url = this._proxyUrl('/api/roles');
-    this._get(id_token, url, function(data) {
+  loadRoles: function(aws_credentials) {
+    var s3 = new AWS.S3();
+    s3.config.credentials = new AWS.Credentials(
+      aws_credentials.AccessKeyId,
+      aws_credentials.SecretAccessKey,
+      aws_credentials.SessionToken);
+    var params = {
+      Bucket: window.config.aws_s3_bucket,
+      Key: 'data/roles.json'
+    }
+    s3.getObject(params, function(err, response) {
+      if (err) { throw err; }
+      var data = JSON.parse(response.Body.toString());
       Dispatcher.dispatch({
         actionType: Constants.RECEIVED_ROLES,
-        roles: data.roles
+        roles: data.result;
       });
     });
   },

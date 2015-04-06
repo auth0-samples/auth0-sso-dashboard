@@ -4,8 +4,8 @@ var API = require('../API');
 
 module.exports = {
 
-  loadRoals: function(token) {
-    API.loadRoles(token);
+  loadRoles: function(aws_credentials) {
+    API.loadRoles(aws_credentials);
   },
 
   save: function(token, role) {
