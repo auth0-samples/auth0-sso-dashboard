@@ -233,6 +233,14 @@ gulp.task('rules-publish', ['rules-build'], function() {
   gulp.src('./build/rules/**/*.js');
 });
 
+gulp.task('rules-watch', ['rules-publish'], function() {
+  var watcher = gulp.watch("./rules/**/*.js", ['rules-publish']);
+  watcher.on('change', function(event) {
+    console.log('File ' + event.path + ' was ' + event.type + ', running tasks...');
+  });
+});
+
+
 gulp.task('webtasks', ['webtasks-publish']);
 gulp.task('rules', ['rules-publish']);
 
@@ -269,6 +277,6 @@ gulp.task('data-publish', ['set-cors'], function(cb) {
 });
 
 
-gulp.task('start', ['css-watch', 'js-watch', 'webtasks-watch', 'html', 'data-publish', 'serve']);
+gulp.task('start', ['css-watch', 'js-watch', 'webtasks-watch', 'rules-watch', 'html', 'data-publish', 'serve']);
 gulp.task('build', ['clean', 'css-minify', 'js-minify', 'html', 'img', 'font']);
 gulp.task('publish', ['app-publish', 'webtasks', 'rules', 'data-publish']);
