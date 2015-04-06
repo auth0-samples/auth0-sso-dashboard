@@ -47,11 +47,11 @@ var AdminRoles = React.createClass({
   },
 
   saveRole: function(role) {
-    RoleActions.save(this.props.token, role);
+    RoleActions.save(this.props.tokens.aws_credentials, role);
   },
 
   deleteRole: function(role) {
-    RoleActions.delete(this.props.token, role.id);
+    RoleActions.delete(this.props.tokens.aws_credentials, role.id);
   },
 
   render: function() {

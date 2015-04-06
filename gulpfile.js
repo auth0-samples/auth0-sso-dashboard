@@ -244,8 +244,8 @@ gulp.task('data-publish', ['set-cors'], function(cb) {
       }
       s3.getObject(params, function(err, data) {
         if (err) {
-          params.Body = "{ result: [] }";
-          params.ContentType = "application/json";
+          params.Body = '{ "result": [] }';
+          params.ContentType = 'application/json';
           s3.putObject(params, function(err, data) {
             if (err) {
               console.log(err);

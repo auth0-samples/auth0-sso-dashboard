@@ -3,6 +3,8 @@ var Dispatcher = require('./Dispatcher');
 var Constants = require('./Constants');
 var qs = require('querystring');
 var ProfileStore = require('./stores/ProfileStore');
+var _ = require('lodash');
+var uuid = require('uuid');
 
 var sbUrlBase = 'https://sandbox.it.auth0.com/api/run/auth0-sso-dashboard';
 
@@ -66,6 +68,15 @@ module.exports = {
     return url;
   },
 
+  _getS3: function(aws_credentials) {
+    var s3 = new AWS.S3({ params: { Bucket: window.config.aws_s3_bucket }});
+    s3.config.credentials = new AWS.Credentials(
+      aws_credentials.AccessKeyId,
+      aws_credentials.SecretAccessKey,
+      aws_credentials.SessionToken);
+    return s3;
+  },
+
   loadUserApps: function(task_token) {
     this._get(task_token, sbUrlBase, function(data) {
       Dispatcher.dispatch({
@@ -105,13 +116,8 @@ module.exports = {
   },
 
   loadRoles: function(aws_credentials) {
-    var s3 = new AWS.S3();
-    s3.config.credentials = new AWS.Credentials(
-      aws_credentials.AccessKeyId,
-      aws_credentials.SecretAccessKey,
-      aws_credentials.SessionToken);
+    var s3 = this._getS3(aws_credentials);
     var params = {
-      Bucket: window.config.aws_s3_bucket,
       Key: 'data/roles.json'
     }
     s3.getObject(params, function(err, response) {
@@ -119,29 +125,68 @@ module.exports = {
       var data = JSON.parse(response.Body.toString());
       Dispatcher.dispatch({
         actionType: Constants.RECEIVED_ROLES,
-        roles: data.result;
+        roles: data.result
       });
     });
   },
 
-  saveRole: function(id_token, role) {
-    var url = this._proxyUrl('/api/roles');
-    this._post(id_token, url, role, function(data) {
-      Dispatcher.dispatch({
-        actionType: Constants.SAVED_ROLE,
-        role: data
+  saveRole: function(aws_credentials, role) {
+    var s3 = this._getS3(aws_credentials);
+    var params = {
+      Key: 'data/roles.json'
+    }
+    s3.getObject(params, function(err, response) {
+      if (err) throw err;
+      var data = JSON.parse(response.Body.toString());
+      if (role.id) {
+        var index = _.findIndex(data.result, { id: role.id });
+        if (index > -1) {
+          data.result[index] = role;
+        } else {
+          throw 'Invalid role id provided.';
+        }
+      } else {
+        role.id = uuid.v4()
+        data.result.push(role);
+      }
+
+      params.Body = JSON.stringify(data);
+      params.ContentType = 'application/json';
+      s3.putObject(params, function(err, response) {
+        if (err) throw err;
+        Dispatcher.dispatch({
+          actionType: Constants.RECEIVED_ROLES,
+          roles: data.result
+        });
       });
-    })
+    });
   },
 
-  deleteRole: function(id_token, role_id) {
-    var url = this._proxyUrl('/api/roles/' + role_id);
-    this._delete(id_token, url, function(data) {
-      Dispatcher.dispatch({
-        actionType: Constants.DELETED_ROLE,
-        role_id: role_id
+  deleteRole: function(aws_credentials, role_id) {
+    var s3 = this._getS3(aws_credentials);
+    var params = {
+      Key: 'data/roles.json'
+    }
+    s3.getObject(params, function(err, response) {
+      if (err) throw err;
+      var data = JSON.parse(response.Body.toString());
+      var index = _.findIndex(data.result, { id: role_id });
+      if (index > -1) {
+        data.result.splice(index, 1);
+      } else {
+        throw 'Invalid role id provided.';
+      }
+
+      params.Body = JSON.stringify(data);
+      params.ContentType = 'application/json';
+      s3.putObject(params, function(err) {
+        if (err) throw err;
+        Dispatcher.dispatch({
+          actionType: Constants.RECEIVED_ROLES,
+          roles: data.result
+        });
       });
-    })
+    });
   },
 
   loadUsers: function(id_token, options) {
