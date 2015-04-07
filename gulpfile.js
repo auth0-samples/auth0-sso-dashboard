@@ -1,4 +1,5 @@
 require('dotenv').load();
+var fs = require('fs');
 var gulp = require('gulp');
 var gutil = require('gulp-util');
 var sourcemaps = require('gulp-sourcemaps');
@@ -18,6 +19,7 @@ var serve = require('gulp-serve');
 var babel = require("gulp-babel");
 var through = require('through2');
 var Stream = require('stream');
+var insert = require('gulp-insert');
 var AWS = require('aws-sdk');
 var s3Upload = require('gulp-s3-upload')({
   accessKeyId: process.env.AWS_ACCESS_KEY_ID,
@@ -193,8 +195,13 @@ gulp.task('app-publish', ['build', 'webtasks', 'rules', 'set-cors'], function() 
 })
 
 gulp.task('webtasks-build', ['webtasks-clean'], function() {
+  var polyfillPath = path.join(__dirname, './node_modules/native-promise-only/lib/npo.src.js');
+  var polyfill = fs.readFileSync(polyfillPath);
+
+
   return gulp.src("tasks/*.js")
     .pipe(babel())
+    .pipe(insert.prepend(polyfill))
     .pipe(gulp.dest("build/tasks"));
 });
 

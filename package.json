@@ -60,8 +60,10 @@
     "async": "^0.9.0",
     "aws-sdk": "^2.1.20",
     "gulp-babel": "^4.0.1",
+    "gulp-insert": "^0.4.0",
     "gulp-s3-upload": "^1.0.4",
     "mocha": "~2.2.1",
+    "native-promise-only": "^0.7.8-a",
     "sandbox": "^0.8.6",
     "through2": "^0.6.3"
   }
