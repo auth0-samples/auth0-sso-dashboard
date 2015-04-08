@@ -137,7 +137,7 @@ gulp.task('html', ['clean'], function() {
     aws_iam_principal: process.env.AWS_IAM_PRINCIPAL,
     aws_iam_user: process.env.AWS_IAM_USER,
     aws_iam_admin: process.env.AWS_IAM_ADMIN,
-    debug: process.env.DEBUG
+    debug: !PROD
   }
   var data = {
     bundle_js_path: PROD ? '/bundle.min.js' : '/bundle.js',
