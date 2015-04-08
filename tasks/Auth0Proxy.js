@@ -6,6 +6,7 @@ return function(context, req, res) {
   var path = data.path;
 
   var url = 'https://' + data.auth0_domain + path;
+
   if (data.query) {
     var query = JSON.parse(data.query);
     url = url + '?' + qs.stringify(query);
@@ -20,16 +21,43 @@ return function(context, req, res) {
     }
   };
 
-  if (req.method !== 'GET') {
-    data.json = context.body;
+
+  var getBody = function(callback) {
+    var body = '';
+    req.on('data', function (chunk) { body += chunk; });
+    req.on('end', function () {
+        return callback(null, body);
+    });
+    req.on('error', callback);
+  };
+
+  var executeRequest = function(options) {
+    request(options, function(error, response, body) {
+      if (error || response.statusCode !== 200) {
+        res.writeHead(response.statusCode, { 'Content-Type': 'application/json'});
+        if (error) {
+          res.end(JSON.stringify(error));
+        } else {
+          res.end();
+        }
+      } else {
+        res.writeHead(200, { 'Content-Type': 'application/json'});
+        if (body) {
+          res.end(body);
+        } else {
+          res.end();
+        }
+      }
+    });
   }
-  request(options, function(error, response, body) {
-    if (error) {
-      res.writeHead(500, { 'Content-Type': 'application/json'});
-      res.end(JSON.stringify(error));
-    } else {
-      res.writeHead(200, { 'Content-Type': 'application/json'});
-      res.end(body);
-    }
-  });
+
+  if (req.method === 'GET' || req.method == 'DELETE') {
+    executeRequest(options);
+  } else {
+    getBody(function(err, body) {
+      options.body = body;
+      executeRequest(options);
+    });
+  }
+
 }

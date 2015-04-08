@@ -11,6 +11,9 @@ function getStateFromStores() {
 }
 
 module.exports = React.createClass({
+  contextTypes: {
+    router: React.PropTypes.func
+  },
 
   getInitialState: function() {
     return getStateFromStores();
@@ -24,17 +27,15 @@ module.exports = React.createClass({
     Auth.removeChangeListener(this._onChange);
   },
 
-  statics: {
-    willTransitionTo: function (transition) {
-      var nextPath = transition.path;
-      if (!Auth.isAuthenticated()) {
-        transition.redirect('/login',{},
-          { 'nextPath' : nextPath });
-      }
-    }
-  },
-
   render: function() {
+    // Check Auth status
+    if (!Auth.isAuthenticated()) {
+      var { router } = this.context;
+      var nextPath = router.getCurrentPath();
+      router.transitionTo('/login',{}, { 'nextPath' : nextPath });
+      return (<div></div>)
+    }
+
     return (
       <div>
         <Navbar />

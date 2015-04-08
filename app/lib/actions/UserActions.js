@@ -6,7 +6,7 @@ module.exports = {
 
   loadUsers: function(token) {
     API.loadUsers(token, {
-      per_page: 10,
+      per_page: 50,
       page: 0
     });
   },

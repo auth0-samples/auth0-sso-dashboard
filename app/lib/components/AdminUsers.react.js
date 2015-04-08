@@ -26,7 +26,19 @@ var AdminUsers = React.createClass({
     RoleStore.addChangeListener(this._onChange);
     if (this.props.tokens.auth0_proxy) {
       UserActions.loadUsers(this.props.tokens.auth0_proxy);
-      RoleActions.loadRoles(this.props.token);
+    }
+    if (this.props.tokens.aws_credentials) {
+      RoleActions.loadRoles(this.props.tokens.aws_credentials);
+    }
+  },
+
+  componentWillReceiveProps: function(nextProps) {
+    if (!this.props.tokens.auth0_proxy && nextProps.tokens.auth0_proxy) {
+      UserActions.loadUsers(nextProps.tokens.auth0_proxy);
+    }
+
+    if (!this.props.tokens.id_token && nextProps.tokens.aws_credentials) {
+      RoleActions.loadRoles(nextProps.tokens.aws_credentials);
     }
   },
 
@@ -36,7 +48,7 @@ var AdminUsers = React.createClass({
   },
 
   saveRoles: function(user_id, roles) {
-    UserActions.saveUserRoles(this.props.token, user_id, roles);
+    UserActions.saveUserRoles(this.props.tokens.auth0_proxy, user_id, roles);
   },
 
   render: function() {
@@ -58,17 +70,18 @@ var AdminUsers = React.createClass({
             <tbody>
               {this.state.users.map(function(user, i) {
                 var role_names = [];
-                user.roles.map(function(role_id) {
-                  var role = _.find(this.state.roles, { id: role_id});
-                  if (role) {
-                    role_names.push(role.name);
-                  } else {
-                    // Role has probably been deleted
-                    //role_names.push(role_id);
-                    console.warn('Role not found: ' + role_id);
-                  }
-                }, this);
-
+                if (user.app_metadata && user.app_metadata.roles) {
+                  user.app_metadata.roles.map(function(role_id) {
+                    var role = _.find(this.state.roles, { id: role_id});
+                    if (role) {
+                      role_names.push(role.name);
+                    } else {
+                      // Role has probably been deleted
+                      //role_names.push(role_id);
+                      console.warn('Role not found: ' + role_id);
+                    }
+                  }, this);
+                }
                 return (
                   <tr key={user.user_id}>
                     <td>{user.name}</td>

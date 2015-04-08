@@ -20,6 +20,7 @@ var Auth = {
     this.task_tokens = null;
     this.aws_creds = null;
     store.remove('id_token');
+    this.emitChange();
   },
 
   login: function(callback) {
