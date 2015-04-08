@@ -10,10 +10,16 @@ var Auth = {
   emitter: new EventEmitter(),
 
   logout: function() {
-    store.clear();
+    this.clearSession();
     Dispatcher.dispatch({
       actionType: Constants.USER_LOGGED_OUT
     });
+  },
+
+  clearSession: function() {
+    this.task_tokens = null;
+    this.aws_creds = null;
+    store.remove('id_token');
   },
 
   login: function(callback) {
@@ -118,6 +124,9 @@ module.exports = Auth;
 Dispatcher.register(function(action) {
 
   switch(action.actionType) {
+    case Constants.USER_LOGGED_OUT:
+      Auth.clearSession();
+      break;
     case Constants.RECEIVED_PROFILE:
       Auth.loadAwsCredentials(action.profile.is_admin);
       Auth.setTaskTokens(action.profile.task_tokens);
