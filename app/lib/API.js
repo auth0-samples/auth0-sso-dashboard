@@ -6,7 +6,10 @@ var ProfileStore = require('./stores/ProfileStore');
 var _ = require('lodash');
 var uuid = require('uuid');
 
-var sbUrlBase = 'https://sandbox.it.auth0.com/api/run/auth0-sso-dashboard';
+var sbUrlBase = 'https://sandbox.it.auth0.com/api/run/auth0-sso-dashboard?';
+if (window.config.debug) {
+  sbUrlBase += 'webtask_no_cache=1';
+}
 
 module.exports = {
 
@@ -63,7 +66,7 @@ module.exports = {
   _proxyUrl: function(path, query) {
     var url = sbUrlBase + '?path=' + path;
     if (query) {
-      url = url + '&query=' + JSON.stringify(query);
+      url += '&query=' + JSON.stringify(query);
     }
     return url;
   },
@@ -78,6 +81,7 @@ module.exports = {
   },
 
   loadUserApps: function(task_token) {
+
     this._get(task_token, sbUrlBase, function(data) {
       Dispatcher.dispatch({
         actionType: Constants.RECEIVED_USER_APPS,

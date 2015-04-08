@@ -19,8 +19,8 @@ var serve = require('gulp-serve');
 var babel = require("gulp-babel");
 var through = require('through2');
 var Stream = require('stream');
-var insert = require('gulp-insert');
 var AWS = require('aws-sdk');
+var cp = require('child_process');
 var s3Upload = require('gulp-s3-upload')({
   accessKeyId: process.env.AWS_ACCESS_KEY_ID,
   secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
@@ -136,7 +136,8 @@ gulp.task('html', ['clean'], function() {
     aws_s3_bucket: process.env.AWS_S3_BUCKET,
     aws_iam_principal: process.env.AWS_IAM_PRINCIPAL,
     aws_iam_user: process.env.AWS_IAM_USER,
-    aws_iam_admin: process.env.AWS_IAM_ADMIN
+    aws_iam_admin: process.env.AWS_IAM_ADMIN,
+    debug: process.env.DEBUG
   }
   var data = {
     bundle_js_path: PROD ? '/bundle.min.js' : '/bundle.js',
@@ -195,13 +196,8 @@ gulp.task('app-publish', ['build', 'webtasks', 'rules', 'set-cors'], function() 
 })
 
 gulp.task('webtasks-build', ['webtasks-clean'], function() {
-  var polyfillPath = path.join(__dirname, './node_modules/native-promise-only/lib/npo.src.js');
-  var polyfill = fs.readFileSync(polyfillPath);
-
-
   return gulp.src("tasks/*.js")
     .pipe(babel())
-    .pipe(insert.prepend(polyfill))
     .pipe(gulp.dest("build/tasks"));
 });
 
@@ -223,13 +219,32 @@ gulp.task('webtasks-watch', ['webtasks-publish'], function() {
   });
 });
 
+gulp.task('webtasks-logs', function() {
+  var args = [];
+  args.push('curl');
+  args.push('-N');
+  args.push('-s')
+  args.push('https://webtask.it.auth0.com/api/logs/tenant/' + process.env.WEBTASK_CONTAINER);
+  args.push('-H "Authorization: Bearer ' + process.env.SSO_DASHBOARD_WEBTASK_API_KEY + '"');
+
+ var cmd = args.join(' ');
+
+  cp.spawn(cmd, { stdio: 'inherit' })
+  .on('exit', function(code){
+      console.log('Exit code: '+code);
+   });
+});
+
 gulp.task('rules-build', ['rules-clean'], function() {
   var data = {
     auth0_client_id: process.env.AUTH0_CLIENT_ID,
-    admin_group: process.env.SSO_DASHBOARD_ADMIN_GROUP,
     auth0_domain: process.env.AUTH0_DOMAIN,
+    auth0_connection: process.env.AUTH0_CONNECTION,
+    admin_group: process.env.SSO_DASHBOARD_ADMIN_GROUP,
     aws_region: process.env.AWS_REGION,
-    aws_s3_bucket: process.env.AWS_S3_BUCKET
+    aws_s3_bucket: process.env.AWS_S3_BUCKET,
+    aws_access_key_id: process.env.AWS_ACCESS_KEY_ID,
+    webtask_container: process.env.WEBTASK_CONTAINER
   }
   return gulp.src("rules/*.js")
     .pipe(handlebars(data))

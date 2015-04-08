@@ -25,7 +25,6 @@ function(user, context, cb) {
 
   };
 
-
   var generateToken = function(taskName, callback) {
     var isAuthorized = authCheck(taskName);
     if (!isAuthorized) {
@@ -37,12 +36,17 @@ function(user, context, cb) {
     var data = {
       pctx: {
         user_id: user.user_id,
-        auth0_domain: '{{auth0_domain}}'
+        auth0_client_id: '{{auth0_client_id}}',
+        auth0_domain: '{{auth0_domain}}',
+        auth0_connection: '{{auth0_connection}}',
+        aws_bucket: '{{aws_s3_bucket}}',
+        aws_access_key_id: '{{aws_access_key_id}}'
       },
       ectx: {
         auth0_api_key: config.SSO_DASHBOARD_AUTH0_API_KEY,
+        aws_secret_access_key: config.SSO_DASHBOARD_AWS_SECRET_ACCESS_KEY
       },
-      ten: 'auth0-sso-dashboard',
+      ten: '{{webtask_container}}',
       url: url
     };
 

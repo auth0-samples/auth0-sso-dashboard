@@ -135,9 +135,15 @@ var Forms = require('./Forms.react');
 var RoleModal = React.createClass({
   getInitialState: function() {
     var role = this.props.role || {};
+    if (role.groups) {
+      var groups = role.groups.join(', ');
+    } else {
+      var groups = '';
+    }
     return {
       id: role.id,
       name: role.name,
+      groups: groups,
       all_apps: role.all_apps || false,
       apps: role.apps || []
     };
@@ -160,6 +166,7 @@ var RoleModal = React.createClass({
         <div className="modal-body">
           <form className="form-horizontal">
             <Forms.TextInput name="name" label="Name" placeholder="Name" value={this.state.name} onChange={this.onNameChanged} />
+            <Forms.TextInput name="groups" label="Map from Groups" placeholder="Group1, Group 2" value={this.state.groups} onChange={this.onGroupsChanged} />
             <Forms.RadioGroup label="Apps">
               <Forms.Radio label="All Apps" name="all_apps" value="1" checked={this.state.all_apps} onChange={this.allAppsChanged} />
               <Forms.Radio label="Specific Apps" name="all_apps" value="0" checked={!this.state.all_apps} onChange={this.allAppsChanged} />
@@ -177,9 +184,16 @@ var RoleModal = React.createClass({
 
   saveChanges: function() {
     // TODO: Validation logic
+    var groups = [];
+    if (this.state.groups) {
+      this.state.groups.split(',').map(function(g) {
+        groups.push(g.trim());
+      });
+    }
     var role = {
       id: this.state.id,
       name: this.state.name,
+      groups: groups,
       all_apps: this.state.all_apps,
       apps: this.state.apps
     };
@@ -197,6 +211,10 @@ var RoleModal = React.createClass({
 
   onNameChanged: function(event) {
     this.setState({name: event.target.value });
+  },
+
+  onGroupsChanged: function(event) {
+    this.setState({groups: event.target.value });
   },
 
   onAppSelected: function(event) {

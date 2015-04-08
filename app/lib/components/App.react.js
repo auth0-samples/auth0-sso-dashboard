@@ -36,7 +36,7 @@ var routes = (
   </Router.Route>
 );
 
-module.exports.init = function(config) {
+module.exports.init = function() {
   Auth.reauthenticate();
 
   Router.run(routes, function (Handler, state) {

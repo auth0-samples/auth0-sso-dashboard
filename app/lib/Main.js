@@ -7,11 +7,5 @@ window.React = React;
 
 var App = require('./components/App.react');
 
-var SsoDashboard = {
-  init: function(config) {
-    document.title = config.title;
-    App.init(config);
-  }
-}
-
-module.exports = window.SsoDashboard = SsoDashboard;
+document.title = config.title;
+App.init();

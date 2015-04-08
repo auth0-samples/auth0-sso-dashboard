@@ -26,7 +26,7 @@ return function(context, req, res) {
   request(options, function(error, response, body) {
     if (error) {
       res.writeHead(500, { 'Content-Type': 'application/json'});
-      res.end(error);
+      res.end(JSON.stringify(error));
     } else {
       res.writeHead(200, { 'Content-Type': 'application/json'});
       res.end(body);
