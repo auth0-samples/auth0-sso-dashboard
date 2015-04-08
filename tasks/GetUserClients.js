@@ -127,22 +127,22 @@ return function(context, cb) {
   var getUserRoles = (user) => {
     return getRoles().then(roles => {
       var user_roles = [];
-      if (user.groups && user.groups.length > 0) {
-        user.groups.map(function(group) {
-          var role = _.find(roles, function(role) {
-            return role.name.toLowerCase() === group.toLowerCase();
-          });
-          if (role) {
-            user_roles.push(role.id);
-          }
-        });
-      } else
+      // if (user.groups && user.groups.length > 0) {
+      //   user.groups.map(function(group) {
+      //     var role = _.find(roles, function(role) {
+      //       return role.name.toLowerCase() === group.toLowerCase();
+      //     });
+      //     if (role) {
+      //       user_roles.push(role.id);
+      //     }
+      //   });
+      // } else
       if (user.app_metadata && user.app_metadata.roles && user.app_metadata.roles.length > 0) {
         user.app_metadata.roles.map(function(role_id) {
           user_roles.push(role_id)
         });
       }
-      return roles;
+      return user_roles;
     });
   }
 

@@ -62,16 +62,25 @@ module.exports = {
     this._makeRequest('DELETE', token, url, null, callback);
   },
 
+  _getTaskUrl: function(query) {
+    if (window.config.debug) {
+      query = query || {};
+      query.webtask_no_cache = 1
+    }
+    if (query) {
+      return sbUrlBase + '?' + qs.stringify(query);
+    } else {
+      return sbUrlBase;
+    }
+  },
+
   _proxyUrl: function(path, query) {
     var args = {};
     args.path = path;
     if (query) {
       args.query = JSON.stringify(query);
     }
-    if (window.config.debug) {
-      args.webtask_no_cache = 1
-    }
-    return sbUrlBase + '?' + qs.stringify(args);
+    return this._getTaskUrl(args);
   },
 
   _getS3: function(aws_credentials) {
@@ -84,7 +93,8 @@ module.exports = {
   },
 
   loadUserApps: function(task_token) {
-    this._get(task_token, sbUrlBase, function(data) {
+    var url = this._getTaskUrl();
+    this._get(task_token, url, function(data) {
       Dispatcher.dispatch({
         actionType: Constants.RECEIVED_USER_APPS,
         apps: data

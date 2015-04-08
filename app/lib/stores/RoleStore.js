@@ -14,11 +14,11 @@ Dispatcher.register(function(action) {
     case Constants.USER_LOGGED_OUT:
       RoleStore.set();
       break;
-    case Constants.SAVED_ROLE:
-      RoleStore.update(action.role, function(current) {
-        return current.id === action.role.id;
-      });
-      break;
+    // case Constants.SAVED_ROLE:
+    //   RoleStore.update(action.role, function(current) {
+    //     return current.id === action.role.id;
+    //   });
+    //   break;
     case Constants.DELETED_ROLE:
       RoleStore.delete(function(current) {
         return current.id === action.role_id;
