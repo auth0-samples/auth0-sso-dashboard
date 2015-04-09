@@ -23,8 +23,8 @@ var AdminRoles = React.createClass({
   componentDidMount: function() {
     RoleStore.addChangeListener(this._onChange);
     AppStore.addChangeListener(this._onChange);
-    if (this.props.tokens.auth0_proxy) {
-      AppActions.loadApps(this.props.tokens.auth0_proxy);
+    if (this.props.tokens.auth0_proxy && this.props.tokens.aws_credentials) {
+      AppActions.loadApps(this.props.tokens.auth0_proxy, this.props.tokens.aws_credentials);
     }
     if (this.props.tokens.aws_credentials) {
       RoleActions.loadRoles(this.props.tokens.aws_credentials);
@@ -32,12 +32,16 @@ var AdminRoles = React.createClass({
   },
 
   componentWillReceiveProps: function(nextProps) {
-    if (!this.props.tokens.auth0_proxy && nextProps.tokens.auth0_proxy) {
-      AppActions.loadApps(nextProps.tokens.auth0_proxy);
+    var current = this.props.tokens;
+    var next = nextProps.tokens;
+    if (!current.auth0_proxy || !current.aws_credentials) {
+      if ((current.auth0_proxy || next.auth0_proxy) && (current.aws_credentials || next.aws_credentials)) {
+        AppActions.loadApps(current.auth0_proxy || next.auth0_proxy, current.aws_credentials || next.aws_credentials);
+      }
     }
 
-    if (!this.props.tokens.id_token && nextProps.tokens.aws_credentials) {
-      RoleActions.loadRoles(nextProps.tokens.aws_credentials);
+    if (!current.aws_credentials && next.aws_credentials) {
+      RoleActions.loadRoles(next.aws_credentials);
     }
   },
 
@@ -55,6 +59,67 @@ var AdminRoles = React.createClass({
   },
 
   render: function() {
+    var content;
+    var data_ready = (this.state.apps.length > 0) && (this.state.roles.length > 0);
+
+
+    if (data_ready) {
+      content = (
+        <table className="table">
+          <thead>
+            <tr>
+              <td>Name</td>
+              <td>All Apps</td>
+              <td>Apps</td>
+              <td width="20px"></td>
+              <td width="20px"></td>
+            </tr>
+          </thead>
+          <tbody>
+            {this.state.roles.map(function(role, i) {
+            var apps = [];
+            if (role.apps) {
+              apps = role.apps;
+            }
+            var app_names = [];
+            apps.map(function(client_id) {
+              var app = _.find(this.state.apps, { client_id: client_id });
+              if (app) {
+                app_names.push(app.name);
+              } else {
+                app_names.push(client_id);
+              }
+            }, this);
+
+            return (
+              <tr key={role.id}>
+                <td>{role.name}</td>
+                <td>{role.all_apps == true ? 'Yes' : 'No'}</td>
+                <td>
+                  <ul className="role-list">
+                  {app_names.map(function(app) {
+                    return (<li key={app}>{app}</li>);
+                  })}
+                  </ul>
+                </td>
+                <td>
+                  <BS.ModalTrigger modal={<UI.PromptModal message="Are you sure you want to delete this role?" onAcceptDialog={this.deleteRole.bind(this, role)} />}>
+                    <span className="table-button glyphicon glyphicon-trash" aria-hidden="true"></span>
+                  </BS.ModalTrigger>
+                </td>
+                <td>
+                  <BS.ModalTrigger modal={<RoleModal apps={this.state.apps} role={role} onRoleSaved={this.saveRole} />}>
+                    <span className="table-button glyphicon glyphicon-cog" aria-hidden="true"></span>
+                  </BS.ModalTrigger>
+                </td>
+              </tr>
+            );
+          }, this)}
+          </tbody>
+        </table>
+      );
+    }
+
     return (
       <div className="container">
         <UI.PageHeader title="Administration: Roles">
@@ -65,58 +130,8 @@ var AdminRoles = React.createClass({
           </BS.ModalTrigger>
         </UI.PageHeader>
         <div className="row">
-          <table className="table">
-            <thead>
-              <tr>
-                <td>Name</td>
-                <td>All Apps</td>
-                <td>Apps</td>
-                <td width="20px"></td>
-                <td width="20px"></td>
-              </tr>
-            </thead>
-            <tbody>
-              {this.state.roles.map(function(role, i) {
-                var apps = [];
-                if (role.apps) {
-                  apps = role.apps;
-                }
-                var app_names = [];
-                apps.map(function(client_id) {
-                  var app = _.find(this.state.apps, { client_id: client_id });
-                  if (app) {
-                    app_names.push(app.name);
-                  } else {
-                    app_names.push(client_id);
-                  }
-                }, this);
+          {{content}}
 
-                return (
-                  <tr key={role.id}>
-                    <td>{role.name}</td>
-                    <td>{role.all_apps == true ? 'Yes' : 'No'}</td>
-                    <td>
-                      <ul className="role-list">
-                      {app_names.map(function(app) {
-                        return (<li key={app}>{app}</li>);
-                      })}
-                      </ul>
-                    </td>
-                    <td>
-                      <BS.ModalTrigger modal={<UI.PromptModal message="Are you sure you want to delete this role?" onAcceptDialog={this.deleteRole.bind(this, role)} />}>
-                        <span className="table-button glyphicon glyphicon-trash" aria-hidden="true"></span>
-                      </BS.ModalTrigger>
-                    </td>
-                    <td>
-                      <BS.ModalTrigger modal={<RoleModal apps={this.state.apps} role={role} onRoleSaved={this.saveRole} />}>
-                        <span className="table-button glyphicon glyphicon-cog" aria-hidden="true"></span>
-                      </BS.ModalTrigger>
-                    </td>
-                  </tr>
-                );
-              }, this)}
-            </tbody>
-          </table>
         </div>
       </div>
     );
