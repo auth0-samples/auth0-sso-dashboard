@@ -20,7 +20,10 @@ module.exports = function(gulp, is_production) {
     });
   });
 
-  gulp.task('styles-minify', ['styles-bundle'], function() {
+  gulp.task('styles-build', ['styles-bundle'], function() {
+    if (!is_production) {
+      return gulp;
+    }
     return gulp.src('./dist/app/bundle.css')
       .pipe(minifyCSS())
       .pipe(rename(function(path) {
@@ -28,7 +31,4 @@ module.exports = function(gulp, is_production) {
       }))
       .pipe(gulp.dest('./dist/app'))
   });
-
-  gulp.task('styles-build', ['styles-minify']);
-
 }

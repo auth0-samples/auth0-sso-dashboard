@@ -6,6 +6,8 @@ var source = require('vinyl-source-stream');
 var sourcemaps = require('gulp-sourcemaps');
 var uglify = require('gulp-uglify');
 var watchify = require('watchify');
+var chalk = require('chalk');
+var moment = require('moment');
 
 module.exports = function(gulp, is_production) {
 
@@ -44,16 +46,22 @@ module.exports = function(gulp, is_production) {
     };
 
     bundler.on('update', function() {
-      console.log('Start \'scripts-bundle\'');
+      var start = Date.now();
+      console.log('[' + chalk.gray(moment().format('HH:mm:ss')) + '] Starting \'' + chalk.cyan('scripts-build') + '\'...');
       rebundle();
-      console.log('Finished \'scripts-bundle\'');
+      var elapsed = Date.now() - start;
+      console.log('[' + chalk.gray(moment().format('HH:mm:ss')) + '] Finished \'' + chalk.cyan('scripts-build') + '\' after ' + chalk.magenta(elapsed + ' ms'));
     });
     return rebundle();
   }
 
   gulp.task('scripts-watch', scripts.bind(null, true));
   gulp.task('scripts-bundle', ['app-clean'], scripts.bind(null, false));
-  gulp.task('scripts-minify', ['scripts-bundle'], function() {
+  gulp.task('scripts-build', ['scripts-bundle'], function() {
+    if (!is_production) {
+      return gulp;
+    }
+
     return gulp.src('./dist/app/bundle.js')
       .pipe(uglify())
       .pipe(rename(function(path) {
@@ -61,7 +69,4 @@ module.exports = function(gulp, is_production) {
       }))
       .pipe(gulp.dest('./dist/app'));
   });
-
-  gulp.task('scripts-build', ['scripts-minify']);
-
 }

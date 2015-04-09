@@ -1,4 +1,6 @@
 var AWS = require('aws-sdk');
+var chalk = require('chalk');
+var moment = require('moment');
 var s3 = new AWS.S3({params: {Bucket: process.env.AWS_S3_BUCKET }});
 s3.config.credentials = new AWS.Credentials(
   process.env.AWS_ACCESS_KEY_ID,
@@ -51,14 +53,14 @@ module.exports = function(gulp, is_production) {
               }
             })
           } else {
-            console.log('Data file already exists at ' + obj);
+            console.log('[' + chalk.gray(moment().format('HH:mm:ss')) + '] ' + chalk.grey('No change ..... ') + obj);
             resolve();
           }
         });
       });
     };
 
-    var objs = ['data/apps.json', 'data/roles.json'];
+    var objs = ['data/clients.json', 'data/roles.json'];
     return Promise.all(objs.map(createObjectIfNotExists));
   });
 
