@@ -19,14 +19,18 @@ var AdminApps = React.createClass({
 
   componentDidMount: function() {
     AppStore.addChangeListener(this._onChange);
-    if (this.props.tokens.auth0_proxy) {
-      AppActions.loadApps(this.props.tokens.auth0_proxy);
+    if (this.props.tokens.auth0_proxy && this.props.tokens.aws_credentials) {
+      AppActions.loadApps(this.props.tokens.auth0_proxy, this.props.tokens.aws_credentials);
     }
   },
 
   componentWillReceiveProps: function(nextProps) {
-    if (!this.props.tokens.auth0_proxy) {
-      AppActions.loadApps(nextProps.tokens.auth0_proxy);
+    var current = this.props.tokens;
+    var next = nextProps.tokens;
+    if (!current.auth0_proxy || !current.aws_credentials) {
+      if ((current.auth0_proxy || next.auth0_proxy) && (current.aws_credentials || next.aws_credentials)) {
+        AppActions.loadApps(current.auth0_proxy || next.auth0_proxy, current.aws_credentials || next.aws_credentials);
+      }
     }
   },
 
@@ -35,7 +39,7 @@ var AdminApps = React.createClass({
   },
 
   saveApp: function(app) {
-    AppActions.save(this.props.token, app);
+    AppActions.save(this.props.tokens.aws_credentials, app);
   },
 
   render: function() {

@@ -70,18 +70,8 @@ return function(context, cb) {
     delete app.addons;
     delete app.callbacks
 
-    app.logo_url = '/img/logos/auth0.png';
+    app.logo_url = app.logo_url || '/img/logos/auth0.png';
     return app;
-    // return getClients()
-    // .then(clients => {
-    //   var clientData = _.find(clients, { 'client_id': app.client_id });
-    //   if (clientData) {
-    //     if (clientData.logo_url) {
-    //       app.logo_url = clientData.logo_url;
-    //     }
-    //   }
-    //   return app;
-    // });
   }
 
   var getRoles = () => {
@@ -161,8 +151,25 @@ return function(context, cb) {
           }
           reject('Invalid HTTP request. Status code: ' + response.statusCode);
         } else {
-          var apps = JSON.parse(body);
-          resolve(apps);
+          var apps = [];
+          var data = JSON.parse(body);
+          var params = {
+            Key: 'data/clients.json'
+          }
+          s3.getObject(params, (err, response) => {
+            if (err) reject(err);
+            var metadatas = JSON.parse(response.Body.toString()).result;
+
+            for (var i = 0; i < data.length; i++) {
+              var app = data[i];
+              var metadata = _.find(metadatas, { client_id: app.client_id });
+              if (metadata) {
+                app = _.merge(app, metadata);
+              }
+              apps.push(app);
+            }
+            resolve(apps);
+          });
         }
       });
     });

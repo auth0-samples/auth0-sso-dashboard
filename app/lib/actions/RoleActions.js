@@ -8,12 +8,12 @@ module.exports = {
     API.loadRoles(aws_credentials);
   },
 
-  save: function(token, role) {
-    API.saveRole(token, role);
+  save: function(aws_credentials, role) {
+    API.saveRole(aws_credentials, role);
   },
 
-  delete: function(token, role_id) {
-    API.deleteRole(token, role_id);
+  delete: function(aws_credentials, role_id) {
+    API.deleteRole(aws_credentials, role_id);
   }
 
 };

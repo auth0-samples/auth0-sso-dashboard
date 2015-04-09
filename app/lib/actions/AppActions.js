@@ -3,15 +3,15 @@ var Constants = require('../Constants');
 var API = require('../API');
 
 module.exports = {
-  loadApps: function(token) {
-    API.loadApps(token);
+  loadApps: function(proxy_token, aws_credentials) {
+    API.loadApps(proxy_token, aws_credentials);
   },
 
-  save: function(token, app) {
-    API.saveApp(token, app);
+  save: function(aws_credentials, app) {
+    API.saveApp(aws_credentials, app);
   },
 
-  loadUserApps: function(token) {
-    API.loadUserApps(token);
+  loadUserApps: function(task_token) {
+    API.loadUserApps(task_token);
   }
 };

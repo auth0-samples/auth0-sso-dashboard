@@ -4,15 +4,15 @@ var API = require('../API');
 
 module.exports = {
 
-  loadUsers: function(token) {
-    API.loadUsers(token, {
+  loadUsers: function(proxy_token) {
+    API.loadUsers(proxy_token, {
       per_page: 50,
       page: 0
     });
   },
 
-  saveUserRoles: function(token, user_id, roles) {
-    API.saveUserRoles(token, user_id, roles);
+  saveUserRoles: function(proxy_token, user_id, roles) {
+    API.saveUserRoles(proxy_token, user_id, roles);
   }
 
   // saveUserProfile: function(token, user_id, profile) {

@@ -19,6 +19,9 @@ module.exports = {
     if (token) {
       options.headers['Authorization'] = 'Bearer ' + token
     }
+
+    // HACK: There is currently a bug in sandbox that wont allow
+    // Content-Type headers to be sent.
     if (json && url.indexOf('sandbox.it.auth0.com') < 0) {
       options.json = json;
     } else {
@@ -34,7 +37,7 @@ module.exports = {
         }
         console.log({ message: 'Error making HTTP Request', error: error, statusCode: response.statusCode });
         return;
-      } else {
+      } else { 
         var data;
         if (typeof body === "string") {
           data = JSON.parse(body)
@@ -102,33 +105,71 @@ module.exports = {
     });
   },
 
-  loadApps: function(proxy_token) {
+  loadApps: function(proxy_token, aws_credentials) {
     var url = this._proxyUrl('/api/v2/clients', {"fields": "name,client_id,global"});
-    this._get(proxy_token, url, function(data) {
+    this._get(proxy_token, url, (data) => {
       var apps = [];
-      for (var i = 0; i < data.length; i++) {
-        var app = data[i];
-        // Filter out this app and the global 'all applications' app
-        if (window.config.auth0_client_id !== app.client_id && app.global === false) {
-          // App is allowed, now check permissions
-          apps.push(app);
-        }
+      var s3 = this._getS3(aws_credentials);
+      var params = {
+        Key: 'data/clients.json'
       }
-      Dispatcher.dispatch({
-        actionType: Constants.RECEIVED_APPS,
-        apps: apps
+      s3.getObject(params, (err, response) => {
+        if (err) throw err;
+        var metadatas = JSON.parse(response.Body.toString()).result;
+
+        for (var i = 0; i < data.length; i++) {
+          var app = data[i];
+          // Filter out this app and the global 'all applications' app
+          if (window.config.auth0_client_id !== app.client_id && app.global === false) {
+            var metadata = _.find(metadatas, { client_id: app.client_id });
+            if (metadata) {
+              app = _.merge(app, metadata);
+            }
+            apps.push(app);
+          }
+        }
+        Dispatcher.dispatch({
+          actionType: Constants.RECEIVED_APPS,
+          apps: apps
+        });
       });
     })
   },
 
-  saveApp: function(proxy_token, app) {
-    this._proxyUrl('/api/v2/clients');
-    this._post(proxy_token, url, app, function(data) {
-      Dispatcher.dispatch({
-        actionType: Constants.SAVED_APP,
-        app: data
+  saveApp: function(aws_credentials, app) {
+    var s3 = this._getS3(aws_credentials);
+    var params = {
+      Key: 'data/clients.json'
+    }
+    s3.getObject(params, function(err, response) {
+      if (err) throw err;
+      var data = JSON.parse(response.Body.toString());
+      if (!app.client_id) {
+        throw 'Cannot save app without client_id.';
+      }
+
+      var appData = {
+        client_id: app.client_id,
+        logo_url: app.logo_url
+      }
+
+      var index = _.findIndex(data.result, { client_id: appData.client_id });
+      if (index > -1) {
+        data.result[index] = appData;
+      } else {
+        data.result.push(appData);
+      }
+
+      params.Body = JSON.stringify(data);
+      params.ContentType = 'application/json';
+      s3.putObject(params, function(err, response) {
+        if (err) throw err;
+        Dispatcher.dispatch({
+          actionType: Constants.SAVED_APP,
+          app: app
+        });
       });
-    })
+    });
   },
 
   loadRoles: function(aws_credentials) {
@@ -167,12 +208,12 @@ module.exports = {
       }
 
       params.Body = JSON.stringify(data);
-      //params.ContentType = 'application/json';
+      params.ContentType = 'application/json';
       s3.putObject(params, function(err, response) {
         if (err) throw err;
         Dispatcher.dispatch({
-          actionType: Constants.RECEIVED_ROLES,
-          roles: data.result
+          actionType: Constants.SAVED_ROLE,
+          roles: role
         });
       });
     });
@@ -205,9 +246,9 @@ module.exports = {
     });
   },
 
-  loadUsers: function(id_token, options) {
+  loadUsers: function(proxy_token, options) {
     var url = this._proxyUrl('/api/v2/users', options)
-    this._get(id_token, url, function(data) {
+    this._get(proxy_token, url, function(data) {
       Dispatcher.dispatch({
         actionType: Constants.RECEIVED_USERS,
         users: data
