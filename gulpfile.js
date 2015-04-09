@@ -21,6 +21,7 @@ var through = require('through2');
 var Stream = require('stream');
 var AWS = require('aws-sdk');
 var cp = require('child_process');
+var crypto = require('crypto');
 var s3Upload = require('gulp-s3-upload')({
   accessKeyId: process.env.AWS_ACCESS_KEY_ID,
   secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
@@ -36,15 +37,15 @@ var PROD = process.env.NODE_ENV === 'production';
 gulp.task('serve', serve(['app', 'build/app']));
 
 gulp.task('clean', function(cb) {
-  del(['build/app'], cb);
+  return del(['build/app'], cb);
 });
 
 gulp.task('rules-clean', function(cb) {
-  del(['build/rules'], cb);
+  return del(['build/rules'], cb);
 });
 
 gulp.task('webtasks-clean', function(cb) {
-  del(['build/tasks'], cb);
+  return del(['build/tasks'], cb);
 });
 
 gulp.task('css', function () {
@@ -119,14 +120,14 @@ gulp.task('js-minify', ['js'], function() {
 });
 
 gulp.task('img', ['clean'], function() {
-  gulp.src('./app/img/**/*.*').pipe(gulp.dest('./build/app/img'));
+  return gulp.src('./app/img/**/*.*').pipe(gulp.dest('./build/app/img'));
 });
 
 gulp.task('font', ['clean'], function() {
-  gulp.src('./app/fonts/**/*.*').pipe(gulp.dest('./build/app/fonts'));
+  return gulp.src('./app/fonts/**/*.*').pipe(gulp.dest('./build/app/fonts'));
 });
 
-gulp.task('html', ['clean'], function() {
+gulp.task('html', ['clean', 'js-minify', 'css-minify'], function() {
   var config = {
     title: process.env.SITE_TITLE,
     logo_url: process.env.LOGO_URL,
@@ -139,12 +140,20 @@ gulp.task('html', ['clean'], function() {
     aws_iam_admin: process.env.AWS_IAM_ADMIN,
     debug: !PROD
   }
+
+  var checksumPath = function(file) {
+    var fullPath = path.join(__dirname, 'build/app', file);
+    var text = fs.readFileSync(fullPath);
+    var hash = crypto.createHash('md5').update(text, 'utf8').digest('hex');
+    return file + '?v=' + hash;
+  }
+
   var data = {
-    bundle_js_path: PROD ? '/bundle.min.js' : '/bundle.js',
-    bundle_css_path: PROD ? '/bundle.min.css' : '/bundle.css',
+    bundle_js_path: PROD ? checksumPath('/bundle.min.js') : '/bundle.js',
+    bundle_css_path: PROD ? checksumPath('/bundle.min.css') : '/bundle.css',
     config: JSON.stringify(config)
   }
-  gulp.src('./app/html/index.html')
+  return gulp.src('./app/html/index.html')
   .pipe(handlebars(data))
   .pipe(gulp.dest('build/app'));
 });
@@ -188,12 +197,12 @@ gulp.task('set-cors', function(cb) {
 });
 
 gulp.task('app-publish', ['build', 'webtasks', 'rules', 'set-cors'], function() {
-  gulp.src("./build/app/**/*.*")
+  return gulp.src("./build/app/**/*.*")
   .pipe(s3Upload({
       Bucket: process.env.AWS_S3_BUCKET,
       ACL:    'public-read'
   }));
-})
+});
 
 gulp.task('webtasks-build', ['webtasks-clean'], function() {
   return gulp.src("tasks/*.js")
@@ -202,7 +211,7 @@ gulp.task('webtasks-build', ['webtasks-clean'], function() {
 });
 
 gulp.task('webtasks-publish', ['webtasks-build'], function() {
-  gulp.src("./build/tasks/**/*.js")
+  return gulp.src("./build/tasks/**/*.js")
   .pipe(s3Upload({
       Bucket: process.env.AWS_S3_BUCKET,
       ACL:    'public-read',
@@ -217,22 +226,6 @@ gulp.task('webtasks-watch', ['webtasks-publish'], function() {
   watcher.on('change', function(event) {
     console.log('File ' + event.path + ' was ' + event.type + ', running tasks...');
   });
-});
-
-gulp.task('webtasks-logs', function() {
-  var args = [];
-  args.push('curl');
-  args.push('-N');
-  args.push('-s')
-  args.push('https://webtask.it.auth0.com/api/logs/tenant/' + process.env.WEBTASK_CONTAINER);
-  args.push('-H "Authorization: Bearer ' + process.env.SSO_DASHBOARD_WEBTASK_API_KEY + '"');
-
- var cmd = args.join(' ');
-
-  cp.spawn(cmd, { stdio: 'inherit' })
-  .on('exit', function(code){
-      console.log('Exit code: '+code);
-   });
 });
 
 gulp.task('rules-build', ['rules-clean'], function() {
@@ -252,7 +245,7 @@ gulp.task('rules-build', ['rules-clean'], function() {
 });
 
 gulp.task('rules-publish', ['rules-build'], function() {
-  gulp.src('./build/rules/**/*.js');
+  return gulp.src('./build/rules/**/*.js');
 });
 
 gulp.task('rules-watch', ['rules-publish'], function() {
