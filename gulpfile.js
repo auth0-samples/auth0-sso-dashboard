@@ -22,6 +22,7 @@ var Stream = require('stream');
 var AWS = require('aws-sdk');
 var cp = require('child_process');
 var crypto = require('crypto');
+var minifyHTML = require('gulp-minify-html');
 var s3Upload = require('gulp-s3-upload')({
   accessKeyId: process.env.AWS_ACCESS_KEY_ID,
   secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
@@ -155,6 +156,7 @@ gulp.task('html', ['clean', 'js-minify', 'css-minify'], function() {
   }
   return gulp.src('./app/html/index.html')
   .pipe(handlebars(data))
+  .pipe(minifyHTML())
   .pipe(gulp.dest('build/app'));
 });
 

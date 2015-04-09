@@ -3,15 +3,13 @@
 <head>
   <link rel="stylesheet" href="{{bundle_css_path}}">
 </head>
-
 <body>
-  <div id="react"></div>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
   <script src="https://cdn.auth0.com/js/lock-7.0.min.js"></script>
   <script src="//cdnjs.cloudflare.com/ajax/libs/store.js/1.3.14/store.min.js"></script>
   <script src="https://sdk.amazonaws.com/js/aws-sdk-2.1.20.min.js"></script>
   <script>
-  window.config = {{{config}}}
+  window.config = {{{config}}};
   window.lock = new Auth0Lock(config.auth0_client_id, config.auth0_domain);
   </script>
   <script src="{{bundle_js_path}}"></script>
