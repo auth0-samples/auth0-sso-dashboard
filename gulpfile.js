@@ -35,18 +35,18 @@ s3.config.credentials = new AWS.Credentials(
 
 var PROD = process.env.NODE_ENV === 'production';
 
-gulp.task('serve', serve(['app', 'build/app']));
+gulp.task('serve', serve(['app', 'dist/app']));
 
 gulp.task('clean', function(cb) {
-  return del(['build/app'], cb);
+  return del(['dist/app'], cb);
 });
 
 gulp.task('rules-clean', function(cb) {
-  return del(['build/rules'], cb);
+  return del(['dist/rules'], cb);
 });
 
 gulp.task('webtasks-clean', function(cb) {
-  return del(['build/tasks'], cb);
+  return del(['dist/tasks'], cb);
 });
 
 gulp.task('css', function () {
@@ -55,7 +55,7 @@ gulp.task('css', function () {
     .pipe(rename(function(path) {
       path.basename = "bundle"
     }))
-    .pipe(gulp.dest('build/app'));
+    .pipe(gulp.dest('dist/app'));
 });
 
 gulp.task('css-watch', ['css'], function() {
@@ -66,12 +66,12 @@ gulp.task('css-watch', ['css'], function() {
 });
 
 gulp.task('css-minify', ['css'], function() {
-  return gulp.src('./build/app/bundle.css')
+  return gulp.src('./dist/app/bundle.css')
     .pipe(minifyCSS())
     .pipe(rename(function(path) {
       path.extname = '.min.css';
     }))
-    .pipe(gulp.dest('build/app'))
+    .pipe(gulp.dest('dist/app'))
 });
 
 function scripts(watch) {
@@ -102,7 +102,7 @@ function scripts(watch) {
       .pipe(buffer())
       .pipe(sourcemaps.init({loadMaps: true})) // loads map from browserify file
       .pipe(sourcemaps.write('./')) // writes .map file
-      .pipe(gulp.dest('./build/app'));
+      .pipe(gulp.dest('./dist/app'));
   };
 
   bundler.on('update', rebundle);
@@ -112,20 +112,20 @@ function scripts(watch) {
 gulp.task('js-watch', scripts.bind(null, true));
 gulp.task('js', scripts.bind(null, false));
 gulp.task('js-minify', ['js'], function() {
-  return gulp.src('./build/app/bundle.js')
+  return gulp.src('./dist/app/bundle.js')
     .pipe(uglify())
     .pipe(rename(function(path) {
       path.extname = '.min.js'
     }))
-    .pipe(gulp.dest('./build/app'));
+    .pipe(gulp.dest('./dist/app'));
 });
 
 gulp.task('img', ['clean'], function() {
-  return gulp.src('./app/img/**/*.*').pipe(gulp.dest('./build/app/img'));
+  return gulp.src('./app/img/**/*.*').pipe(gulp.dest('./dist/app/img'));
 });
 
 gulp.task('font', ['clean'], function() {
-  return gulp.src('./app/fonts/**/*.*').pipe(gulp.dest('./build/app/fonts'));
+  return gulp.src('./app/fonts/**/*.*').pipe(gulp.dest('./dist/app/fonts'));
 });
 
 gulp.task('html', ['clean', 'js-minify', 'css-minify'], function() {
@@ -143,7 +143,7 @@ gulp.task('html', ['clean', 'js-minify', 'css-minify'], function() {
   }
 
   var checksumPath = function(file) {
-    var fullPath = path.join(__dirname, 'build/app', file);
+    var fullPath = path.join(__dirname, 'dist/app', file);
     var text = fs.readFileSync(fullPath);
     var hash = crypto.createHash('md5').update(text, 'utf8').digest('hex');
     return file + '?v=' + hash;
@@ -157,7 +157,7 @@ gulp.task('html', ['clean', 'js-minify', 'css-minify'], function() {
   return gulp.src('./app/html/index.html')
   .pipe(handlebars(data))
   .pipe(minifyHTML())
-  .pipe(gulp.dest('build/app'));
+  .pipe(gulp.dest('dist/app'));
 });
 
 gulp.task('create-bucket', function(cb) {
@@ -199,7 +199,7 @@ gulp.task('set-cors', function(cb) {
 });
 
 gulp.task('app-publish', ['build', 'webtasks', 'rules', 'set-cors'], function() {
-  return gulp.src("./build/app/**/*.*")
+  return gulp.src("./dist/app/**/*.*")
   .pipe(s3Upload({
       Bucket: process.env.AWS_S3_BUCKET,
       ACL:    'public-read'
@@ -209,11 +209,11 @@ gulp.task('app-publish', ['build', 'webtasks', 'rules', 'set-cors'], function() 
 gulp.task('webtasks-build', ['webtasks-clean'], function() {
   return gulp.src("tasks/*.js")
     .pipe(babel())
-    .pipe(gulp.dest("build/tasks"));
+    .pipe(gulp.dest("dist/tasks"));
 });
 
 gulp.task('webtasks-publish', ['webtasks-build'], function() {
-  return gulp.src("./build/tasks/**/*.js")
+  return gulp.src("./dist/tasks/**/*.js")
   .pipe(s3Upload({
       Bucket: process.env.AWS_S3_BUCKET,
       ACL:    'public-read',
@@ -243,11 +243,11 @@ gulp.task('rules-build', ['rules-clean'], function() {
   }
   return gulp.src("rules/*.js")
     .pipe(handlebars(data))
-    .pipe(gulp.dest("build/rules"));
+    .pipe(gulp.dest("dist/rules"));
 });
 
 gulp.task('rules-publish', ['rules-build'], function() {
-  return gulp.src('./build/rules/**/*.js');
+  return gulp.src('./dist/rules/**/*.js');
 });
 
 gulp.task('rules-watch', ['rules-publish'], function() {
