@@ -4,9 +4,12 @@ var API = require('../API');
 
 module.exports = {
 
+  loadProfile: function(id_token, user_id) {
+    API.loadUserProfile(id_token, user_id);
+  },
 
-  loadProfile: function(id_token) {
-    API.loadUserProfile(id_token);
+  saveProfile: function(id_token, user_id, profile) {
+    API.saveUserProfile(id_token, user_id, profile);
   }
-  
+
 };

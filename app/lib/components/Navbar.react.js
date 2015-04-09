@@ -2,30 +2,8 @@ var React = require('react');
 var NavbarMenuItem = require('./NavbarMenuItem.react');
 var Link = require('react-router').Link;
 var BS = require('react-bootstrap');
-var ProfileActions = require('../actions/ProfileActions');
-var ProfileStore = require('../stores/ProfileStore');
-var Auth = require('../Auth');
-var Router = require('react-router');
-
-function getStateFromStores() {
-  return {
-    profile: ProfileStore.get(),
-  };
-}
 
 export default class Navbar extends React.Component {
-
-  constructor() {
-    this.state = getStateFromStores();
-  }
-
-  componentDidMount() {
-    ProfileStore.addChangeListener(this._onChange.bind(this));
-  }
-
-  componentWillUnmount() {
-    ProfileStore.removeChangeListener(this._onChange);
-  }
 
   render() {
     var title = window.config.title;
@@ -36,16 +14,11 @@ export default class Navbar extends React.Component {
       brand = <span><img src={logo_url} className="brand-image" /> {title}</span>
     }
 
-
-    var displayName = "Login";
-    var profileImageUrl = 'https://graph.facebook.com/3/picture';
-    if (this.state.profile) {
-      displayName = this.state.profile.name;
-      profileImageUrl = this.state.profile.picture;
-    }
+    var displayName = this.props.token_info.name;
+    var profileImageUrl = this.props.token_info.picture || 'https://graph.facebook.com/3/picture';
 
     var adminMenu;
-    if (this.state.profile.is_admin) {
+    if (this.props.token_info.is_admin) {
       adminMenu = (<NavbarMenuItem title="Admin" route="/admin" />);
     }
 
@@ -67,20 +40,8 @@ export default class Navbar extends React.Component {
     );
   }
 
-  /**
-   * Event handler for 'change' events coming from the stores
-   */
-  _onChange() {
-    this.setState(getStateFromStores());
-  }
-
   handleLogout(event) {
     event.preventDefault();
-    Auth.logout();
-    this.context.router.transitionTo('/login');
+    this.props.logout();
   }
 }
-
-Navbar.contextTypes = {
-  router: React.PropTypes.func
-};

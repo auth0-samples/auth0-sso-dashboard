@@ -2,6 +2,7 @@ var Dispatcher = require('./Dispatcher');
 var Constants = require('./Constants');
 var EventEmitter = require('events').EventEmitter;
 var ProfileActions = require('./actions/ProfileActions');
+var API = require('./API');
 
 var CHANGE_EVENT = "CHANGE";
 
@@ -28,23 +29,23 @@ var Auth = {
     lock.show({
       closable: false,
       connections: [config.auth0_connection]
-    }, (function(err, profile, token) {
+    }, (function(err, token_info, token) {
       if (err) {
         // Error callback
         throw err;
         console.log(err);
       } else {
-        this.authenticate(token, profile);
+        this.authenticate(token, token_info);
         callback();
       }
     }).bind(this));
   },
 
-  authenticate: function(id_token, profile) {
+  authenticate: function(id_token, token_info) {
     this.setIdToken(id_token);
     Dispatcher.dispatch({
-      actionType: Constants.RECEIVED_PROFILE,
-      profile: profile
+      actionType: Constants.RECEIVED_TOKEN_INFO,
+      token_info: token_info
     });
     Dispatcher.dispatch({
       actionType: Constants.USER_AUTHENTICATED,
@@ -55,8 +56,17 @@ var Auth = {
   reauthenticate: function() {
     var id_token = this.getIdToken();
     if (id_token) {
-      ProfileActions.loadProfile(id_token);
+      API.loadTokenInfo(id_token);
     }
+  },
+
+  setTokenInfo: function(token_info) {
+    this.token_info = token_info;
+    this.emitChange();
+  },
+
+  getTokenInfo: function() {
+    return this.token_info;
   },
 
   setIdToken: function(id_token) {
@@ -128,9 +138,10 @@ Dispatcher.register(function(action) {
     case Constants.USER_LOGGED_OUT:
       Auth.clearSession();
       break;
-    case Constants.RECEIVED_PROFILE:
-      Auth.loadAwsCredentials(action.profile.is_admin);
-      Auth.setTaskTokens(action.profile.task_tokens);
+    case Constants.RECEIVED_TOKEN_INFO:
+      Auth.setTokenInfo(action.token_info);
+      Auth.loadAwsCredentials(action.token_info.is_admin);
+      Auth.setTaskTokens(action.token_info.task_tokens);
       break;
     default:
       // no op

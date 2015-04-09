@@ -37,7 +37,7 @@ module.exports = {
         }
         console.log({ message: 'Error making HTTP Request', error: error, statusCode: response.statusCode });
         return;
-      } else { 
+      } else {
         var data;
         if (typeof body === "string") {
           data = JSON.parse(body)
@@ -256,12 +256,23 @@ module.exports = {
     });
   },
 
-  loadUserProfile: function(id_token) {
+  loadTokenInfo: function(id_token) {
     var url = 'https://' + window.config.auth0_domain + '/tokeninfo';
     var data = {
       id_token: id_token
     };
-    this._post(null, url, data, function(profile) {
+    this._post(null, url, data, function(token_info) {
+      Dispatcher.dispatch({
+        actionType: Constants.RECEIVED_TOKEN_INFO,
+        token_info: token_info
+      });
+    });
+  },
+
+  loadUserProfile: function(id_token, user_id) {
+    var user_id = user_id || JSON.parse(atob(id_token.split('.')[1])).sub;
+    var url = 'https://' + window.config.auth0_domain + '/api/v2/users/' + user_id + '?exclude_fields=true&fields=app_metadata,identities';
+    this._get(id_token, url, function(profile) {
       Dispatcher.dispatch({
         actionType: Constants.RECEIVED_PROFILE,
         profile: profile
@@ -269,12 +280,12 @@ module.exports = {
     });
   },
 
-  saveUserProfile: function(proxy_token, user_id, profile) {
+  saveUserProfile: function(id_token, user_id, profile) {
     var body = {
       user_metadata: profile
     }
-    var url = this._proxyUrl('/api/userprofile');
-    this._patch(proxy_token, url, body, function(data) {
+    var url = 'https://' + window.config.auth0_domain + '/api/v2/users/' + user_id;
+    this._patch(id_token, url, body, function(data) {
       Dispatcher.dispatch({
         actionType: Constants.RECEIVED_PROFILE,
         profile: data

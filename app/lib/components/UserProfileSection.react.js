@@ -2,7 +2,7 @@ var React = require('react');
 var ProfileStore = require('../stores/ProfileStore');
 var UI = require('./UI.react');
 var BS = require('react-bootstrap');
-var UserActions = require('../actions/UserActions');
+var ProfileActions = require('../actions/ProfileActions');
 var MUI = require('material-ui');
 
 function getStateFromStores() {
@@ -19,6 +19,7 @@ var UserProfile = React.createClass({
 
   componentDidMount: function() {
     ProfileStore.addChangeListener(this._onChange);
+    ProfileActions.loadProfile(this.props.tokens.id_token);
   },
 
   componentWillUnmount: function() {
@@ -26,7 +27,7 @@ var UserProfile = React.createClass({
   },
 
   saveChanges: function(user_metadata) {
-    UserActions.saveUserProfile(this.props.token, this.state.profile.user_id, user_metadata);
+    ProfileActions.saveProfile(this.props.tokens.id_token, this.state.profile.user_id, user_metadata);
     this.refs.snackbar.show();
     setTimeout((function() {
       this.refs.snackbar.dismiss();

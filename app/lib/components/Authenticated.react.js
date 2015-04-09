@@ -5,9 +5,12 @@ var Auth = require('../Auth');
 
 function getStateFromStores() {
   var tokens = Auth.getTaskTokens() || {};
-  tokens.auth = Auth.getIdToken();
+  tokens.id_token = Auth.getIdToken();
   tokens.aws_credentials = Auth.getAwsCredentials();
-  return tokens;
+  return {
+    tokens: tokens,
+    token_info: Auth.getTokenInfo()
+  }
 }
 
 module.exports = React.createClass({
@@ -27,6 +30,11 @@ module.exports = React.createClass({
     Auth.removeChangeListener(this._onChange);
   },
 
+  logout: function() {
+    Auth.logout();
+    this.context.router.transitionTo('/login');
+  },
+
   render: function() {
     // Check Auth status
     if (!Auth.isAuthenticated()) {
@@ -36,12 +44,18 @@ module.exports = React.createClass({
       return (<div></div>)
     }
 
-    return (
-      <div>
-        <Navbar />
-        <Router.RouteHandler {...this.props} tokens={this.state} />
-      </div>
-    )
+    if (this.state.token_info) {
+      return (
+        <div>
+          <Navbar token_info={this.state.token_info} logout={this.logout} />
+          <Router.RouteHandler {...this.props} tokens={this.state.tokens} />
+        </div>
+      )
+    } else {
+      return (<div></div>)
+    }
+
+
   },
 
   _onChange: function() {

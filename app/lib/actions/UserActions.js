@@ -15,8 +15,4 @@ module.exports = {
     API.saveUserRoles(proxy_token, user_id, roles);
   }
 
-  // saveUserProfile: function(token, user_id, profile) {
-  //   API.saveUserProfile(token, user_id, profile);
-  // }
-
 };
