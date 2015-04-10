@@ -249,10 +249,8 @@ module.exports = {
   loadUsers: function(proxy_token, options) {
     var url = this._proxyUrl('/api/v2/users', options)
     this._get(proxy_token, url, function(data) {
-      Dispatcher.dispatch({
-        actionType: Constants.RECEIVED_USERS,
-        users: data
-      });
+      data.actionType = Constants.RECEIVED_USERS;
+      Dispatcher.dispatch(data);
     });
   },
 

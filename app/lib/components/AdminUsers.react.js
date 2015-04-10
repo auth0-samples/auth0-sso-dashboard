@@ -7,11 +7,14 @@ var moment = require('moment');
 var UI = require('./UI.react');
 var BS = require('react-bootstrap');
 var _ = require('lodash');
+var Pager = require('./Pager.react');
 
 function getStateFromStores() {
   return {
     roles: RoleStore.get(),
-    users: UserStore.get()
+    users: UserStore.get(),
+    total_pages: UserStore.getTotalPages(),
+    current_page: UserStore.getCurrentPage()
   };
 }
 
@@ -21,11 +24,18 @@ var AdminUsers = React.createClass({
     return getStateFromStores();
   },
 
+  queryOptions: {
+    sort: 'name:1',
+    per_page: 10,
+    page: 0,
+    include_totals: true
+  },
+
   componentDidMount: function() {
     UserStore.addChangeListener(this._onChange);
     RoleStore.addChangeListener(this._onChange);
     if (this.props.tokens.auth0_proxy) {
-      UserActions.loadUsers(this.props.tokens.auth0_proxy);
+      UserActions.loadUsers(this.props.tokens.auth0_proxy, this.queryOptions);
     }
     if (this.props.tokens.aws_credentials) {
       RoleActions.loadRoles(this.props.tokens.aws_credentials);
@@ -34,7 +44,7 @@ var AdminUsers = React.createClass({
 
   componentWillReceiveProps: function(nextProps) {
     if (!this.props.tokens.auth0_proxy && nextProps.tokens.auth0_proxy) {
-      UserActions.loadUsers(nextProps.tokens.auth0_proxy);
+      UserActions.loadUsers(nextProps.tokens.auth0_proxy, this.queryOptions);
     }
 
     if (!this.props.tokens.id_token && nextProps.tokens.aws_credentials) {
@@ -49,6 +59,11 @@ var AdminUsers = React.createClass({
 
   saveRoles: function(user_id, roles) {
     UserActions.saveUserRoles(this.props.tokens.auth0_proxy, user_id, roles);
+  },
+
+  pageUsers: function(page) {
+    this.queryOptions.page = page;
+    UserActions.loadUsers(this.props.tokens.auth0_proxy, this.queryOptions);
   },
 
   render: function() {
@@ -105,6 +120,7 @@ var AdminUsers = React.createClass({
               }, this)}
             </tbody>
           </table>
+          <Pager onPage={this.pageUsers} totalPages={this.state.total_pages} currentPage={this.state_current_page} />
         </div>
       </div>
     );

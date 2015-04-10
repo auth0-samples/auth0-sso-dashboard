@@ -4,11 +4,8 @@ var API = require('../API');
 
 module.exports = {
 
-  loadUsers: function(proxy_token) {
-    API.loadUsers(proxy_token, {
-      per_page: 50,
-      page: 0
-    });
+  loadUsers: function(proxy_token, options) {
+    API.loadUsers(proxy_token, options);
   },
 
   saveUserRoles: function(proxy_token, user_id, roles) {
