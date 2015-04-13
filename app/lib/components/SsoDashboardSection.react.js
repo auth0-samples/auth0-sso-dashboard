@@ -19,14 +19,17 @@ var ApplicationList = React.createClass({
 
   componentDidMount: function() {
     UserAppStore.addChangeListener(this._onChange);
-    if (this.props.tokens.get_user_clients) {
-      AppActions.loadUserApps(this.props.tokens.get_user_clients);
-    }
+    this.updateDataIfNeeded(this.props);
   },
 
   componentWillReceiveProps: function(nextProps) {
-    if (!this.props.tokens.get_user_clients) {
-      AppActions.loadUserApps(nextProps.tokens.get_user_clients);
+    this.updateDataIfNeeded(nextProps);
+  },
+
+  updateDataIfNeeded: function(props) {
+    // TODO: Determine if data should be loaded
+    if (props.tokens.get_user_clients) {
+      AppActions.loadUserApps(props.tokens.get_user_clients);
     }
   },
 

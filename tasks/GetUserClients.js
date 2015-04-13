@@ -115,18 +115,18 @@ return function(context, cb) {
   }
 
   var getUserRoles = (user) => {
-    return getRoles().then(roles => {
+    return Q(all_roles).then(roles => {
       var user_roles = [];
-      // if (user.groups && user.groups.length > 0) {
-      //   user.groups.map(function(group) {
-      //     var role = _.find(roles, function(role) {
-      //       return role.name.toLowerCase() === group.toLowerCase();
-      //     });
-      //     if (role) {
-      //       user_roles.push(role.id);
-      //     }
-      //   });
-      // } else
+      if (user.groups && user.groups.length > 0) {
+        user.groups.map(function(group) {
+          var role = _.find(roles, function(role) {
+            return role.groups && (role.groups.indexOf(group) > -1);
+          });
+          if (role) {
+            user_roles.push(role.id);
+          }
+        });
+      }
       if (user.app_metadata && user.app_metadata.roles && user.app_metadata.roles.length > 0) {
         user.app_metadata.roles.map(function(role_id) {
           user_roles.push(role_id)
@@ -198,8 +198,7 @@ return function(context, cb) {
   }
 
   var getUserApps = (user_role_ids) => {
-    return getRoles()
-    .then(roles => {
+    return Q(all_roles).then(roles => {
       var perms = {
         all_allowed: false,
         apps: []
@@ -234,16 +233,20 @@ return function(context, cb) {
 
   var user_id = context.data.user_id;
 
-  return Q.Promise((resolve, reject) => { resolve(user_id); })
-  .then(getUser)
-  .then(getUserRoles)
-  .then(getUserApps)
-  .then(apps => {
-    cb(null, apps);
-  })
-  .fail(err => {
-    cb(err);
-  })
-  .done();
+  var all_roles;
+
+  return getRoles()
+    .then((roles) => { all_roles = roles; })
+    .then(() => { return user_id })
+    .then(getUser)
+    .then(getUserRoles)
+    .then(getUserApps)
+    .then(apps => {
+      cb(null, apps);
+    })
+    .fail(err => {
+      cb(err);
+    })
+    .done();
 
 }

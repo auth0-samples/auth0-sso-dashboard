@@ -61,18 +61,17 @@ var AdminApps = React.createClass({
 
   componentDidMount: function() {
     AppStore.addChangeListener(this._onChange);
-    if (this.props.tokens.auth0_proxy && this.props.tokens.aws_credentials) {
-      AppActions.loadApps(this.props.tokens.auth0_proxy, this.props.tokens.aws_credentials);
-    }
+    this.updateDataIfNeeded(this.props);
   },
 
   componentWillReceiveProps: function(nextProps) {
-    var current = this.props.tokens;
-    var next = nextProps.tokens;
-    if (!current.auth0_proxy || !current.aws_credentials) {
-      if ((current.auth0_proxy || next.auth0_proxy) && (current.aws_credentials || next.aws_credentials)) {
-        AppActions.loadApps(current.auth0_proxy || next.auth0_proxy, current.aws_credentials || next.aws_credentials);
-      }
+    this.updateDataIfNeeded(nextProps);
+  },
+
+  updateDataIfNeeded: function(props) {
+    // TODO: Determine if data should be loaded
+    if (props.tokens.auth0_proxy && props.tokens.aws_credentials) {
+      AppActions.loadApps(props.tokens.auth0_proxy, props.tokens.aws_credentials);
     }
   },
 

@@ -18,22 +18,29 @@ var RolesModal = React.createClass({
     };
   },
 
+  componentDidMount: function() {
+    this.updateSelectedRoles(this.props);
+  },
+
   componentWillReceiveProps: function(nextProps) {
+    this.updateSelectedRoles(nextProps);
+  },
+
+  updateSelectedRoles: function(props) {
     var selected_roles = [];
-    if (nextProps.profile.user_metadata) {
-      selected_roles = nextProps.user.roles;
+    if (props.user.app_metadata && props.user.app_metadata.roles) {
+      selected_roles = props.user.app_metadata.roles;
     }
     this.setState({ selected_roles: selected_roles });
   },
 
-
   render: function() {
     return(
-      <BS.Modal {...this.props} animation={false} title="Edit App">
+      <BS.Modal {...this.props} animation={false} title="Edit User">
         <div className="modal-body">
           <form className="form-horizontal">
             <Forms.TextInput name="name" label="Name" placeholder="Name" value={this.props.user.name} disabled="true" />
-            {this.props.roles.map(function(role, i) {
+            {this.props.roles.map(function(role) {
               var checked = this.state.selected_roles.indexOf(role.id) > -1;
               return (
                 <Forms.Checkbox key={role.id} name={role.id} label={role.name} checked={checked} onChange={this.onRoleSelected} />
@@ -95,21 +102,20 @@ var AdminUsers = React.createClass({
   componentDidMount: function() {
     UserStore.addChangeListener(this._onChange);
     RoleStore.addChangeListener(this._onChange);
-    if (this.props.tokens.auth0_proxy) {
-      UserActions.loadUsers(this.props.tokens.auth0_proxy, this.queryOptions);
-    }
-    if (this.props.tokens.aws_credentials) {
-      RoleActions.loadRoles(this.props.tokens.aws_credentials);
-    }
+    this.updateDataIfNeeded(this.props);
   },
 
   componentWillReceiveProps: function(nextProps) {
-    if (!this.props.tokens.auth0_proxy && nextProps.tokens.auth0_proxy) {
-      UserActions.loadUsers(nextProps.tokens.auth0_proxy, this.queryOptions);
+    this.updateDataIfNeeded(nextProps);
+  },
+
+  updateDataIfNeeded: function(props) {
+    if (props.tokens.auth0_proxy) {
+      UserActions.loadUsers(props.tokens.auth0_proxy, this.queryOptions);
     }
 
-    if (!this.props.tokens.id_token && nextProps.tokens.aws_credentials) {
-      RoleActions.loadRoles(nextProps.tokens.aws_credentials);
+    if (props.tokens.aws_credentials) {
+      RoleActions.loadRoles(props.tokens.aws_credentials);
     }
   },
 
@@ -128,10 +134,12 @@ var AdminUsers = React.createClass({
   },
 
   render: function() {
-    return (
-      <div className="container">
-        <UI.PageHeader title="Administration: Users" />
-        <div className="row" id="apps">
+    var content = (<h3>Loading...</h3>);
+    var data_ready = (this.state.roles.length > 0) && (this.state.users.length > 0);
+
+    if (data_ready) {
+      content = (
+        <div>
           <table className="table">
             <thead>
               <tr>
@@ -182,6 +190,15 @@ var AdminUsers = React.createClass({
             </tbody>
           </table>
           <Pager onPage={this.pageUsers} totalPages={this.state.total_pages} currentPage={this.state_current_page} />
+        </div>
+      );
+    }
+
+    return (
+      <div className="container">
+        <UI.PageHeader title="Administration: Users" />
+        <div className="row" id="apps">
+          {{content}}
         </div>
       </div>
     );
