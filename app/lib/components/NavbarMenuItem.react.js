@@ -7,7 +7,7 @@ var NavbarMenuItem = React.createClass({
     var className;
     var currentPath = Router.HashLocation.getCurrentPath();
     if (currentPath === this.props.route || currentPath.indexOf(this.props.route + '/') === 0) {
-      className = "active";
+      className = 'active';
     }
     return (
       <li className={className}><Link to={this.props.route}>{this.props.title}</Link></li>

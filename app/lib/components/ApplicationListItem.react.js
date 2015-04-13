@@ -1,6 +1,5 @@
 var React = require('react');
 
-
 export default class ApplicationItem extends React.Component {
   render() {
     var app = this.props.app;

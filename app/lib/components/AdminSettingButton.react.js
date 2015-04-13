@@ -1,6 +1,4 @@
 var React = require('react');
-var Router = require('react-router');
-
 
 export default class AdminSettingButton extends React.Component {
   render() {

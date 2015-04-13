@@ -15,18 +15,18 @@ util.inherits(Store, EventEmitter);
 Store.prototype.set = function(data) {
   this._data = data || this._initial;
   this.emitChange();
-}
+};
 
-Store.prototype.get = function(data) {
+Store.prototype.get = function() {
   return this._data;
-}
+};
 
 Store.prototype.update = function(data, comparison) {
   var i = _.findIndex(this._data, comparison);
   if (i > -1) {
     this._data[i] = data;
   } else {
-    this._data.push(data)
+    this._data.push(data);
   }
   this.emitChange();
 };
@@ -39,7 +39,7 @@ Store.prototype.delete = function(comparison) {
     throw 'Invalid role_id';
   }
   this.emitChange();
-}
+};
 
 Store.prototype.emitChange = function() {
   this.emit(CHANGE_EVENT);

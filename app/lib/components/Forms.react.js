@@ -1,5 +1,4 @@
 var React = require('react');
-var BS = require('react-bootstrap');
 
 export class TextInput extends React.Component {
   render() {

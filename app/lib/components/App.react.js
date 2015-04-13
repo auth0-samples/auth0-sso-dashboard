@@ -1,7 +1,5 @@
 var React = require('react');
 var Router = require('react-router');
-var Navbar = require('./Navbar.react');
-var ProfileStore = require('../stores/ProfileStore');
 var Auth = require('../Auth');
 
 var App = React.createClass({
@@ -42,4 +40,4 @@ module.exports.init = function() {
   Router.run(routes, function (Handler, state) {
     React.render(<Handler {...state} />, document.body);
   });
-}
+};

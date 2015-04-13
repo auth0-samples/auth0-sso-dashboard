@@ -29,7 +29,7 @@ module.exports.PromptModal = React.createClass({
           <BS.Button onClick={this.handleAcceptDialog}>Yes</BS.Button>
         </div>
       </BS.Modal>
-    )
+    );
   },
 
   handleAcceptDialog: function() {

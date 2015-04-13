@@ -1,6 +1,5 @@
 var React = require('react');
 var NavbarMenuItem = require('./NavbarMenuItem.react');
-var Link = require('react-router').Link;
 var BS = require('react-bootstrap');
 
 export default class Navbar extends React.Component {
@@ -11,7 +10,7 @@ export default class Navbar extends React.Component {
 
     var brand = title;
     if (logo_url) {
-      brand = <span><img src={logo_url} className="brand-image" /> {title}</span>
+      brand = (<span><img src={logo_url} className="brand-image" /> {title}</span>);
     }
 
     var displayName = this.props.token_info.name;

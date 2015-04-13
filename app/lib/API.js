@@ -2,7 +2,6 @@ var request = require('browser-request');
 var Dispatcher = require('./Dispatcher');
 var Constants = require('./Constants');
 var qs = require('querystring');
-var ProfileStore = require('./stores/ProfileStore');
 var _ = require('lodash');
 var uuid = require('uuid');
 
@@ -15,9 +14,9 @@ module.exports = {
       method: method,
       url: url,
       headers: {}
-    }
+    };
     if (token) {
-      options.headers['Authorization'] = 'Bearer ' + token
+      options.headers['Authorization'] = 'Bearer ' + token;
     }
 
     // HACK: There is currently a bug in sandbox that wont allow
@@ -39,8 +38,8 @@ module.exports = {
         return;
       } else {
         var data;
-        if (typeof body === "string") {
-          data = JSON.parse(body)
+        if (typeof body === 'string') {
+          data = JSON.parse(body);
         } else {
           data = body;
         }
@@ -68,7 +67,7 @@ module.exports = {
   _getTaskUrl: function(query) {
     if (window.config.debug) {
       query = query || {};
-      query.webtask_no_cache = 1
+      query.webtask_no_cache = 1;
     }
     if (query) {
       return sbUrlBase + '?' + qs.stringify(query);
@@ -106,15 +105,15 @@ module.exports = {
   },
 
   loadApps: function(proxy_token, aws_credentials) {
-    var url = this._proxyUrl('/api/v2/clients', {"fields": "name,client_id,global"});
+    var url = this._proxyUrl('/api/v2/clients', { fields: 'name,client_id,global' });
     this._get(proxy_token, url, (data) => {
       var apps = [];
       var s3 = this._getS3(aws_credentials);
       var params = {
         Key: 'data/clients.json'
-      }
+      };
       s3.getObject(params, (err, response) => {
-        if (err) throw err;
+        if (err) { throw err; }
         var metadatas = JSON.parse(response.Body.toString()).result;
 
         for (var i = 0; i < data.length; i++) {
@@ -133,16 +132,16 @@ module.exports = {
           apps: apps
         });
       });
-    })
+    });
   },
 
   saveApp: function(aws_credentials, app) {
     var s3 = this._getS3(aws_credentials);
     var params = {
       Key: 'data/clients.json'
-    }
+    };
     s3.getObject(params, function(err, response) {
-      if (err) throw err;
+      if (err) { throw err; }
       var data = JSON.parse(response.Body.toString());
       if (!app.client_id) {
         throw 'Cannot save app without client_id.';
@@ -151,7 +150,7 @@ module.exports = {
       var appData = {
         client_id: app.client_id,
         logo_url: app.logo_url
-      }
+      };
 
       var index = _.findIndex(data.result, { client_id: appData.client_id });
       if (index > -1) {
@@ -162,8 +161,8 @@ module.exports = {
 
       params.Body = JSON.stringify(data);
       params.ContentType = 'application/json';
-      s3.putObject(params, function(err, response) {
-        if (err) throw err;
+      s3.putObject(params, function(err) {
+        if (err) { throw err; }
         Dispatcher.dispatch({
           actionType: Constants.SAVED_APP,
           app: app
@@ -176,7 +175,7 @@ module.exports = {
     var s3 = this._getS3(aws_credentials);
     var params = {
       Key: 'data/roles.json'
-    }
+    };
     s3.getObject(params, function(err, response) {
       if (err) { throw err; }
       var data = JSON.parse(response.Body.toString());
@@ -191,9 +190,9 @@ module.exports = {
     var s3 = this._getS3(aws_credentials);
     var params = {
       Key: 'data/roles.json'
-    }
+    };
     s3.getObject(params, function(err, response) {
-      if (err) throw err;
+      if (err) { throw err; }
       var data = JSON.parse(response.Body.toString());
       if (role.id) {
         var index = _.findIndex(data.result, { id: role.id });
@@ -203,14 +202,14 @@ module.exports = {
           throw 'Invalid role id provided.';
         }
       } else {
-        role.id = uuid.v4()
+        role.id = uuid.v4();
         data.result.push(role);
       }
 
       params.Body = JSON.stringify(data);
       params.ContentType = 'application/json';
-      s3.putObject(params, function(err, response) {
-        if (err) throw err;
+      s3.putObject(params, function(err) {
+        if (err) { throw err; }
         Dispatcher.dispatch({
           actionType: Constants.SAVED_ROLE,
           roles: role
@@ -223,9 +222,9 @@ module.exports = {
     var s3 = this._getS3(aws_credentials);
     var params = {
       Key: 'data/roles.json'
-    }
+    };
     s3.getObject(params, function(err, response) {
-      if (err) throw err;
+      if (err) { throw err; }
       var data = JSON.parse(response.Body.toString());
       var index = _.findIndex(data.result, { id: role_id });
       if (index > -1) {
@@ -237,7 +236,7 @@ module.exports = {
       params.Body = JSON.stringify(data);
       //params.ContentType = 'application/json';
       s3.putObject(params, function(err) {
-        if (err) throw err;
+        if (err) { throw err; }
         Dispatcher.dispatch({
           actionType: Constants.RECEIVED_ROLES,
           roles: data.result
@@ -247,7 +246,7 @@ module.exports = {
   },
 
   loadUsers: function(proxy_token, options) {
-    var url = this._proxyUrl('/api/v2/users', options)
+    var url = this._proxyUrl('/api/v2/users', options);
     this._get(proxy_token, url, function(data) {
       data.actionType = Constants.RECEIVED_USERS;
       Dispatcher.dispatch(data);
@@ -268,7 +267,7 @@ module.exports = {
   },
 
   loadUserProfile: function(id_token, user_id) {
-    var user_id = user_id || JSON.parse(atob(id_token.split('.')[1])).sub;
+    user_id = user_id || JSON.parse(atob(id_token.split('.')[1])).sub;
     var url = 'https://' + window.config.auth0_domain + '/api/v2/users/' + user_id + '?exclude_fields=true&fields=app_metadata,identities';
     this._get(id_token, url, function(profile) {
       Dispatcher.dispatch({
@@ -281,13 +280,13 @@ module.exports = {
   saveUserProfile: function(id_token, user_id, profile) {
     var body = {
       user_metadata: profile
-    }
+    };
     var url = 'https://' + window.config.auth0_domain + '/api/v2/users/' + user_id;
     this._patch(id_token, url, body, function(data) {
       Dispatcher.dispatch({
         actionType: Constants.RECEIVED_PROFILE,
         profile: data
-      })
+      });
     });
   },
 
@@ -296,7 +295,7 @@ module.exports = {
       app_metadata: {
         roles: roles
       }
-    }
+    };
     var url = this._proxyUrl('/api/v2/users/' + user_id);
     this._patch(proxy_token, url, body, function(data) {
       Dispatcher.dispatch({

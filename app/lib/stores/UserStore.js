@@ -15,11 +15,11 @@ UserStore.getTotalPages = function() {
 
 UserStore.setCurrentPage = function(length, start) {
   this.current_page = Math.floor(start / length) - 1;
-}
+};
 
 UserStore.getCurrentPage = function() {
   return this.current_page;
-}
+};
 
 // Register callback to handle all updates
 Dispatcher.register(function(action) {

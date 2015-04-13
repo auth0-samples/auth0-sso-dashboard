@@ -1,4 +1,3 @@
-var babel = require("gulp-babel");
 var browserify = require('browserify');
 var buffer = require('vinyl-buffer');
 var rename = require('gulp-rename');
@@ -21,20 +20,20 @@ module.exports = function(gulp, is_production) {
       fullPaths: watch // required to be true only for watchify
     });
     if (watch) {
-      bundler = watchify(bundler)
+      bundler = watchify(bundler);
     }
 
     // bundler.external('lodash')
     // bundler.external('react')
 
     //bundler.transform('reactify', {"es6": true});
-    bundler.transform('babelify')
+    bundler.transform('babelify');
     bundler.transform('envify');
 
     var rebundle = function() {
       return bundler.bundle()
         .on('error', function(err) {
-          console.log(err)
+          console.log(err);
         })
         .pipe(source('bundle.js'))
         .pipe(buffer())
@@ -65,8 +64,8 @@ module.exports = function(gulp, is_production) {
     return gulp.src('./dist/app/bundle.js')
       .pipe(uglify())
       .pipe(rename(function(path) {
-        path.extname = '.min.js'
+        path.extname = '.min.js';
       }))
       .pipe(gulp.dest('./dist/app'));
   });
-}
+};

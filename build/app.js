@@ -41,20 +41,21 @@ module.exports = function(gulp, is_production) {
       aws_iam_user: process.env.AWS_IAM_USER,
       aws_iam_admin: process.env.AWS_IAM_ADMIN,
       debug: !is_production
-    }
+    };
 
     var checksumPath = function(file) {
       var fullPath = path.join(__dirname, '../dist/app', file);
       var text = fs.readFileSync(fullPath);
       var hash = crypto.createHash('md5').update(text, 'utf8').digest('hex');
       return file + '?v=' + hash;
-    }
+    };
 
     var data = {
       bundle_js_path: is_production ? checksumPath('/bundle.min.js') : '/bundle.js',
       bundle_css_path: is_production ? checksumPath('/bundle.min.css') : '/bundle.css',
       config: JSON.stringify(config)
-    }
+    };
+
     return gulp.src('./app/html/index.html')
       .pipe(handlebars(data))
       .pipe(minifyHTML())
@@ -64,7 +65,7 @@ module.exports = function(gulp, is_production) {
   gulp.task('app-build', ['scripts-build', 'styles-build', 'app-html', 'app-fonts', 'app-images']);
 
   gulp.task('app-publish', ['app-build'], function() {
-    return gulp.src("./dist/app/**/*.*")
+    return gulp.src('./dist/app/**/*.*')
       .pipe(s3Upload({
         Bucket: process.env.AWS_S3_BUCKET,
         ACL: 'public-read'
@@ -73,4 +74,4 @@ module.exports = function(gulp, is_production) {
 
   gulp.task('app-serve', serve(['app', './dist/app']));
 
-}
+};

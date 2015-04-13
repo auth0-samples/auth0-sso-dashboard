@@ -5,62 +5,6 @@ var BS = require('react-bootstrap');
 var ProfileActions = require('../actions/ProfileActions');
 var MUI = require('material-ui');
 
-function getStateFromStores() {
-  return {
-    profile: ProfileStore.get()
-  };
-}
-
-var UserProfile = React.createClass({
-
-  getInitialState: function() {
-    return getStateFromStores();
-  },
-
-  componentDidMount: function() {
-    ProfileStore.addChangeListener(this._onChange);
-    ProfileActions.loadProfile(this.props.tokens.id_token);
-  },
-
-  componentWillUnmount: function() {
-    ProfileStore.removeChangeListener(this._onChange);
-  },
-
-  saveChanges: function(user_metadata) {
-    ProfileActions.saveProfile(this.props.tokens.id_token, this.state.profile.user_id, user_metadata);
-    this.refs.snackbar.show();
-    setTimeout((function() {
-      this.refs.snackbar.dismiss();
-    }).bind(this), 2000)
-  },
-
-  render: function() {
-    var body;
-    if (this.state.profile) {
-      body = <ProfileEditor profile={this.state.profile} onSaveChanges={this.saveChanges} />;
-    } else {
-      body = "Loading";
-    }
-    return (
-      <div className="container">
-        <UI.PageHeader title="User Profile" />
-        <MUI.Snackbar ref="snackbar" message="User profile saved." />
-        <div className="row">
-          {body}
-        </div>
-      </div>
-    )
-  },
-
-  /**
-   * Event handler for 'change' events coming from the stores
-   */
-  _onChange: function() {
-    this.setState(getStateFromStores());
-  }
-});
-
-
 var ProfileEditor = React.createClass({
   getInitialState: function() {
     return {};
@@ -88,7 +32,7 @@ var ProfileEditor = React.createClass({
     this.setState({ home_address: event.target.value });
   },
 
-  saveChanges: function(event) {
+  saveChanges: function() {
     this.props.onSaveChanges(this.state);
   },
 
@@ -104,18 +48,72 @@ var ProfileEditor = React.createClass({
         <BS.Input type='textarea' label="Home Address" ref="homeaddress" value={this.state.home_address} onChange={this.onHomeAddressChanged}/>
         <BS.Button className="btn btn-primary" onClick={this.saveChanges}>Save changes</BS.Button>
       </form>
-    )
+    );
   },
 
   componentDidMount: function() {
-    var addressPlaceholder = "1234 Example St.\nBellevue, WA 98004";
+    var addressPlaceholder = '1234 Example St.\nBellevue, WA 98004';
     var node = this.refs.homeaddress.getDOMNode();
     if (node) {
       node.childNodes[1].setAttribute('placeholder', addressPlaceholder);
     }
   }
 
+});
 
+function getStateFromStores() {
+  return {
+    profile: ProfileStore.get()
+  };
+}
+
+var UserProfile = React.createClass({
+
+  getInitialState: function() {
+    return getStateFromStores();
+  },
+
+  componentDidMount: function() {
+    ProfileStore.addChangeListener(this._onChange);
+    ProfileActions.loadProfile(this.props.tokens.id_token);
+  },
+
+  componentWillUnmount: function() {
+    ProfileStore.removeChangeListener(this._onChange);
+  },
+
+  saveChanges: function(user_metadata) {
+    ProfileActions.saveProfile(this.props.tokens.id_token, this.state.profile.user_id, user_metadata);
+    this.refs.snackbar.show();
+    setTimeout((function() {
+      this.refs.snackbar.dismiss();
+    }).bind(this), 2000);
+  },
+
+  render: function() {
+    var body;
+    if (this.state.profile) {
+      body = <ProfileEditor profile={this.state.profile} onSaveChanges={this.saveChanges} />;
+    } else {
+      body = 'Loading';
+    }
+    return (
+      <div className="container">
+        <UI.PageHeader title="User Profile" />
+        <MUI.Snackbar ref="snackbar" message="User profile saved." />
+        <div className="row">
+          {body}
+        </div>
+      </div>
+    );
+  },
+
+  /**
+   * Event handler for 'change' events coming from the stores
+   */
+  _onChange: function() {
+    this.setState(getStateFromStores());
+  }
 });
 
 

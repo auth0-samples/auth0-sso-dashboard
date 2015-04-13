@@ -94,7 +94,7 @@ var AdminRoles = React.createClass({
             return (
               <tr key={role.id}>
                 <td>{role.name}</td>
-                <td>{role.all_apps == true ? 'Yes' : 'No'}</td>
+                <td>{role.all_apps === true ? 'Yes' : 'No'}</td>
                 <td>
                   <ul className="role-list">
                   {app_names.map(function(app) {

@@ -6,7 +6,7 @@ s3.config.credentials = new AWS.Credentials(
   process.env.AWS_ACCESS_KEY_ID,
   process.env.AWS_SECRET_ACCESS_KEY);
 
-module.exports = function(gulp, is_production) {
+module.exports = function(gulp) {
 
   gulp.task('set-cors', function(cb) {
     var params = {
@@ -33,25 +33,25 @@ module.exports = function(gulp, is_production) {
     s3.putBucketCors(params, cb);
   });
 
-  gulp.task('data-publish', ['set-cors'], function(cb) {
+  gulp.task('data-publish', ['set-cors'], function() {
     var createObjectIfNotExists = function(obj) {
       return new Promise(function(resolve, reject) {
         var params = {
           Key: obj
-        }
-        s3.getObject(params, function(err, data) {
+        };
+        s3.getObject(params, function(err) {
           if (err) {
             params.Body = '{ "result": [] }';
             params.ContentType = 'application/json';
-            s3.putObject(params, function(err, data) {
+            s3.putObject(params, function(err) {
               if (err) {
                 console.log(err);
                 reject(err);
               } else {
                 console.log('Uplaoded ' + obj);
-                resolve(data);
+                resolve();
               }
-            })
+            });
           } else {
             console.log('[' + chalk.gray(moment().format('HH:mm:ss')) + '] ' + chalk.grey('No change ..... ') + obj);
             resolve();
@@ -64,4 +64,4 @@ module.exports = function(gulp, is_production) {
     return Promise.all(objs.map(createObjectIfNotExists));
   });
 
-}
+};

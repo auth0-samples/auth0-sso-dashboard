@@ -1,7 +1,7 @@
 var del = require('del');
 var handlebars = require('gulp-compile-handlebars');
 
-module.exports = function(gulp, is_production) {
+module.exports = function(gulp) {
 
   gulp.task('rules-clean', function(cb) {
     return del(['./dist/rules'], cb);
@@ -18,10 +18,10 @@ module.exports = function(gulp, is_production) {
       aws_s3_bucket: process.env.AWS_S3_BUCKET,
       aws_access_key_id: process.env.AWS_ACCESS_KEY_ID,
       webtask_container: process.env.WEBTASK_CONTAINER
-    }
-    return gulp.src("./rules/*.js")
+    };
+    return gulp.src('./rules/*.js')
       .pipe(handlebars(data))
-      .pipe(gulp.dest("./dist/rules"));
+      .pipe(gulp.dest('./dist/rules'));
   });
 
   gulp.task('rules-publish', ['rules-build'], function() {
@@ -29,10 +29,10 @@ module.exports = function(gulp, is_production) {
   });
 
   gulp.task('rules-watch', ['rules-publish'], function() {
-    var watcher = gulp.watch("./rules/**/*.js", ['rules-publish']);
+    var watcher = gulp.watch('./rules/**/*.js', ['rules-publish']);
     watcher.on('change', function(event) {
       console.log('File ' + event.path + ' was ' + event.type + ', running tasks...');
     });
   });
 
-}
+};

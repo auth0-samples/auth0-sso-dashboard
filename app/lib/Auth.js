@@ -1,10 +1,8 @@
 var Dispatcher = require('./Dispatcher');
 var Constants = require('./Constants');
 var EventEmitter = require('events').EventEmitter;
-var ProfileActions = require('./actions/ProfileActions');
 var API = require('./API');
-
-var CHANGE_EVENT = "CHANGE";
+var CHANGE_EVENT = 'CHANGE';
 
 var Auth = {
 
@@ -32,8 +30,8 @@ var Auth = {
     }, (function(err, token_info, token) {
       if (err) {
         // Error callback
-        throw err;
         console.log(err);
+        throw err;
       } else {
         this.authenticate(token, token_info);
         callback();
@@ -103,7 +101,7 @@ var Auth = {
       principal: config.aws_iam_principal
     };
     lock.$auth0.getDelegationToken(options, (function(err, delegationResult) {
-      if (err) throw err;
+      if (err) { throw err; }
       this.setAwsCredentials(delegationResult.Credentials);
     }).bind(this));
   },
@@ -127,8 +125,8 @@ var Auth = {
 
   removeChangeListener: function(callback) {
     this.emitter.removeListener(CHANGE_EVENT, callback);
-  },
-}
+  }
+};
 
 module.exports = Auth;
 

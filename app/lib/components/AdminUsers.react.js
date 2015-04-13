@@ -9,6 +9,67 @@ var BS = require('react-bootstrap');
 var _ = require('lodash');
 var Pager = require('./Pager.react');
 
+var Forms = require('./Forms.react');
+
+var RolesModal = React.createClass({
+  getInitialState: function() {
+    return {
+      selected_roles: []
+    };
+  },
+
+  componentWillReceiveProps: function(nextProps) {
+    var selected_roles = [];
+    if (nextProps.profile.user_metadata) {
+      selected_roles = nextProps.user.roles;
+    }
+    this.setState({ selected_roles: selected_roles });
+  },
+
+
+  render: function() {
+    return(
+      <BS.Modal {...this.props} animation={false} title="Edit App">
+        <div className="modal-body">
+          <form className="form-horizontal">
+            <Forms.TextInput name="name" label="Name" placeholder="Name" value={this.props.user.name} disabled="true" />
+            {this.props.roles.map(function(role, i) {
+              var checked = this.state.selected_roles.indexOf(role.id) > -1;
+              return (
+                <Forms.Checkbox key={role.id} name={role.id} label={role.name} checked={checked} onChange={this.onRoleSelected} />
+              );
+            }, this)}
+          </form>
+        </div>
+        <div className="modal-footer">
+          <BS.Button onClick={this.props.onRequestHide}>Close</BS.Button>
+          <BS.Button className="btn btn-primary" onClick={this.saveChanges}>Save changes</BS.Button>
+        </div>
+      </BS.Modal>
+    );
+  },
+
+  saveChanges: function() {
+    // TODO: Validation logic
+    var roles = this.state.selected_roles;
+    this.props.onRolesSaved(this.props.user.user_id, roles);
+    this.props.onRequestHide();
+  },
+
+  onRoleSelected: function(event) {
+    var roles = this.state.selected_roles;
+    var id = event.target.name;
+    var i = roles.indexOf(id);
+    if (i > -1) {
+      roles.splice(i, 1);
+    } else {
+      roles.push(id);
+    }
+    this.setState({ selected_roles: roles });
+  }
+
+});
+
 function getStateFromStores() {
   return {
     roles: RoleStore.get(),
@@ -133,69 +194,5 @@ var AdminUsers = React.createClass({
     this.setState(getStateFromStores());
   }
 });
-
-
-var Forms = require('./Forms.react');
-
-var RolesModal = React.createClass({
-  getInitialState: function() {
-    return {
-      selected_roles: []
-    };
-  },
-
-  componentWillReceiveProps: function(nextProps) {
-    var selected_roles = [];
-    if (nextProps.profile.user_metadata) {
-      selected_roles = nextProps.user.roles;
-    }
-    this.setState({ selected_roles: selected_roles });
-  },
-
-
-  render: function() {
-    return(
-      <BS.Modal {...this.props} animation={false} title="Edit App">
-        <div className="modal-body">
-          <form className="form-horizontal">
-            <Forms.TextInput name="name" label="Name" placeholder="Name" value={this.props.user.name} disabled="true" />
-            {this.props.roles.map(function(role, i) {
-              var checked = this.state.selected_roles.indexOf(role.id) > -1;
-              return (
-                <Forms.Checkbox key={role.id} name={role.id} label={role.name} checked={checked} onChange={this.onRoleSelected} />
-              );
-            }, this)}
-          </form>
-        </div>
-        <div className="modal-footer">
-          <BS.Button onClick={this.props.onRequestHide}>Close</BS.Button>
-          <BS.Button className="btn btn-primary" onClick={this.saveChanges}>Save changes</BS.Button>
-        </div>
-      </BS.Modal>
-    )
-  },
-
-  saveChanges: function() {
-    // TODO: Validation logic
-    var roles = this.state.selected_roles;
-    this.props.onRolesSaved(this.props.user.user_id, roles);
-    this.props.onRequestHide();
-  },
-
-  onRoleSelected: function(event) {
-    var roles = this.state.selected_roles;
-    var id = event.target.name;
-    var i = roles.indexOf(id);
-    if (i > -1) {
-      roles.splice(i, 1);
-    } else {
-      roles.push(id);
-    }
-    this.setState({ selected_roles: roles });
-  }
-
-});
-
-
 
 module.exports = AdminUsers;

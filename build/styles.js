@@ -8,7 +8,7 @@ module.exports = function(gulp, is_production) {
     return gulp.src('./app/styles/main.less')
       .pipe(less())
       .pipe(rename(function(path) {
-        path.basename = "bundle"
+        path.basename = 'bundle';
       }))
       .pipe(gulp.dest('./dist/app'));
   });
@@ -29,6 +29,6 @@ module.exports = function(gulp, is_production) {
       .pipe(rename(function(path) {
         path.extname = '.min.css';
       }))
-      .pipe(gulp.dest('./dist/app'))
+      .pipe(gulp.dest('./dist/app'));
   });
-}
+};

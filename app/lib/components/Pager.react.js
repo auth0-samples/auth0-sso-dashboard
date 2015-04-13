@@ -19,7 +19,7 @@ export default class Pager extends React.Component {
     for (var i = 0; i <= total_pages; i++) {
       var label = i + 1;
       var isActive = i === this.state.current_page;
-      pages.push(<li className={isActive ? "active" : ""}><a onClick={this.handlePage.bind(this, i, null)}>{{label}}</a></li>);
+      pages.push(<li className={isActive ? 'active' : ''}><a onClick={this.handlePage.bind(this, i, null)}>{{label}}</a></li>);
     }
 
     return (

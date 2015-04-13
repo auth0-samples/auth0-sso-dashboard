@@ -19,8 +19,9 @@ var ApplicationList = React.createClass({
 
   componentDidMount: function() {
     UserAppStore.addChangeListener(this._onChange);
-    if (this.props.tokens.get_user_clients)
-    AppActions.loadUserApps(this.props.tokens.get_user_clients);
+    if (this.props.tokens.get_user_clients) {
+      AppActions.loadUserApps(this.props.tokens.get_user_clients);
+    }
   },
 
   componentWillReceiveProps: function(nextProps) {
@@ -38,7 +39,7 @@ var ApplicationList = React.createClass({
   },
 
   render: function() {
-    var message = "It looks like you haven't been authorized to use any applications yet.";
+    var message = 'It looks like you haven\'t been authorized to use any applications yet.';
     var inner = (<h3>{message}</h3>);
     if (this.state.apps && this.state.apps.length > 0) {
       inner = this.state.apps.map(function(app) {

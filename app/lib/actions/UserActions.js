@@ -1,5 +1,3 @@
-var Dispatcher = require('../Dispatcher');
-var Constants = require('../Constants');
 var API = require('../API');
 
 module.exports = {

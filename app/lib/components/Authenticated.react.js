@@ -10,7 +10,7 @@ function getStateFromStores() {
   return {
     tokens: tokens,
     token_info: Auth.getTokenInfo()
-  }
+  };
 }
 
 module.exports = React.createClass({
@@ -41,7 +41,7 @@ module.exports = React.createClass({
       var { router } = this.context;
       var nextPath = router.getCurrentPath();
       router.transitionTo('/login',{}, { 'nextPath' : nextPath });
-      return (<div></div>)
+      return (<div></div>);
     }
 
     if (this.state.token_info) {
@@ -50,12 +50,10 @@ module.exports = React.createClass({
           <Navbar token_info={this.state.token_info} logout={this.logout} />
           <Router.RouteHandler {...this.props} tokens={this.state.tokens} />
         </div>
-      )
+      );
     } else {
-      return (<div></div>)
+      return (<div></div>);
     }
-
-
   },
 
   _onChange: function() {

@@ -2,8 +2,50 @@ var React = require('react');
 var AppStore = require('../stores/AppStore');
 var UI = require('./UI.react');
 var AppActions = require('../actions/AppActions');
-var ProfileStore = require('../stores/ProfileStore');
 var BS = require('react-bootstrap');
+var Forms = require('./Forms.react');
+
+var AppModal = React.createClass({
+  getInitialState: function() {
+    var app = this.props.app || {};
+    return {
+      logo_url: app.logo_url
+    };
+  },
+
+
+  render: function() {
+
+    return(
+      <BS.Modal {...this.props} animation={false} title="Edit App">
+        <div className="modal-body">
+          <form className="form-horizontal">
+            <Forms.TextInput name="name" label="Name" placeholder="Name" value={this.props.app.name} disabled="true" />
+            <Forms.TextInput name="logo_url" label="Logo" placeholder="/img/logos/logo.png" value={this.state.logo_url} onChange={this.onLogoUrlChanged} />
+          </form>
+        </div>
+        <div className="modal-footer">
+          <BS.Button onClick={this.props.onRequestHide}>Close</BS.Button>
+          <BS.Button className="btn btn-primary" onClick={this.saveChanges}>Save changes</BS.Button>
+        </div>
+      </BS.Modal>
+    );
+  },
+
+  saveChanges: function() {
+    // TODO: Validation logic
+    var app = this.props.app;
+    app.logo_url = this.state.logo_url;
+    this.props.onAppSaved(app);
+    this.props.onRequestHide();
+  },
+
+  onLogoUrlChanged: function(event) {
+    this.setState({logo_url: event.target.value });
+  }
+
+});
+
 
 function getStateFromStores() {
   return {
@@ -56,7 +98,7 @@ var AdminApps = React.createClass({
               </tr>
             </thead>
             <tbody>
-              {this.state.apps.map(function(app, i) {
+              {this.state.apps.map(function(app) {
                 return (
                   <tr key={app.client_id}>
                     <td>{app.name}</td>
@@ -83,51 +125,5 @@ var AdminApps = React.createClass({
     this.setState(getStateFromStores());
   }
 });
-
-
-
-var Forms = require('./Forms.react');
-
-var AppModal = React.createClass({
-  getInitialState: function() {
-    var app = this.props.app || {};
-    return {
-      logo_url: app.logo_url
-    };
-  },
-
-
-  render: function() {
-
-    return(
-      <BS.Modal {...this.props} animation={false} title="Edit App">
-        <div className="modal-body">
-          <form className="form-horizontal">
-            <Forms.TextInput name="name" label="Name" placeholder="Name" value={this.props.app.name} disabled="true" />
-            <Forms.TextInput name="logo_url" label="Logo" placeholder="/img/logos/logo.png" value={this.state.logo_url} onChange={this.onLogoUrlChanged} />
-          </form>
-        </div>
-        <div className="modal-footer">
-          <BS.Button onClick={this.props.onRequestHide}>Close</BS.Button>
-          <BS.Button className="btn btn-primary" onClick={this.saveChanges}>Save changes</BS.Button>
-        </div>
-      </BS.Modal>
-    )
-  },
-
-  saveChanges: function() {
-    // TODO: Validation logic
-    var app = this.props.app;
-    app.logo_url = this.state.logo_url;
-    this.props.onAppSaved(app);
-    this.props.onRequestHide();
-  },
-
-  onLogoUrlChanged: function(event) {
-    this.setState({logo_url: event.target.value });
-  }
-
-});
-
 
 module.exports = AdminApps;
