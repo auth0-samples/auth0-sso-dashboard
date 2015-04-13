@@ -3,6 +3,9 @@ var gulp = require('gulp');
 
 var is_production = process.env.NODE_ENV === 'production';
 
+if (is_production) {
+  console.log('Production build');
+}
 
 require('./build/app')(gulp, is_production);
 require('./build/data')(gulp, is_production);

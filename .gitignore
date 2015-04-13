@@ -4,6 +4,7 @@ logs
 dist
 data.json
 .env
+.awspublish-ssodashboard
 
 # Runtime data
 pids

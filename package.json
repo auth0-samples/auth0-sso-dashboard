@@ -21,12 +21,15 @@
     "envify": "^3.4.0",
     "flux": "~2.0.1",
     "gulp": "~3.8.11",
+    "gulp-awspublish": "^1.0.6",
     "gulp-babel": "^4.0.1",
+    "gulp-cloudfront": "0.0.14",
     "gulp-compile-handlebars": "^0.4.4",
     "gulp-less": "~3.0.0",
     "gulp-minify-css": "^1.0.0",
     "gulp-minify-html": "^1.0.2",
     "gulp-rename": "~1.2.0",
+    "gulp-rev-all": "^0.8.18",
     "gulp-s3-upload": "^1.0.4",
     "gulp-serve": "^0.3.1",
     "gulp-sourcemaps": "^1.5.1",
@@ -41,6 +44,8 @@
     "react-router": "^0.13.2",
     "react-tap-event-plugin": "^0.1.6",
     "uuid": "^2.0.1",
+    "vinyl-buffer": "^1.0.0",
+    "vinyl-source-stream": "^1.1.0",
     "watchify": "^2.3.0"
   }
 }

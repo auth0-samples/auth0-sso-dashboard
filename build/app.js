@@ -1,21 +1,29 @@
-var crypto = require('crypto');
 var del = require('del');
-var fs = require('fs');
 var handlebars = require('gulp-compile-handlebars');
 var minifyHTML = require('gulp-minify-html');
-var path = require('path');
 var serve = require('gulp-serve');
+var cloudfront = require('gulp-cloudfront');
+var RevAll = require('gulp-rev-all');
+var awspublish = require('gulp-awspublish');
 
-var s3Upload = require('gulp-s3-upload')({
-  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-  region: process.env.AWS_REGION
-});
+// var s3Upload = require('gulp-s3-upload')({
+//   accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+//   secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+//   region: process.env.AWS_REGION
+// });
+
+var aws = {
+    key: process.env.AWS_ACCESS_KEY_ID,
+    secret: process.env.AWS_SECRET_ACCESS_KEY,
+    bucket: process.env.AWS_S3_BUCKET,
+    region: process.env.AWS_REGION,
+    distributionId: process.env.AWS_CLOUDFRONT_DISTRIBUTION_ID
+};
 
 module.exports = function(gulp, is_production) {
 
-  require('./scripts')(gulp);
-  require('./styles')(gulp);
+  require('./scripts')(gulp, is_production);
+  require('./styles')(gulp, is_production);
 
   gulp.task('app-clean', function(cb) {
     return del(['./dist/app'], cb);
@@ -43,16 +51,9 @@ module.exports = function(gulp, is_production) {
       debug: !is_production
     };
 
-    var checksumPath = function(file) {
-      var fullPath = path.join(__dirname, '../dist/app', file);
-      var text = fs.readFileSync(fullPath);
-      var hash = crypto.createHash('md5').update(text, 'utf8').digest('hex');
-      return file + '?v=' + hash;
-    };
-
     var data = {
-      bundle_js_path: is_production ? checksumPath('/bundle.min.js') : '/bundle.js',
-      bundle_css_path: is_production ? checksumPath('/bundle.min.css') : '/bundle.css',
+      bundle_js_path: is_production ? '/bundle.min.js' : '/bundle.js',
+      bundle_css_path: is_production ? '/bundle.min.css' : '/bundle.css',
       config: JSON.stringify(config)
     };
 
@@ -65,11 +66,24 @@ module.exports = function(gulp, is_production) {
   gulp.task('app-build', ['scripts-build', 'styles-build', 'app-html', 'app-fonts', 'app-images']);
 
   gulp.task('app-publish', ['app-build'], function() {
+    var publisher = awspublish.create(aws);
+
+    // define custom headers
+    var headers = {
+       'Cache-Control': 'max-age=315360000, no-transform, public'
+    };
+
+   var revAll = new RevAll({
+     dontRenameFile: ['\/fonts\/.*', '\/img\/.*']
+   });
+
     return gulp.src('./dist/app/**/*.*')
-      .pipe(s3Upload({
-        Bucket: process.env.AWS_S3_BUCKET,
-        ACL: 'public-read'
-      }));
+      .pipe(revAll.revision())
+      .pipe(awspublish.gzip())
+      .pipe(publisher.publish(headers))
+      .pipe(publisher.cache())
+      .pipe(awspublish.reporter())
+      .pipe(cloudfront(aws));
   });
 
   gulp.task('app-serve', serve(['app', './dist/app']));
