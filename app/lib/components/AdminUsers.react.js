@@ -148,12 +148,14 @@ var AdminUsers = React.createClass({
                 <td>Email</td>
                 <td>Latest Login</td>
                 {/*<td>Login Count</td>*/}
+                <td>Groups</td>
                 <td>Roles</td>
                 <td width="20px"></td>
               </tr>
             </thead>
             <tbody>
               {this.state.users.map(function(user, i) {
+                var groups_names = user.groups || [];
                 var role_names = [];
                 if (user.app_metadata && user.app_metadata.roles) {
                   user.app_metadata.roles.map(function(role_id) {
@@ -172,6 +174,13 @@ var AdminUsers = React.createClass({
                     <td>{user.email}</td>
                     <td>{moment(user.last_login).fromNow()}</td>
                     {/* <td>{user.logins_count}</td> */}
+                    <td>
+                      <ul className="role-list">
+                      {groups_names.map(function(group) {
+                        return (<li key={group}>{group}</li>);
+                      })}
+                      </ul>
+                    </td>
                     <td>
                       <ul className="role-list">
                       {role_names.map(function(role) {

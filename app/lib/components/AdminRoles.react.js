@@ -167,16 +167,15 @@ var AdminRoles = React.createClass({
               <td>Name</td>
               <td>All Apps</td>
               <td>Apps</td>
+              <td>Groups</td>
               <td width="20px"></td>
               <td width="20px"></td>
             </tr>
           </thead>
           <tbody>
             {this.state.roles.map(function(role, i) {
-            var apps = [];
-            if (role.apps) {
-              apps = role.apps;
-            }
+            var apps = role.apps || [];
+            var group_names = role.groups || [];
             var app_names = [];
             apps.map(function(client_id) {
               var app = _.find(this.state.apps, { client_id: client_id });
@@ -194,6 +193,13 @@ var AdminRoles = React.createClass({
                 <td>
                   <ul className="role-list">
                   {app_names.map(function(app) {
+                    return (<li key={app}>{app}</li>);
+                  })}
+                  </ul>
+                </td>
+                <td>
+                  <ul className="role-list">
+                  {group_names.map(function(app) {
                     return (<li key={app}>{app}</li>);
                   })}
                   </ul>
