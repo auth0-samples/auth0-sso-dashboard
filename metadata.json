@@ -1,0 +1,14 @@
+{
+  "name": "SSO Dashboard",
+  "type": "sample",
+  "tags": [
+    "javascript",
+    "nodejs",
+    "webtask",
+    "web",
+    "rules",
+    "react",
+    "spa",
+    "single-sign-on"
+  ]
+}
