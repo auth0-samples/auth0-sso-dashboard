@@ -1,6 +1,7 @@
 # Logs
 logs
 *.log
+*.pem
 dist
 data.json
 .env

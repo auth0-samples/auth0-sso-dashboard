@@ -107,17 +107,17 @@ var RoleModal = React.createClass({
 
 });
 
-function getStateFromStores() {
-  return {
-    roles: RoleStore.get(),
-    apps: AppStore.get()
-  };
-}
-
 var AdminRoles = React.createClass({
 
   getInitialState: function() {
-    return getStateFromStores();
+    return this.getStateFromStores();
+  },
+
+  getStateFromStores: function() {
+    return {
+      roles: RoleStore.get(),
+      apps: AppStore.get()
+    };
   },
 
   componentDidMount: function() {
@@ -237,7 +237,7 @@ var AdminRoles = React.createClass({
    * Event handler for 'change' events coming from the stores
    */
   _onChange: function() {
-    this.setState(getStateFromStores());
+    this.setState(this.getStateFromStores());
   }
 });
 

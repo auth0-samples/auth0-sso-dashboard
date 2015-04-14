@@ -36,7 +36,7 @@ Store.prototype.delete = function(comparison) {
   if (i > -1) {
     this._data.splice(i, 1);
   } else {
-    throw 'Invalid role_id';
+    throw 'Invalid';
   }
   this.emitChange();
 };

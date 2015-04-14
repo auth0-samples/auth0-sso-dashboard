@@ -46,17 +46,16 @@ var AppModal = React.createClass({
 
 });
 
-
-function getStateFromStores() {
-  return {
-    apps: AppStore.get()
-  };
-}
-
 var AdminApps = React.createClass({
 
   getInitialState: function() {
-    return getStateFromStores();
+    return this.getStateFromStores();
+  },
+
+  getStateFromStores: function() {
+    return {
+      apps: AppStore.get()
+    };
   },
 
   componentDidMount: function() {
@@ -121,7 +120,7 @@ var AdminApps = React.createClass({
    * Event handler for 'change' events coming from the stores
    */
   _onChange: function() {
-    this.setState(getStateFromStores());
+    this.setState(this.getStateFromStores());
   }
 });
 

@@ -61,16 +61,16 @@ var ProfileEditor = React.createClass({
 
 });
 
-function getStateFromStores() {
-  return {
-    profile: ProfileStore.get()
-  };
-}
-
 var UserProfile = React.createClass({
 
   getInitialState: function() {
-    return getStateFromStores();
+    return this.getStateFromStores();
+  },
+
+  getStateFromStores: function() {
+    return {
+      profile: ProfileStore.get()
+    };
   },
 
   componentDidMount: function() {
@@ -112,7 +112,7 @@ var UserProfile = React.createClass({
    * Event handler for 'change' events coming from the stores
    */
   _onChange: function() {
-    this.setState(getStateFromStores());
+    this.setState(this.getStateFromStores());
   }
 });
 

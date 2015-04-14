@@ -77,26 +77,26 @@ var RolesModal = React.createClass({
 
 });
 
-function getStateFromStores() {
-  return {
-    roles: RoleStore.get(),
-    users: UserStore.get(),
-    total_pages: UserStore.getTotalPages(),
-    current_page: UserStore.getCurrentPage()
-  };
-}
-
 var AdminUsers = React.createClass({
-
-  getInitialState: function() {
-    return getStateFromStores();
-  },
 
   queryOptions: {
     sort: 'name:1',
     per_page: 10,
     page: 0,
     include_totals: true
+  },
+
+  getInitialState: function() {
+    return this.getStateFromStores();
+  },
+
+  getStateFromStores: function() {
+    return {
+      roles: RoleStore.get(),
+      users: UserStore.get(),
+      total_pages: UserStore.getTotalPages(),
+      current_page: UserStore.getCurrentPage()
+    };
   },
 
   componentDidMount: function() {
@@ -110,6 +110,7 @@ var AdminUsers = React.createClass({
   },
 
   updateDataIfNeeded: function(props) {
+    // TODO: Determine if data should be loaded
     if (props.tokens.auth0_proxy) {
       UserActions.loadUsers(props.tokens.auth0_proxy, this.queryOptions);
     }
@@ -161,7 +162,6 @@ var AdminUsers = React.createClass({
                       role_names.push(role.name);
                     } else {
                       // Role has probably been deleted
-                      //role_names.push(role_id);
                       console.warn('Role not found: ' + role_id);
                     }
                   }, this);
@@ -208,7 +208,7 @@ var AdminUsers = React.createClass({
    * Event handler for 'change' events coming from the stores
    */
   _onChange: function() {
-    this.setState(getStateFromStores());
+    this.setState(this.getStateFromStores());
   }
 });
 
