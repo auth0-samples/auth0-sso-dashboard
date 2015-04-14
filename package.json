@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "test": "mocha --compilers js:babel/register",
-    "publish": "gulp publish"
+    "deploy": "gulp publish"
   },
   "engines": {
     "node": "0.12.x"
