@@ -212,7 +212,7 @@ module.exports = {
         if (err) { throw err; }
         Dispatcher.dispatch({
           actionType: Constants.SAVED_ROLE,
-          roles: role
+          role: role
         });
       });
     });
