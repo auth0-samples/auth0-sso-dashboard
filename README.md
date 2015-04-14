@@ -13,10 +13,10 @@ This application allows Auth0 customers the ability to host a self-service Singl
 You can see a full featured version of this dashboard running at [https://sso.fabrikamcorp.com](https://sso.fabrikamcorp.com). You can login with the username `publicdemo` and the password `TestUser123`. This will only show you the user side of the demo. For the admin portion, please deploy your own version of the dashboard as explained below.
 
 ## Install
-To download this sample simply clone this repository. See our wiki for [instructions on deploying](wiki/Setup) your own dashboard.
+To download this sample simply clone this repository. See our wiki for [instructions on deploying](https://github.com/auth0/auth0-sso-dashboard-sample/wiki/Setup) your own dashboard.
 
 ## Usage
-This sample can be run locally or it can be deployed anywhere that hosts static content. The deployment scripts packaged with this project are optimized for hosting in Amazon S3. See our wiki for the complete [instructions on deploying](wiki/Setup) the dashboard.
+This sample can be run locally or it can be deployed anywhere that hosts static content. The deployment scripts packaged with this project are optimized for hosting in Amazon S3. See our wiki for the complete [instructions on deploying](https://github.com/auth0/auth0-sso-dashboard-sample/wiki/Setup) the dashboard.
 
 ## What is Auth0?
 
