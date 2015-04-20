@@ -7,6 +7,9 @@ module.exports = function(rulePath, user, context, cb) {
   var async = require('async');
   // TODO: Load more modules
 
+  var configuration;
+
+
   var ruleText = fs.readFileSync(rulePath, 'utf8');
   ruleText = '(' + ruleText + ')(user, context, cb);';
   eval(ruleText);
