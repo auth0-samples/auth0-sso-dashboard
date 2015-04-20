@@ -13,7 +13,7 @@ module.exports = function(gulp) {
       auth0_client_id: process.env.AUTH0_CLIENT_ID,
       auth0_domain: process.env.AUTH0_DOMAIN,
       auth0_connection: process.env.AUTH0_CONNECTION,
-      admin_group: process.env.SSO_DASHBOARD_ADMIN_GROUP,
+      admin_group: process.env.SITE_ADMIN_GROUP,
       aws_region: process.env.AWS_REGION,
       aws_s3_bucket: process.env.AWS_S3_BUCKET,
       aws_access_key_id: process.env.AWS_ACCESS_KEY_ID,
