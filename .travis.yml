@@ -3,5 +3,5 @@ node_js:
   - "0.12"
 before_install:
   - npm install -g gulp mocha
-after_success:
+script:
     "gulp deploy"
