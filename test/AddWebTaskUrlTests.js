@@ -42,3 +42,9 @@ var rulePath = path.join(__dirname, '../rules/AddWebTaskTokens.js');
 //     });
 //   });
 // });
+
+describe('Temp', function() {
+  it('should be true', function() {
+    assert(true);
+  });
+});
