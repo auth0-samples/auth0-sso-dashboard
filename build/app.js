@@ -6,11 +6,6 @@ var cloudfront = require('gulp-cloudfront');
 var RevAll = require('gulp-rev-all');
 var awspublish = require('gulp-awspublish');
 
-// var s3Upload = require('gulp-s3-upload')({
-//   accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-//   secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-//   region: process.env.AWS_REGION
-// });
 
 var aws = {
     key: process.env.AWS_ACCESS_KEY_ID,

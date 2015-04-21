@@ -11,22 +11,18 @@ var moment = require('moment');
 module.exports = function(gulp, is_production) {
 
   function scripts(watch) {
-    var bundler, rebundle;
-    bundler = browserify('../app/lib/Main.js', {
+    var bundler = browserify('../app/lib/Main.js', {
       basedir: __dirname,
       debug: !is_production,
       cache: {}, // required for watchify
       packageCache: {}, // required for watchify
       fullPaths: watch // required to be true only for watchify
     });
+
     if (watch) {
       bundler = watchify(bundler);
     }
 
-    // bundler.external('lodash')
-    // bundler.external('react')
-
-    //bundler.transform('reactify', {"es6": true});
     bundler.transform('babelify');
     bundler.transform('envify');
 
