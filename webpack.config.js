@@ -5,10 +5,7 @@ module.exports = {
   cache: true,
   context: path.join(__dirname, '/app'),
   entry: {
-    app: [
-      'webpack-dev-server/client?http://localhost:3000/',
-      './Main.js'
-    ],
+    app: ['./Main.js'],
     vendors: ['react', 'react-router', 'lodash', 'moment', 'react-bootstrap']
   },
   output: {

@@ -18,7 +18,7 @@ UserStore.setCurrentPage = function(length, start) {
 };
 
 UserStore.getCurrentPage = function() {
-  return this.current_page;
+  return this.current_page; 
 };
 
 // Register callback to handle all updates

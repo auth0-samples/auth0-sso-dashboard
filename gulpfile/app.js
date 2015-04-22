@@ -74,6 +74,7 @@ module.exports = function(gulp) {
     var myConfig = Object.create(webpackConfig);
     myConfig.devtool = 'eval';
     myConfig.debug = true;
+    myConfig.entry.app = ['webpack-dev-server/client?http://localhost:3000/', './Main.js']
 
     // Start a webpack-dev-server
     new WebpackDevServer(webpack(myConfig), {
