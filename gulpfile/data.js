@@ -8,7 +8,7 @@ s3.config.credentials = new AWS.Credentials(
 
 module.exports = function(gulp) {
 
-  gulp.task('set-cors', function(cb) {
+  gulp.task('data:set-cors', function(cb) {
     var params = {
       Bucket: process.env.AWS_S3_BUCKET,
       CORSConfiguration: {
@@ -33,7 +33,7 @@ module.exports = function(gulp) {
     s3.putBucketCors(params, cb);
   });
 
-  gulp.task('data-publish', ['set-cors'], function() {
+  gulp.task('data:publish', ['data:set-cors'], function() {
     var createObjectIfNotExists = function(obj) {
       return new Promise(function(resolve, reject) {
         var params = {

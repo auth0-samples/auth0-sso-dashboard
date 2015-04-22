@@ -3,6 +3,7 @@ var React = require('react');
 export default class Pager extends React.Component {
 
   constructor(props) {
+    super();
     this.state = { current_page: props.currentPage || 0 };
   }
 

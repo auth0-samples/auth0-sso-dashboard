@@ -1,4 +1,5 @@
 var React = require('react');
+require('../../img/default.png');
 
 export default class ApplicationItem extends React.Component {
   render() {

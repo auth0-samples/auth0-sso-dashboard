@@ -65,7 +65,7 @@ module.exports = {
   },
 
   _getTaskUrl: function(query) {
-    if (window.config.debug) {
+    if (__DEV__) {
       query = query || {};
       query.webtask_no_cache = 1;
     }
@@ -86,7 +86,7 @@ module.exports = {
   },
 
   _getS3: function(aws_credentials) {
-    var s3 = new AWS.S3({ params: { Bucket: window.config.aws_s3_bucket }});
+    var s3 = new AWS.S3({ params: { Bucket: __AWS_S3_BUCKET__ }});
     s3.config.credentials = new AWS.Credentials(
       aws_credentials.AccessKeyId,
       aws_credentials.SecretAccessKey,
@@ -119,7 +119,7 @@ module.exports = {
         for (var i = 0; i < data.length; i++) {
           var app = data[i];
           // Filter out this app and the global 'all applications' app
-          if (window.config.auth0_client_id !== app.client_id && app.global === false) {
+          if (__AUTH0_CLIENT_ID__ !== app.client_id && app.global === false) {
             var metadata = _.find(metadatas, { client_id: app.client_id });
             if (metadata) {
               app = _.merge(app, metadata);
@@ -254,7 +254,7 @@ module.exports = {
   },
 
   loadTokenInfo: function(id_token) {
-    var url = 'https://' + window.config.auth0_domain + '/tokeninfo';
+    var url = 'https://' + __AUTH0_DOMAIN__ + '/tokeninfo';
     var data = {
       id_token: id_token
     };
@@ -268,7 +268,7 @@ module.exports = {
 
   loadUserProfile: function(id_token, user_id) {
     user_id = user_id || JSON.parse(atob(id_token.split('.')[1])).sub;
-    var url = 'https://' + window.config.auth0_domain + '/api/v2/users/' + user_id + '?exclude_fields=true&fields=app_metadata,identities';
+    var url = 'https://' + __AUTH0_DOMAIN__ + '/api/v2/users/' + user_id + '?exclude_fields=true&fields=app_metadata,identities';
     this._get(id_token, url, function(profile) {
       Dispatcher.dispatch({
         actionType: Constants.RECEIVED_PROFILE,
@@ -281,7 +281,7 @@ module.exports = {
     var body = {
       user_metadata: profile
     };
-    var url = 'https://' + window.config.auth0_domain + '/api/v2/users/' + user_id;
+    var url = 'https://' + __AUTH0_DOMAIN__ + '/api/v2/users/' + user_id;
     this._patch(id_token, url, body, function(data) {
       Dispatcher.dispatch({
         actionType: Constants.RECEIVED_PROFILE,

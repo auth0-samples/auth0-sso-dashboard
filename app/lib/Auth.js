@@ -7,6 +7,7 @@ var CHANGE_EVENT = 'CHANGE';
 var Auth = {
 
   emitter: new EventEmitter(),
+  lock: new Auth0Lock(__AUTH0_CLIENT_ID__, __AUTH0_DOMAIN__),
 
   logout: function() {
     this.clearSession();
@@ -23,10 +24,9 @@ var Auth = {
   },
 
   login: function(callback) {
-    var lock = window.lock;
-    lock.show({
+    this.lock.show({
       closable: false,
-      connections: [config.auth0_connection]
+      connections: [__AUTH0_CONNECTION__]
     }, (function(err, token_info, token) {
       if (err) {
         // Error callback
@@ -96,11 +96,11 @@ var Auth = {
   loadAwsCredentials: function(is_admin) {
     var options = {
       id_token:  this.getIdToken(),
-      client_id: config.auth0_client_id,
-      role: is_admin ? config.aws_iam_admin : config.aws_iam_user,
-      principal: config.aws_iam_principal
+      client_id: __AUTH0_CLIENT_ID__,
+      role: is_admin ? __AWS_IAM_ADMIN__ : __AWS_IAM_USER__,
+      principal: __AWS_IAM_PRINCIPAL__
     };
-    lock.$auth0.getDelegationToken(options, (function(err, delegationResult) {
+    this.lock.$auth0.getDelegationToken(options, (function(err, delegationResult) {
       if (err) { throw err; }
       this.setAwsCredentials(delegationResult.Credentials);
     }).bind(this));

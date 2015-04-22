@@ -6,7 +6,7 @@ s3.config.credentials = new AWS.Credentials(
 
 module.exports = function(gulp) {
 
-  gulp.task('create-s3-bucket', function(cb) {
+  gulp.task('util:create-s3-bucket', function(cb) {
     var params = {
       Bucket: process.env.AWS_S3_BUCKET,
       ACL: 'public-read',

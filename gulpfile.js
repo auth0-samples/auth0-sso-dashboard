@@ -1,18 +1,12 @@
 require('dotenv').load();
 var gulp = require('gulp');
 
-var is_production = process.env.NODE_ENV === 'production';
+require('./gulpfile/app')(gulp);
+require('./gulpfile/data')(gulp);
+require('./gulpfile/rules')(gulp);
+require('./gulpfile/utilities')(gulp);
+require('./gulpfile/webtasks')(gulp);
 
-if (is_production) {
-  console.log('Production build');
-}
-
-require('./build/app')(gulp, is_production);
-require('./build/data')(gulp, is_production);
-require('./build/rules')(gulp, is_production);
-require('./build/utilities')(gulp, is_production);
-require('./build/webtasks')(gulp, is_production);
-
-gulp.task('start', ['styles-watch', 'scripts-watch', 'webtasks-watch', 'rules-watch', 'data-publish', 'app-build', 'app-serve']);
-gulp.task('build', ['app-build', 'rules-build', 'webtasks-build']);
-gulp.task('publish', ['app-publish', 'webtasks-publish', 'rules-publish', 'data-publish']);
+gulp.task('default', ['webtasks:watch', 'rules:watch', 'data:publish', 'app:watch']);
+gulp.task('build', ['app:build', 'rules:build', 'webtasks:build']);
+gulp.task('publish', ['app:publish', 'webtasks:publish', 'rules:publish', 'data:publish']);

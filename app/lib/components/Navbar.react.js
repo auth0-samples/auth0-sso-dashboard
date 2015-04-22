@@ -5,8 +5,8 @@ var BS = require('react-bootstrap');
 export default class Navbar extends React.Component {
 
   render() {
-    var title = window.config.title;
-    var logo_url = window.config.logo_url;
+    var title = __SITE_TITLE__;
+    var logo_url = __LOGO_URL__;
 
     var brand = title;
     if (logo_url) {

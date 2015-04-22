@@ -70,7 +70,7 @@ return function(context, cb) {
     delete app.addons;
     delete app.callbacks
 
-    app.logo_url = app.logo_url || '/img/logos/auth0.png';
+    app.logo_url = app.logo_url || '/img/default.png';
     return app;
   }
 
