@@ -1,5 +1,5 @@
 var React = require('react');
-require('../../img/default.png');
+var defaultImg = require('../../img/default.png');
 
 export default class ApplicationItem extends React.Component {
   render() {
@@ -8,7 +8,7 @@ export default class ApplicationItem extends React.Component {
     return (
       <div className="col-md-2">
         <div className="app">
-          <div className="mui-paper mui-z-depth-3 mui-rounded"><a href={app.login_url}><img src={app.logo_url} /></a></div>
+          <div className="mui-paper mui-z-depth-3 mui-rounded"><a href={app.login_url}><img src={app.logo_url || defaultImg} /></a></div>
           <a className="name" href={app.login_url}>{app.name}</a>
         </div>
       </div>

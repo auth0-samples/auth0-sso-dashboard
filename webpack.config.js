@@ -28,7 +28,7 @@ module.exports = {
             { test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/,    loader: 'url?limit=10000&minetype=application/octet-stream' },
             { test: /\.eot(\?v=\d+\.\d+\.\d+)?$/,    loader: 'file' },
             { test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,    loader: 'url?limit=10000&minetype=image/svg+xml' },
-            { test: /\.png$/, loader: 'url-loader?mimetype=image/png' }
+            { test: /\.png$/, loader: 'url-loader?limit&10000&mimetype=image/png' }
         ],
         noParse: [/\.min\.js/]
     },

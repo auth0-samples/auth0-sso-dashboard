@@ -91,7 +91,7 @@ module.exports = function(gulp) {
   });
 
   gulp.task('html:build', ['app:clean', 'webpack:build'], function() {
-    return gulp.src('./index.html')
+    return gulp.src('./app/html/index.html')
       .pipe(gulp.dest('./dist/app'));
   });
 
@@ -108,7 +108,7 @@ module.exports = function(gulp) {
     };
 
     var revAll = new RevAll({
-      dontRenameFile: ['.woff', '.woff2', '.svg', '.ttf', '.eot']
+      dontRenameFile: ['\.woff', '\.woff2', '\.svg', '\.ttf', '\.eot']
     });
 
     return gulp.src('./dist/app/**/*.*')
