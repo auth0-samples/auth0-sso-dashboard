@@ -11,7 +11,7 @@ This application allows Auth0 customers the ability to host a self-service Singl
 * Completely customizable UI.
 
 ## Example Dashboard
-You can see a full featured version of this dashboard running at [https://sso.fabrikamcorp.com](https://sso.fabrikamcorp.com). You can login with the username `publicdemo` and the password `TestUser123`. This will only show you the user side of the demo. For the admin portion, please deploy your own version of the dashboard as explained below.
+You can see a full featured version of this dashboard running at https://d1rf874o453bjr.cloudfront.net/. You can login with the username `publicdemo` and the password `TestUser123`. This will only show you the user side of the demo. For the admin portion, please deploy your own version of the dashboard as explained below.
 
 ## Install
 To download this sample simply clone this repository. See our wiki for [instructions on deploying](https://github.com/auth0/auth0-sso-dashboard-sample/wiki/Setup) your own dashboard.
