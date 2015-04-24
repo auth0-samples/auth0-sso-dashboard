@@ -4,10 +4,10 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-    "postinstall": "gunt build",
+    "postinstall": "gulp build",
     "dev": "gulp",
     "build": "gulp build",
-    "test": "mocha --compilers js:babel/register",
+    "test": "mocha --compilers js:babel/register"
   },
   "engines": {
     "node": "0.12.x"

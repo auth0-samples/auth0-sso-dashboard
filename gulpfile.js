@@ -4,7 +4,7 @@ var del = require('del');
 var gutil = require('gulp-util');
 var webpack = require('webpack');
 var WebpackDevServer = require('webpack-dev-server');
-var webpackConfig = require('../webpack.config');
+var webpackConfig = require('./webpack.config');
 var nodemon = require('nodemon');
 
 gulp.task('app:clean', function(cb) {
