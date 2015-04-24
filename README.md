@@ -19,6 +19,7 @@ You can see a full featured version of this dashboard running at https://d1rf874
 Host your own version of the dashbaord on Heroku using the heroku button.
 
 In order to deploy to Heroku you will need:
+
 1. An auth0 account.
 2. An Amazon S3 Bucket and access key for data storage
 3. Create [a rule](/rules/IsAdminRule.js) to grant users admin access to the app.
