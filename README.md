@@ -16,10 +16,12 @@ You can see a full featured version of this dashboard running at https://d1rf874
 > Note, the example dashboard uses a **demo account with fake apps** so clicking the links won't actually sign you into anything. If you want to try this for real, set up the dashboard with your Auth0 account and sign in to your apps.
 
 ## Install
-To download this sample simply clone this repository. See our wiki for [instructions on deploying](https://github.com/auth0/auth0-sso-dashboard-sample/wiki/Setup) your own dashboard.
+Host your own version of the dashbaord on Heroku using the heroku button. Or see our wiki for[instructions on deploying](https://github.com/auth0/auth0-sso-dashboard-sample/wiki/Setup) a custom installation on a hoster of your choice.
+
+[![Deploy](https://www.herokucdn.com/deploy/button.png)](https://dashboard.heroku.com/new?template=https%3A%2F%2Fgithub.com%2Fauth0%2Fauth0-sso-dashboard)
 
 ## Usage
-This sample can be run locally or it can be deployed anywhere that hosts static content. The deployment scripts packaged with this project are optimized for hosting in Amazon S3. See our wiki for the complete [instructions on deploying](https://github.com/auth0/auth0-sso-dashboard-sample/wiki/Setup) the dashboard.
+...
 
 ## What is Auth0?
 
