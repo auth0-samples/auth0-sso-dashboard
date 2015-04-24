@@ -1,48 +1,48 @@
 {
-  name: "Auth0 SSO Dashboard",
-  description: "Single sign on dashboard for all your apps.",
-  repository: "https://github.com/auth0/auth0-sso-dashboard",
-  keywords: [
+  "name": "Auth0 SSO Dashboard",
+  "description": "Single sign on dashboard for all your apps.",
+  "repository": "https://github.com/auth0/auth0-sso-dashboard",
+  "keywords": [
     "auth0",
     "node",
     "security",
     "sso"
   ],
-  env: {
-    AUTH0_CLIENT_ID: {
-      description: "The Auth0 client ID.",
-      required: true
+  "env": {
+    "AUTH0_CLIENT_ID": {
+      "description": "The Auth0 client ID.",
+      "required": true
     },
-    AUTH0_CLIENT_SECRET: {
-      description: "The Auth0 client secret.",
-      required: true
+    "AUTH0_CLIENT_SECRET": {
+      "description": "The Auth0 client secret.",
+      "required": true
     },
-    AUTH0_DOMAIN: {
-      description: "The Auth0 domain",
-      required: true,
-      value: "youraccount.auth0.com"
+    "AUTH0_DOMAIN": {
+      "description": "The Auth0 domain",
+      "required": true,
+      "value": "youraccount.auth0.com"
     },
-    AUTH0_CONNECTION: {
-      description: "The Auth0 connection that you will use to authenticate with this dashboard",
-      required: true
+    "AUTH0_CONNECTION": {
+      "description": "The Auth0 connection that you will use to authenticate with this dashboard",
+      "required": true
     },
-    AWS_ACCESS_KEY_ID: {
-      description: "The AWS Access Key Id with read/write access to an S3 bucket",
-      required: true
+    "AWS_ACCESS_KEY_ID": {
+      "description": "The AWS Access Key Id with read/write access to an S3 bucket",
+      "required": true
     },
-    AWS_SECRET_ACCESS_KEY: {
-      description: "The AWS secrete access key",
-      required: true
+    "AWS_SECRET_ACCESS_KEY": {
+      "description": "The AWS secrete access key",
+      "required": true
     },
-    AWS_S3_BUCKET: {
-      description: "The AWS S3 bucket name used to store this app's data",
-      required: true,
-      generator: "secret"
+    "AWS_S3_BUCKET": {
+      "description": "The AWS S3 bucket name used to store this app's data",
+      "required": true,
+      "generator": "secret"
     },
-    SITE_TITLE: {
-      description: "The name of this dashboard",
-      required: true,
-      value: "Company Dashboard"
+    "SITE_TITLE": {
+      "description": "The name of this dashboard",
+      "required": true,
+      "value": "Company Dashboard"
     }
   }
 }
