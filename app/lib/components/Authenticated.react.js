@@ -4,11 +4,8 @@ var Navbar = require('./Navbar.react');
 var Auth = require('../Auth');
 
 function getStateFromStores() {
-  var tokens = Auth.getTaskTokens() || {};
-  tokens.id_token = Auth.getIdToken();
-  tokens.aws_credentials = Auth.getAwsCredentials();
   return {
-    tokens: tokens,
+    token: Auth.getIdToken(),
     token_info: Auth.getTokenInfo()
   };
 }
@@ -48,7 +45,7 @@ module.exports = React.createClass({
       return (
         <div>
           <Navbar token_info={this.state.token_info} logout={this.logout} />
-          <Router.RouteHandler {...this.props} tokens={this.state.tokens} />
+          <Router.RouteHandler {...this.props} token={this.state.token} />
         </div>
       );
     } else {

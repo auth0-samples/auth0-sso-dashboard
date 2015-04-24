@@ -28,8 +28,8 @@ var ApplicationList = React.createClass({
 
   updateDataIfNeeded: function(props) {
     // TODO: Determine if data should be loaded
-    if (props.tokens.get_user_clients) {
-      AppActions.loadUserApps(props.tokens.get_user_clients);
+    if (props.token) {
+      AppActions.loadUserApps(props.token);
     }
   },
 

@@ -75,7 +75,7 @@ var UserProfile = React.createClass({
 
   componentDidMount: function() {
     ProfileStore.addChangeListener(this._onChange);
-    ProfileActions.loadProfile(this.props.tokens.id_token);
+    ProfileActions.loadProfile(this.props.token);
   },
 
   componentWillUnmount: function() {
@@ -83,7 +83,7 @@ var UserProfile = React.createClass({
   },
 
   saveChanges: function(user_metadata) {
-    ProfileActions.saveProfile(this.props.tokens.id_token, this.state.profile.user_id, user_metadata);
+    ProfileActions.saveProfile(this.props.token, this.state.profile.user_id, user_metadata);
     this.refs.snackbar.show();
     setTimeout((function() {
       this.refs.snackbar.dismiss();

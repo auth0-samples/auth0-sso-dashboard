@@ -111,12 +111,9 @@ var AdminUsers = React.createClass({
 
   updateDataIfNeeded: function(props) {
     // TODO: Determine if data should be loaded
-    if (props.tokens.auth0_proxy) {
-      UserActions.loadUsers(props.tokens.auth0_proxy, this.queryOptions);
-    }
-
-    if (props.tokens.aws_credentials) {
-      RoleActions.loadRoles(props.tokens.aws_credentials);
+    if (props.token) {
+      UserActions.loadUsers(props.token, this.queryOptions);
+      RoleActions.loadRoles(props.token);
     }
   },
 
@@ -126,12 +123,12 @@ var AdminUsers = React.createClass({
   },
 
   saveRoles: function(user_id, roles) {
-    UserActions.saveUserRoles(this.props.tokens.auth0_proxy, user_id, roles);
+    UserActions.saveUserRoles(this.props.token, user_id, roles);
   },
 
   pageUsers: function(page) {
     this.queryOptions.page = page;
-    UserActions.loadUsers(this.props.tokens.auth0_proxy, this.queryOptions);
+    UserActions.loadUsers(this.props.token, this.queryOptions);
   },
 
   render: function() {

@@ -1,15 +1,15 @@
 var API = require('../API');
 
 module.exports = {
-  loadApps: function(proxy_token, aws_credentials) {
-    API.loadApps(proxy_token, aws_credentials);
+  loadApps: function(token) {
+    API.loadApps(token);
   },
 
-  save: function(aws_credentials, app) {
-    API.saveApp(aws_credentials, app);
+  save: function(token, app) {
+    API.saveApp(token, app);
   },
 
-  loadUserApps: function(task_token) {
-    API.loadUserApps(task_token);
+  loadUserApps: function(token) {
+    API.loadUserApps(token);
   }
 };

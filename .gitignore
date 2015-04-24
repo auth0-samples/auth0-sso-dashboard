@@ -2,11 +2,8 @@
 logs
 *.log
 *.pem
-dist
 build
-data.json
 .env
-.awspublish-ssodashboard
 
 # Runtime data
 pids

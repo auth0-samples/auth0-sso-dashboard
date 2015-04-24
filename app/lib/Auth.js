@@ -17,14 +17,15 @@ var Auth = {
   },
 
   clearSession: function() {
-    this.task_tokens = null;
-    this.aws_creds = null;
     store.remove('id_token');
     this.emitChange();
   },
 
   login: function(callback) {
     this.lock.show({
+      authParams: {
+        scope: 'openid is_admin'
+      },
       closable: false,
       connections: [__AUTH0_CONNECTION__]
     }, (function(err, token_info, token) {
@@ -84,37 +85,6 @@ var Auth = {
     return false;
   },
 
-  setTaskTokens: function(task_tokens) {
-    this.task_tokens = task_tokens;
-    this.emitChange();
-  },
-
-  getTaskTokens: function() {
-    return this.task_tokens;
-  },
-
-  loadAwsCredentials: function(is_admin) {
-    var options = {
-      id_token:  this.getIdToken(),
-      client_id: __AUTH0_CLIENT_ID__,
-      role: is_admin ? __AWS_IAM_ADMIN__ : __AWS_IAM_USER__,
-      principal: __AWS_IAM_PRINCIPAL__
-    };
-    this.lock.$auth0.getDelegationToken(options, (function(err, delegationResult) {
-      if (err) { throw err; }
-      this.setAwsCredentials(delegationResult.Credentials);
-    }).bind(this));
-  },
-
-  setAwsCredentials: function(credentials) {
-    this.aws_creds = credentials;
-    this.emitChange();
-  },
-
-  getAwsCredentials: function() {
-    return this.aws_creds;
-  },
-
   emitChange: function() {
     this.emitter.emit(CHANGE_EVENT);
   },
@@ -132,14 +102,12 @@ module.exports = Auth;
 
 Dispatcher.register(function(action) {
 
-  switch(action.actionType) {
+  switch (action.actionType) {
     case Constants.USER_LOGGED_OUT:
       Auth.clearSession();
       break;
     case Constants.RECEIVED_TOKEN_INFO:
       Auth.setTokenInfo(action.token_info);
-      Auth.loadAwsCredentials(action.token_info.is_admin);
-      Auth.setTaskTokens(action.token_info.task_tokens);
       break;
     default:
       // no op

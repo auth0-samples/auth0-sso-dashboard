@@ -69,8 +69,8 @@ var AdminApps = React.createClass({
 
   updateDataIfNeeded: function(props) {
     // TODO: Determine if data should be loaded
-    if (props.tokens.auth0_proxy && props.tokens.aws_credentials) {
-      AppActions.loadApps(props.tokens.auth0_proxy, props.tokens.aws_credentials);
+    if (props.token) {
+      AppActions.loadApps(props.token);
     }
   },
 
@@ -79,7 +79,7 @@ var AdminApps = React.createClass({
   },
 
   saveApp: function(app) {
-    AppActions.save(this.props.tokens.aws_credentials, app);
+    AppActions.save(this.props.token, app);
   },
 
   render: function() {

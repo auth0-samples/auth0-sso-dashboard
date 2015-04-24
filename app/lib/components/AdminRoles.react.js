@@ -132,12 +132,9 @@ var AdminRoles = React.createClass({
 
   updateDataIfNeeded: function(props) {
     // TODO: Determine if data should be loaded
-    if (props.tokens.auth0_proxy && props.tokens.aws_credentials) {
-      AppActions.loadApps(props.tokens.auth0_proxy, props.tokens.aws_credentials);
-    }
-
-    if (props.tokens.aws_credentials) {
-      RoleActions.loadRoles(props.tokens.aws_credentials);
+    if (props.token) {
+      AppActions.loadApps(props.token);
+      RoleActions.loadRoles(props.token);
     }
   },
 
@@ -147,11 +144,11 @@ var AdminRoles = React.createClass({
   },
 
   saveRole: function(role) {
-    RoleActions.save(this.props.tokens.aws_credentials, role);
+    RoleActions.save(this.props.token, role);
   },
 
   deleteRole: function(role) {
-    RoleActions.delete(this.props.tokens.aws_credentials, role.id);
+    RoleActions.delete(this.props.token, role.id);
   },
 
   render: function() {

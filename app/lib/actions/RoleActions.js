@@ -2,16 +2,16 @@ var API = require('../API');
 
 module.exports = {
 
-  loadRoles: function(aws_credentials) {
-    API.loadRoles(aws_credentials);
+  loadRoles: function(token) {
+    API.loadRoles(token);
   },
 
-  save: function(aws_credentials, role) {
-    API.saveRole(aws_credentials, role);
+  save: function(token, role) {
+    API.saveRole(token, role);
   },
 
-  delete: function(aws_credentials, role_id) {
-    API.deleteRole(aws_credentials, role_id);
+  delete: function(token, role_id) {
+    API.deleteRole(token, role_id);
   }
 
 };
