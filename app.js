@@ -9,7 +9,7 @@ var app = express();
 
 app.use(bodyParser.json());
 app.use(logger('dev'));
-app.use(express.static(path.join(__dirname, 'build')));
+app.use(express.static(path.join(__dirname, 'public')));
 
 require('./lib/routes')(app);
 require('./lib/errors')(app);

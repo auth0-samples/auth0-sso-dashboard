@@ -8,14 +8,14 @@ var webpackConfig = require('./webpack.config');
 var nodemon = require('nodemon');
 
 gulp.task('app:clean', function(cb) {
-  return del(['./build'], cb);
+  return del(['./public'], cb);
 });
 
 gulp.task('serve', function() {
   nodemon({
       script: 'bin/www',
       ext: 'js',
-      ignore: ['gulpfile/*', 'build/*', 'app/*', 'gulpfile.js'],
+      ignore: ['gulpfile/*', 'public/*', 'app/*', 'gulpfile.js'],
       env: {
         'NODE_ENV': 'development'
       }
@@ -99,7 +99,7 @@ gulp.task('webpack:dev-server', function() {
 
 gulp.task('html:build', ['app:clean', 'webpack:build'], function() {
   return gulp.src('./app/html/index.html')
-    .pipe(gulp.dest('./build'));
+    .pipe(gulp.dest('./public'));
 });
 
 gulp.task('default', ['data:publish', 'webpack:dev-server', 'serve']);

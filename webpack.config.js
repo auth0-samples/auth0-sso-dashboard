@@ -9,7 +9,7 @@ module.exports = {
     vendors: ['react', 'react-router', 'lodash', 'moment', 'react-bootstrap']
   },
   output: {
-    path: path.join(__dirname, 'build/assets'),
+    path: path.join(__dirname, 'public/assets'),
     filename: '[name].js',
     //chunkFilename: '[name].[chunkhash].js',
     publicPath: 'assets/'
@@ -46,10 +46,6 @@ module.exports = {
       __AUTH0_DOMAIN__: JSON.stringify(process.env.AUTH0_DOMAIN),
       __AUTH0_CLIENT_ID__: JSON.stringify(process.env.AUTH0_CLIENT_ID),
       __AUTH0_CONNECTION__: JSON.stringify(process.env.AUTH0_CONNECTION),
-      __AWS_S3_BUCKET__: JSON.stringify(process.env.AWS_S3_BUCKET),
-      __AWS_IAM_PRINCIPAL__: JSON.stringify(process.env.AWS_IAM_PRINCIPAL),
-      __AWS_IAM_USER__: JSON.stringify(process.env.AWS_IAM_USER),
-      __AWS_IAM_ADMIN__: JSON.stringify(process.env.AWS_IAM_ADMIN),
     }),
     new webpack.optimize.CommonsChunkPlugin('vendors', 'vendors.js')
   ]
