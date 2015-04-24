@@ -9,6 +9,11 @@
     "sso"
   ],
   "env": {
+    "SITE_TITLE": {
+      "description": "The name of this dashboard",
+      "required": true,
+      "value": "Company Dashboard"
+    },
     "AUTH0_CLIENT_ID": {
       "description": "The Auth0 client ID.",
       "required": true
@@ -36,13 +41,7 @@
     },
     "AWS_S3_BUCKET": {
       "description": "The AWS S3 bucket name used to store this app's data",
-      "required": true,
-      "generator": "secret"
-    },
-    "SITE_TITLE": {
-      "description": "The name of this dashboard",
-      "required": true,
-      "value": "Company Dashboard"
+      "required": true
     }
   }
 }
