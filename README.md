@@ -16,17 +16,17 @@ You can see a full featured version of this dashboard running at https://d1rf874
 > Note, the example dashboard uses a **demo account with fake apps** so clicking the links won't actually sign you into anything. If you want to try this for real, set up the dashboard with your Auth0 account and sign in to your apps.
 
 ## Install
-Host your own version of the dashbaord on Heroku using the heroku button.
+Host your own version of the dashbaord on Heroku using the Heroku button.
 
 In order to deploy to Heroku you will need:
 
-1. An auth0 account.
+1. An Auth0 account.
 2. An Amazon S3 Bucket and access key for data storage
 3. Create [a rule](/rules/IsAdminRule.js) to grant users admin access to the app.
 
 [![Deploy](https://www.herokucdn.com/deploy/button.png)](https://dashboard.heroku.com/new?template=https%3A%2F%2Fgithub.com%2Fauth0%2Fauth0-sso-dashboard)
 
-If you would like to install the app on another hosting provider see the [deploying](https://github.com/auth0/auth0-sso-dashboard-sample/wiki/Setup) instructions on the wiki.
+For more details on [setup and deployment](https://github.com/auth0/auth0-sso-dashboard-sample/wiki/Setup) see the [instructions](https://github.com/auth0/auth0-sso-dashboard-sample/wiki/Setup) on the wiki.
 
 
 ## Usage
