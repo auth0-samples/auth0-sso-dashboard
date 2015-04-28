@@ -31,6 +31,7 @@
     "gulp": "~3.8.11",
     "gulp-babel": "^4.0.1",
     "gulp-util": "^3.0.4",
+    "jsonwebtoken": "^5.0.0",
     "less": "^2.5.0",
     "less-loader": "^2.2.0",
     "lodash": "^3.6.0",
