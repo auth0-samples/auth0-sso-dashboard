@@ -1,6 +1,7 @@
 {
   "name": "Auth0 SSO Dashboard",
   "description": "Single sign on dashboard for all your apps.",
+  "logo": "https://cloudup.com/cJPd33l_Stj+",
   "repository": "https://github.com/auth0/auth0-sso-dashboard",
   "keywords": [
     "auth0",
