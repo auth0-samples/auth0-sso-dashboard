@@ -30,7 +30,7 @@ For more details on [setup and deployment](https://github.com/auth0/auth0-sso-da
 
 
 ## Usage
-...
+Usage of the user portion of the dashboard is fairly simple. It contains a list of icons that the user can click on that will take them to other applications. For instruction on [administration of the dashboard](https://github.com/auth0/auth0-sso-dashboard-sample/wiki/Administration) see the wiki.
 
 ## What is Auth0?
 
