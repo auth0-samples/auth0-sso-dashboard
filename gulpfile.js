@@ -102,5 +102,5 @@ gulp.task('html:build', ['app:clean', 'webpack:build'], function() {
     .pipe(gulp.dest('./public'));
 });
 
-gulp.task('default', ['data:publish', 'webpack:dev-server', 'serve']);
+gulp.task('default', ['webpack:dev-server', 'serve']);
 gulp.task('build', ['html:build', 'webpack:build']);
