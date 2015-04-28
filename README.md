@@ -2,7 +2,7 @@
 
 This application allows Auth0 customers the ability to host a self-service Single-Sign-On (SSO) dashboard for employees or customers. This dashboard serves as a landing page for all apps that authenticate with Auth0 and support SSO, thus allowing a convenient way for users to access all important resources without the need to remember multiple URLs or repeatedly enter their credentials.
 
-![App Dashboard](https://cloudup.com/c2io8Lzb5-8+)
+![App Dashboard](https://cloudup.com/cfENOYpKxfL+)
 
 ## Key features
 * Landing page showing all apps that a user is allowed to access.
