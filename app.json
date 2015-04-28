@@ -31,6 +31,10 @@
       "description": "The Auth0 connection that you will use to authenticate with this dashboard",
       "required": true
     },
+    "AUTH0_API_TOKEN": {
+      "description": "The token for Auth0 APIv2.  The following scopes are required: `read:users`, `read:users_app_metadata`, `update:users_app_metadata`, `create:users_app_metadata`, `delete:users_app_metadata`, and `read:clients`.",
+      "required": true
+    },
     "AWS_ACCESS_KEY_ID": {
       "description": "The AWS Access Key Id with read/write access to an S3 bucket",
       "required": true
