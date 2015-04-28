@@ -11,7 +11,7 @@ This application allows Auth0 customers the ability to host a self-service Singl
 * Completely customizable UI.
 
 ## Example Dashboard
-You can see a full featured version of this dashboard running at ssodashboard.herokuapp.com. You can login with the username `publicdemo` and the password `TestUser123`. This will only show you the user side of the demo. For the admin portion, please deploy your own version of the dashboard as explained below.
+You can see a full featured version of this dashboard running at https://ssodashboard.herokuapp.com. You can login with the username `publicdemo` and the password `TestUser123`. This will only show you the user side of the demo. For the admin portion, please deploy your own version of the dashboard as explained below.
 
 > Note, the example dashboard uses a **demo account with fake apps** so clicking the links won't actually sign you into anything. If you want to try this for real, set up the dashboard with your Auth0 account and sign in to your apps.
 
