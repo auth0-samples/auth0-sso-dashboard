@@ -3,15 +3,14 @@ var gulp = require('gulp');
 var del = require('del');
 var gutil = require('gulp-util');
 var webpack = require('webpack');
-var WebpackDevServer = require('webpack-dev-server');
 var webpackConfig = require('./webpack.config');
-var nodemon = require('nodemon');
 
 gulp.task('app:clean', function(cb) {
   return del(['./public'], cb);
 });
 
 gulp.task('serve', function() {
+  var nodemon = require('nodemon');
   nodemon({
       script: 'bin/www',
       ext: 'js',
@@ -73,6 +72,8 @@ gulp.task('webpack:build-dev', function(callback) {
 });
 
 gulp.task('webpack:dev-server', function() {
+  var WebpackDevServer = require('webpack-dev-server');
+  
   // modify some webpack config options
   var myConfig = Object.create(webpackConfig);
   myConfig.devtool = 'eval';
