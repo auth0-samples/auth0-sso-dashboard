@@ -1,6 +1,6 @@
 {
   "name": "auth0-sso-dashboard-sample",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
@@ -8,7 +8,8 @@
     "test": "mocha --compilers js:babel/register"
   },
   "engines": {
-    "node": "4.2.x"
+    "node": ">=4.3",
+    "npm": ">=3.5"
   },
   "dependencies": {
     "aws-sdk": "~2.1.20",
