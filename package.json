@@ -8,8 +8,7 @@
     "test": "mocha --compilers js:babel/register"
   },
   "engines": {
-    "node": ">=4.3",
-    "npm": ">=3.5"
+    "node": ">=4.3"
   },
   "dependencies": {
     "aws-sdk": "~2.1.20",
