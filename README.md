@@ -1,7 +1,7 @@
-# Auth0 SSO Dashboard [![Build Status](https://travis-ci.org/auth0/auth0-sso-dashboard.svg)](https://travis-ci.org/auth0/auth0-sso-dashboard)
+# Auth0 SSO Dashboard (DEPRECATED) [![Build Status](https://travis-ci.org/auth0/auth0-sso-dashboard.svg)](https://travis-ci.org/auth0/auth0-sso-dashboard)
 
-**NOTICE**: 
-This project has been deprecated in favor of [the new Auth0 SSO Dashboard Extension](https://github.com/auth0-extensions/auth0-sso-dashboard-extension). [See the SSO Dashboard Extension Doc](https://auth0.com/docs/extensions/sso-dashboard) for more details.
+**WARNING: 
+This project has been deprecated in favor of [the new Auth0 SSO Dashboard Extension](https://github.com/auth0-extensions/auth0-sso-dashboard-extension). [See the SSO Dashboard Extension Doc](https://auth0.com/docs/extensions/sso-dashboard) for more details.**
 
 This application allows Auth0 customers the ability to host a self-service Single-Sign-On (SSO) dashboard for employees or customers. This dashboard serves as a landing page for all apps that authenticate with Auth0 and support SSO, thus allowing a convenient way for users to access all important resources without the need to remember multiple URLs or repeatedly enter their credentials.
 
